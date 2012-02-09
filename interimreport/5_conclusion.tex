@@ -1,0 +1,47 @@
+\chapter{Conclusion}
+\label{conclusion}
+\paragraph{}
+In this paper we focused on the need of a Word Sense Disambiguation (WSD) system that is directed at keeping the model size and time taken small. We found that even though there is much study made on WSD, few focused on introducing \textit{portability} into the system. For such a system, we intended to keep the size of model to minimal, while attempting to retain a reasonable level of accuracy. We opted to reduce the amount of pre-processing, like POS tagging, prior to the prediction of word senses. We believed that by doing so we incur additional supporting data, which increases the size of model. Also, we wanted to build a system that is speedy and responsive, so as to enhance users' experience. We wish to implement such a system so that we can perform real-time WSD on platforms like web browsers, or even mobile devices. On these platforms, we expect users to only perform WSD on small amount of text, like a sentence. For the project we identified three goals, namely: Accuracy, Speed and Size of Model.
+%%Aobo: here you mention Acc but miss in Chapter 3
+\paragraph{}
+%% Aobo : if this is the motivation, do some comparision
+We used Decision Trees in our system. It is simple to interpret and understand. It requires little data preparations, and able to have value even with little hard data. It is able to process large amount of data in a short time. We use the Weka implementation of the J48 decision tree learner to generate the model files to help us predict word senses.
+
+\paragraph{}
+In our system, we used \textsc{SemCor1.7.1} as our training corpus. Following our intuition on how the system would work, we extracted the training data sentence by sentence, so that each sentence serves as the \textit{environment} for each ambiguous word. For evaluation we tested our system against the all-words tasks of \textsc{SensEval-2}, \textsc{SensEval-3} and \textsc{SemEval}.
+
+\paragraph{}
+We acknowledge that our system produces low WSD accuracies. It seems a better choice to use the Baseline, which is fast, only requires a sense inventory file of about 7MB and has a higher accuracy. However there is still plenty of room of improvement for our system. As of now, the \textit{only} information that our system use is the occurrences of neighboring words. It does not have any other information, such as parts-of-speech, in the training and testing sentences. There are many other surface lexical features that can applied into our system. For example, we can add the \textit{bigrams} feature as described by \cite{pederson}. Otherwise, we can adopt collocations, which is also featured in IMS's system. Considering the potential for growth, our system is still better than the Baseline.
+%%Aobo: do you have any experiemnts on these new features?
+
+\begin{table}[h]
+	\center
+	\begin{tabular}{| c | c | c |}
+		\hline
+		\textsc{SensEval-2} (\%) & \textsc{SensEval-3} (\%) & \textsc{SemEval-2007} Coarse-Grained (\%) \\
+		\hline
+		67.6 & 65.6 & 84.7 \\
+		\hline
+	\end{tabular}
+	\caption{Corpus overlap with \textsc{SemCor1.7.1} (with respective test corpus)}
+	\label{tab:overlapPercentage}
+\end{table}
+
+\paragraph{}
+We conducted additional post-experiment analysis and it helped us identified that the amount of overlap of the training and test corpus affected the WSD accuracies. Comparing Table \ref{tab:resultsSum} and \ref{tab:overlapPercentage}, we can see that the percentages in overlap are consistent with the performances in various test corpus. In other words, the higher the overlap, the higher the performance.
+
+\paragraph{}
+Though our analysis on the amount of corpus overlap showed that it played a part in the performance, it also showed the weakness of our system's inability to process \textit{unknown} words to the system. An immediate course of action from this point might be to increase the amount of training data, rather than only using \textsc{SemCor1.7.1}. Since our system captures training instances by sentences, we can \textit{learn} from WordNet itself, as WordNet do provide sample sentences for most of the words in its inventory. The advantage in this move is that it would expose the system to more words and senses. However, it also increases the system's dependency on a lexical database. Increasing the size of training corpus would directly increase the size of the model and conflict with one of our goals | to reduce the size of model in order to make the system portable. Furthermore, in \cite{yarowsky}, the authors reported that doubling the corpus would only reduce errors by 3 to 4\%. Therefore, in the longer term, we wish to introduce some \textit{unsupervised} characteristics to the system, so that it is less dependent on back-end resources.
+
+\paragraph{}
+Through the various iterations of our system's implementation, we demonstrated that we reduced the time taken and size of model needed to predict word senses. Prior to switching our system to use a modified model, the prediction process easily took 10-40 seconds to process a single sentence, and the size of model, at more than 545MB, was very large. We changed how we store our model and how we perform the WSD procedure, we reduced the time taken to an average of 0.10 seconds per sentence, and the size of model to only 1 MB.
+
+\paragraph{}
+We claimed that our system is able to perform speedily and responsively. To justify that we conducted 2 speed tests. The conclusion drawn from these speed test is our system performed at least twice as fast compared to the IMS system when performing WSD on a single sentence. This satisfies our intention to implement such a system into real-time applications like web browsers and mobile devices. We make reference to previous work done on DiCE Translator\footnote{https://addons.mozilla.org/en-US/firefox/addon/dice-translator/} prior to this system. As a Firefox plugin, DiCE's purpose is to provide bilingual translations for text on web pages to encourage language learning across a second language. Despite after extracting dictionary content from Wiktionary\footnote{http://www.wiktionary.org/}, DiCE lacks the ability to translate accurately according to the context. Integrating our system into DiCE, we plan for DiCE to be able to translate more relevantly, while still maintaining the overall responsiveness in using the tool.
+
+%\paragraph{}
+%As for WSD accuracy itself, our system was able to attain 79.3\% accuracy in the \textsc{SemEval2007} task. Our performance in this task came close with IMS's performance in the same task. From this we had shown that using Decision Trees, with minimal pre-processing, is a feasible method for word sense prediction.
+
+\paragraph{}
+There are many systems that attain high accuracies in WSD tasks. However, few the take size of model and time taken into consideration. We demonstrated that our system is able to keep both the model size and time taken to the minimal. To conclude, we had successfully created a system that is light-weight and speedy.
+%%From Chen Tao:The second sentence "However, few the take..." may revise into "However, few of them take... into consideration."

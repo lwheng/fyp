@@ -1,0 +1,9 @@
+12662c12662
+< J05-4005 ==> P98-2206 # correct acl.net
+---
+> J05-4005 ==> P98-2006 # wrong, everything.net
+27544c27544
+< W02-0608 ==> W01-0518 # correct, acl.net
+---
+> W02-0608 ==> P01-9918 # wrong, everything.net
+

@@ -1,0 +1,79 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citename{Banerjee}{}{Pedersen}{Banerjee-Pedersen}{2002}{lesk}]{lesk}
+Banerjee, S., \& Pedersen, T. (2002).
+\newblock An adapted lesk algorithm for word sense disambiguation using
+  wordnet.
+\newblock {\em CICLing '02: Proceedings of the Third International Conference
+  on Computational Linguistics and Intelligent Text Processing} (pp.\
+  136--145), London, UK, 2002: Springer-Verlag.
+
+\bibitem[\protect\citename{Bennett}{}{Campbell}{Bennett-Campbell}{2000}{svm}]{svm}
+Bennett, K.~P., \& Campbell, C. (2000).
+\newblock Support vector machines: hype or hallelujah?
+\newblock {\em SIGKDD Explor. Newsl.}, {\em 2\/}, December, 2000, 1--13.
+
+\bibitem[\protect\citename{Chen~Ping}{}{}{Chen~Ping}{2009}{unsupervised}]{unsupervised}
+Chen~Ping, Ding~Wei, C. B. . D.~B. (2009).
+\newblock {A fully unsupervised word sense disambiguation method using
+  dependency knowledge}.
+\newblock {\em Proceedings of Human Language Technologies: The 2009 Annual
+  Conference of the North American Chapter of the Association for Computational
+  Linguistics on - NAACL '09}, (June), 2009, 28.
+
+\bibitem[\protect\citename{Escudero}{M\`{a}rquez}{Rigau}{EscuderoETAL}{2000}{supervisedmethods}]{supervisedmethods}
+Escudero, G., M\`{a}rquez, L., \& Rigau, G. (2000).
+\newblock A comparison between supervised learning algorithms for word sense
+  disambiguation.
+\newblock {\em Proceedings of the 2nd workshop on Learning language in logic
+  and the 4th conference on Computational natural language learning - Volume
+  7}, ConLL '00 (pp.\ 31--36), Stroudsburg, PA, USA, 2000: Association for
+  Computational Linguistics.
+
+\bibitem[\protect\citename{Fellbaum}{}{}{Fellbaum}{1998}{wordnet}]{wordnet}
+Fellbaum, C. (Ed.). (1998).
+\newblock {\em Wordnet an electronic lexical database}.
+\newblock Cambridge, MA ; London: The MIT Press.
+
+\bibitem[\protect\citename{Lin}{}{}{Lin}{1998}{minipar}]{minipar}
+Lin, D. (1998).
+\newblock A dependency-based method for evaluating broad-coverage parsers.
+\newblock {\em Nat. Lang. Eng.}, {\em 4\/}(2), 1998, 97--114.
+
+\bibitem[\protect\citename{Mihalcea}{}{}{Mihalcea}{2008}{wikipedia}]{wikipedia}
+Mihalcea, R. (2008).
+\newblock Using wikipedia for automatic word sense disambiguation, 2008.
+
+\bibitem[\protect\citename{Pedersen}{}{}{Pedersen}{2001}{pederson}]{pederson}
+Pedersen, T. (2001).
+\newblock A decision tree of bigrams is an accurate predictor of word sense.
+\newblock {\em Proceedings of the second meeting of the North American Chapter
+  of the Association for Computational Linguistics on Language technologies},
+  NAACL '01 (pp.\ 1--8), Stroudsburg, PA, USA, 2001: Association for
+  Computational Linguistics.
+
+\bibitem[\protect\citename{Yarowsky}{}{Florian}{Yarowsky-Florian}{2002}{yarowsky}]{yarowsky}
+Yarowsky, D., \& Florian, R. (2002).
+\newblock Evaluating sense disambiguation across diverse parameter spaces.
+\newblock {\em Nat. Lang. Eng.}, {\em 8\/}(4), 2002, 293--310.
+
+\bibitem[\protect\citename{Yuret}{}{Yatbaz}{Yuret-Yatbaz}{2010a}{noisy}]{noisy}
+Yuret, D., \& Yatbaz, M.~A. (2010a).
+\newblock The noisy channel model for unsupervised word sense disambiguation.
+\newblock {\em Comput. Linguist.}, {\em 36\/}(1), 2010, 111--127.
+
+\bibitem[\protect\citename{Yuret}{}{Yatbaz}{Yuret-Yatbaz}{2010b}{noisychannel}]{noisychannel}
+Yuret, D., \& Yatbaz, M.~A. (2010b).
+\newblock {The Noisy Channel Model for Unsupervised Word Sense Disambiguation}.
+\newblock {\em Computational Linguistics}, {\em 36\/}(1), March, 2010,
+  111--127.
+
+\bibitem[\protect\citename{Zhong}{}{Ng}{Zhong-Ng}{2010}{itmakessense}]{itmakessense}
+Zhong, Z., \& Ng, H.~T. (2010).
+\newblock It makes sense: A wide-coverage word sense disambiguation system for
+  free text.
+\newblock {\em Proceedings of the ACL 2010 System Demonstrations}, ACL '10
+  (pp.\ 78--83), Morristown, NJ, USA, 2010: Association for Computational
+  Linguistics.
+
+\end{thebibliography}

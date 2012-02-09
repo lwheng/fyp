@@ -1,0 +1,94 @@
+\chapter{Related Works}
+\label{Related Works}
+\paragraph{}
+Word Sense Disambiguation has been a key task in the field of Natural Language Processing since late 1940s. In general, supervised WSD has been attaining performance better than the other types of WSD systems, as they utilized large sense-tagged corpus as training model. However supervised WSD systems do have their limitations, especially for their high dependence on sense-tagged corpus, that their WSD accuracies are only as good as how large and fulfilling their training models are. For the long term, we must consider unsupervised systems for their ability to perform independent of sense-tagged corpus.
+
+\paragraph{}
+In order to encourage WSD applications in other fields, we need to consider flexible systems that allow customization. At the same time, we must consider its portability too, in other words its model size and time needed for the WSD process. For that, we have selected the following works to study in detail.
+
+\section{Word Sense Disambiguation Using Wikipedia}
+\paragraph{}
+Wikipedia is a free, web-based and collaborative encyclopedia that allows the public to contribute and edit almost all articles Wikipedia has, and therefore we can say that words in these articles are manually tagged. \cite{wikipedia} introduced an approach that exploits these manually tagged words, building a sense tagged corpus from Wikipedia to be used for WSD.
+
+\paragraph{}
+In Wikipedia articles, tagged words are in the \textsc{MediaWiki} syntax, which captures information about the word's topic, context or sense. For example, \textbf{[[bar(law)$\mid$bar]]} and \textbf{[[bar(counter)$\mid$bar]]}. The senses of the word \textit{bar}, namely \textit{law} and \textit{counter}, can be derived by extracting them from these annotated links. With this information, Mihalcea built a sense-tagged corpora by first extracting all paragraphs from Wikipedia that contain the occurrences of a given word. Then the senses are mapped onto their corresponding senses in the WordNet sense inventory.
+%Then the approach moves on into the disambiguation algorithm. A target text is tokenized, and each token is tagged with its part-of-speech information. Then collocations are identified. Next, local and topical features are extracted from the context of the ambiguous word. This set of features is similar to the one used by \cite{exemplar}.
+
+\paragraph{}
+The advantage of this approach is it exploits the dynamic nature of Wikipedia. By using Wikipedia as a source for corpus, one can be sure that it will always be up-to-date and contains any new words or new senses. A disadvantage, however, is data inconsistency. Consider the following: \textit{handphone} and \textit{mobile phone}.  Data inconsistency occurs here as different users might refer to the same object by a different name.
+
+\paragraph{}
+We observe that this approach would have the flexibility to handle new words and senses. This is because, considering the popularity of Wikipedia is, any new word or sense used by people, say \textit{tweet}, would most likely appear on Wikipedia faster than any formal dictionary databases. But of course, we must also consider the fact that if the number of new words and senses grows as fast as the number of articles, there would be a need to re-construct the sense-tagged corpus. Alternatively, we may use the APIs on MediaWIki to send query requests to retrieve information about a target word. From that we may build a real-time WSD system that is based on retrieving information from Wikipedia, making it independent of lexical databases and corpora. Performance issues aside, this could minimize the need to reconstruct a corpus on an occasional basis.
+%%From Chen Tao:The term appears twice in paragraph 2 (MEDIAWIKI ) and 4 (MediaWIki). You'd better standardize their cases.
+
+\section{Word Sense Disambiguation Using Dependency Knowledge}
+\paragraph{}
+In this paper by \cite{unsupervised}, we focus on its problem formulation and WSD algorithm. The authors formulated the WSD problem into \textit{weighted directed graphs}, and by simply computing values of the weighted nodes, it is effective in telling the dependencies between the words in a given text.
+
+\paragraph{}
+The approach begins with the construction of the corpus. Ambiguous words are sent to web search engines to retrieve the relevant pages. These pages are cleaned, segmented, and then parsed with a \textit{dependency parser}, Minipar \cite{minipar} to retrieve the parse trees, which are merged, by merging nodes from different dependency relations if they represent the same word, to form the context knowledge base \cite{unsupervised}. In the weighted directed graphs, the weight assignments and score computations are handled by the \textit{TreeMatching} function described by the authors. It is the score calculator for the weights in the parse trees. A target sentence is passed into the WSD algorithm together with WordNet sense inventory and the context knowledge base built earlier. \textit{TreeMatching} then assigns weights to the nodes based on rules and dependency relation instances, and returns the score of a WordNet gloss that an ambiguous word was compared with. Subsequently, either the sense with the best score or the first sense will be determined as the correct sense.
+
+\paragraph{}
+Undoubtably, the algorithm is effective and accurate in matching the dependency relations to determine the correct senses, as shown in the evaluation results in \cite{unsupervised}. However, before \textit{TreeMatching} can be done, all the sentences and glosses have to be pre-processed, and parsed into parsing trees. The parsing process, as mentioned by the authors, takes a lot of time. Then, the authors highlighted there is this concern regarding the dependency parser, Minipar. Minipar is not 100\% accurate in its parsing so it causes invalid dependency relations in the parse trees. Although the authors claimed that the WSD algorithm will minimize those erroneous output, it was not explicitly defined how it actually did it.
+%%From Chen Tao:"it was not explicitly defined how it actually did it." It seems that each "it" has different meaning which is a little ambiguous. Paraphrase this sentence may make it clear to understand.
+
+\section{Word Sense Disambiguation Using Noisy Channel Model}
+\paragraph{}
+In this paper, \cite{noisychannel} describes an unsupervised system that uses a generative probabilistic model for WSD. In their system, they used unlabeled data sets derived from publicly-available web pages instead of sense-tagged corpus such as \textsc{SemCor}. They demonstrated that the Noisy Channel Model can also be used for word sense disambiguation. The main contribution of this method is the reduction of the WSD problem into the estimation of two distributions: the distribution of words that can be used in a given sense and in a given context.
+%\paragraph{}
+%This approach for unsupervised WSD was based on the Noisy Channel Model. This model is a framework commonly used in spell checkers, machine translation and speech recognition. It can be used whenever a signal received does not uniquely identify the message being sent. Bayes' Law is used to identify the most probable intended message within the channel. The authors modeled each context, $C$, as a distinct channel. Then the senses, $S$, are modeled as the intended messages in the channel. The words, $W$, received would be the signal that is received. With that, they adapted the Bayes' formula, as follows:
+\paragraph{}
+First, they estimated the context-dependent sense distribution without using any sense-tagged data. They modeled it according to the noisy channel model, with each context, $C$, as a distinct channel where the intended message is a word sense, $S$, and the signal received is the ambiguous word, $W$. With that they adopted the conditional Bayes' theorem, as in Equation \ref{eqn:bayes}. $P(S|W,C)$ is the probability of a sense $S$ of word $W$ in a given context $C$.
+
+\begin{equation}
+\label{eqn:bayes}
+P(S|W,C) = \frac{P(W|S,C)P(S|C)}{P(W|C)}
+\end{equation}
+
+\paragraph{}
+To perform WSD means finding a sense $S$ that maximizes the value of $P(S|W,C)$, which is equivalent to maximizing the value of $P(W|S,C)P(S|C)$, since the denominator is not dependent on $S$.
+
+%To estimate the values of $P(W|S,C)$ and $P(S|C)$, they assumed that the distribution of words used to express a given sense is the same for all context, such that $P(W|S,C) = P(W|S)$. They used the WordNet sense frequencies to estimate $P(W|S)$, and a statistical language model, 5-gram model, to estimate $P(W|C)$.
+%Algorithm part intentionally left out??
+%To estimate the distribution of words that can be used for a given meaning, $P(W|S)$, they used WordNet sense frequencies, and to estimate the distribution of words that can be used for a given context, $P(W|C)$, a 5-gram model was used.
+
+\paragraph{}
+In their experiments the authors compared their system to some of the best supervised and unsupervised systems. Their probabilistic approach outperforms all the unsupervised systems that were compared with. In their paper the authors also noted that some of all the unsupervised systems available should actually be considered as semi-supervised because of their reliance on sense-tagged corpora for training. In other words, their unsupervised WSD had outperformed some of the semi-supervised ones, which should be considered a remarkable feat.
+%%From Chen Tao:"some of all the unsupervised systems available " may need to revised
+
+\section{It Makes Sense}
+\paragraph{}
+\textit{It Makes Sense} (IMS) is a supervised English all-words WSD System introduced by \cite{itmakessense}. The main contribution of IMS is being an open source system that allows users to customize it by integrating different preprocessing tools and additional features.
+
+\paragraph{}
+Another contribution is that the system addresses the issue regarding the lack of sense-annotated training examples, which is critical in the overall performance of a supervised WSD system. On top of using the widely used \textsc{SemCor} corpus, the authors also collect training data from six parallel corpora from the Linguistic Data Consortium. The idea is maximize the number of training examples for each of the words, ambiguous ones especially, to overcome the lack of sense-annotated training examples.
+%\paragraph{}
+%There are generally 3 modules in IMS: Preprocessing, Feature \& Instance Extraction and Classification. The system accepts any input text. In the Preprocessing module, the OpenNLP toolkit is used by default. Sentences in the input are detected and split using a sentence splitter, and then tokenized into words, before POS tags are assigned to all tokens using OpenNLP's POS tagger. Then, the lemma form of each token is determined using a lemmatizer that is based on using the WordNet thesaurus. In the Extraction module, it makes use of 3 knowledge sources namely, POS Tags of Surrounding Words, Surrounding Words and Local Collocations. In general, the purpose of using these knowledges is to increase the accuracy of the the WSD. Finally in the Classification module, the IMS's classifier trains a model for each word type which has training data during the training process. The classifier as used by IMS is LIBLINEAR. In the testing process, the trained classification models will be applied to the test instances of the corresponding word types. If a test instance is not seen, IMS outputs the first sense found in the WordNet sense inventory.
+
+\paragraph{}
+Regarding the performance, on a default configuration of modules, IMS attained state-of-the-art accuracies on all-words and lexical-sample tasks, with performance comparable to the top performing system compared to in the paper.
+
+\section{Using Decision Trees Of Bigrams To Predict Word Sense}
+\paragraph{}
+In \cite{pederson} presents a corpus-based approach to WSD where a decision tree assigns a sense to an ambiguous word based on the \textit{bigrams} that occur nearby. The author took this approach because surface lexical features like bigrams often contribute a great deal to disambiguation accuracy. In this paper, the author demonstrated that Decision Trees can be used as an accurate predictor for word senses.
+
+\paragraph{}
+It begins with building the feature set of bigrams. Pedersen defined bigrams as two consecutive words that occur in a text. He used Power Divergence Family and Dice Coefficient to select the bigrams to be added to the feature set, so that only the useful and interesting bigrams are added into the system.
+
+\paragraph{}
+The feature set is then applied onto decision trees. The prediction process involves applying test instances on the decision trees, searching for a path through the decision tree from the root to the leaf node, which captures the prediction. In the system the Weka\footnote{http://www.cs.waikato.ac.nz/~ml/} implementation of the C4.5 decision tree learner was used.
+
+\paragraph{}
+We included this work in our review for the same idea of using decision trees for word sense prediction. However in the current implementation of our system we do not include bigram or collocation features. We consider this as a possible option in our future work.
+
+\section{Conclusion}
+\paragraph{}
+From the above works, we have learnt the importance of a sense-tagged corpus for a supervised WSD system. It is important for a system to have sufficient, if not abundant training examples in order to attain higher WSD accuracies. However the disadvantage for relying on sense-tagged corpus is the constant need to update the training model used by the system. \cite{noisychannel} noted that in general, increasing the size of the training model only improves its performance by 3 to 4\%. This is not cost effective as manual tagging is time consuming and costly.
+
+\paragraph{}
+An idea worth mentioning is regarding the \textit{portability} of the system. By portability we refer to the system's training model's size, and the time taken to perform WSD. In order to encourage WSD applications, there is a need to reduce the size of the system. Also, in most papers related to WSD, little was mentioned regarding reducing the model size and time taken.
+%\cite{pederson} demonstrated that using Decision Trees is an accurate method for word sense prediction. 
+%This indirectly relates to reducing the time taken, as Decision Trees is one of the simplest machine learning approaches.
+
+\paragraph{}
+With the above in mind, we describe our approach as follow.

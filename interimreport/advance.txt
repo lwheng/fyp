@@ -1,0 +1,17 @@
+advance
+
+
+
+
+	new = n
+	|   development = n
+	|   |   in_terms_of = n
+	|   |   |   human = n
+	|   |   |   |   and = n: (a change for the better; progress in development)
+	|   |   |   |   and = y
+	|   |   |   |   |   scientific = n: (move forward, also in the metaphorical sense)
+	|   |   |   |   |   scientific = y: (a change for the better; progress in development)
+	|   |   |   human = y: (a change for the better; progress in development)
+	|   |   in_terms_of = y: (move forward, also in the metaphorical sense)
+	|   development = y: (contribute to the progress or growth of)
+	new = y: (develop further)

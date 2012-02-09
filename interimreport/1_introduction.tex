@@ -1,0 +1,68 @@
+\chapter{Introduction}
+\label{introduction}
+\paragraph{}
+In the English language, there are many words and even phrases that have multiple interpretations depending on the context. These words have multiple \textit{senses} or meanings, and are ambiguous. For instance:
+\begin{enumerate}
+\item She is interested in the \textit{interest} rates of the bank.
+\item He developed an \textit{interest} in art.
+\end{enumerate}
+
+\paragraph{}
+It is not difficult for a human to see that the word \textit{interest} has different meanings in the two sentences. We humans are able to determine the context of each sentence immediately, and hence able to identify the correct sense for the ambiguous word. A machine, however, needs to run through a series of analytical processes before it can determine the best answer. This process is termed Word Sense Disambiguation (WSD). More formally, WSD is the process of deciphering the intended meaning of an ambiguous word in a given context.
+
+\paragraph{}
+%%%From Aobo: "such as machine learning" ml is not an example of application.  machine translation?
+%%% updated
+WSD is a key task in Natural Language Processing. It has many applications in computational linguistics, such as machine translation, text mining and information retrieval. It can also be applied within search engines such that the search results will be more relevant, when the results have the same intended meaning as the search query.
+
+\paragraph{}
+There are four conventional types of WSD, they are:
+\begin{enumerate}
+\item Dictionary-based \& knowledge-based \\
+This method uses formal dictionaries and lexical knowledge bases as their primary source to disambiguate senses. Dictionaries provide the definitions of the possible senses of an ambiguous word. The definitions can then be used in WSD algorithms. One example is the Lesk Algorithm \cite{lesk}, that words in a given environment (sentence, paragraph etc) will tend to share a common topic. Banerjee \& Pedersen, instead of using standard dictionaries,  used WordNet \cite{wordnet} as a sense inventory in their implementation of the Lesk Algorithm. WordNet is arranged semantically, creating an electronic lexical database that provides a rich hierarchy of semantic relations that can be exploited. The authors exploited this advantage of WordNet and integrated into the Lesk Algorithm. They found that the adapted implementation outperformed the traditional Lesk approach with double the accuracy.
+%%From Chen Tao:The whole paragraph emphasizes the use of dictionaries (formal or informal), but not mention much about knowledge bases. Can I just understand that dictionaries also provide lexical knowledge? It will be better if introducing the relationship between dictionary-based and knowledge-based method.
+\item Supervised \\%%From aobo : maybe need reference for this paragraph. and the first sentence is not definitely correct.
+% updated
+Supervised WSD uses manually sense-tagged corpora as their primary resource to perform WSD. It can be formulated as a classification problem where word senses represent classes and a classifier assigns a class to a new instance of a word. Some classifiers are the Naive Bayes, Decision Lists \cite{supervisedmethods} and Support Vector Machines \cite{svm}.
+%Support Vector Machines have been known to be one of the most successful approaches for WSD because they can cope with high-dimensionality of the feature space.
+\item Semi-supervised \\
+This method makes use of both labeled and unlabeled data. Similarly, it refers to using multiple untagged corpora to provide concurrent information to supplement a tagged corpus.
+\item Unsupervised \\
+Most challenging approach among all, this method may also be related to \textit{Word Sense Induction}, where senses could be induced by analyzing words in a given text. Unsupervised methods perform WSD with minimal, or no, dependence on sense-tagged corpus. \cite{noisy} described a probabilistic approach based on the Noisy Channel Model that uses an unlabeled word corpus derived from publicly-available web pages. Their system outperformed all the unsupervised systems compared with, some of which the authors claimed that they should be classified as semi-supervised instead.
+\end{enumerate}
+
+\section{Motivation}
+%%From Aobo: your contribution is the balance between efficiency and accuracy, so the motivation should mention the balance beside simply benefiting MT.
+%updated
+\paragraph{}
+There are many WSD systems that can provide great accuracies in disambiguating words. However, most of these systems are also not publicly available, either for its applications or for further research. Also, these systems are not suitable to be deployed as real-time softwares, such as for use on mobile devices, as the size of their training models are relatively large to be suitable.
+
+\paragraph{}
+The motivation in this project, other than to encourage the usage of WSD applications, is to build WSD systems that are small, and responsive such that they are more suited to be deployed on mobile devices or web browsers.
+
+%\paragraph{}
+%The motivation in this project is its benefits when applied into bilingual translation. For instance, English to Chinese. Consider this example:
+%\begin{center}
+%He developed an \textit{interest} in art.
+%\end{center}
+%\paragraph{}
+%In this context, we can see that the word \textit{interest} is more related to the word ``hobby''. So when we translate the word \textit{interest} from English to Chinese, the correct output would be \begin{CJK}{UTF8}{gbsn}兴趣\end{CJK} (a person's interest) instead of \begin{CJK}{UTF8}{gbsn}利息\end{CJK} (simple interest). Being able to translate while retaining the original context would definitely prove to be more relevant for the end-users. Furthermore, this would encourage language learning as it is simpler and more straightforward when a learner is aware of which is the correct sense to be used in a given context.
+
+%\paragraph{}
+%In this paper, however, we do not venture into the field of translating the words into a second language. Instead, we focus on studying how we can predict the word senses of ambiguous words in the English language.
+
+%%%From Aobo: before performance indicators, a chapter explaining what your approach(DT) is and why you use this approach(DT) is needed.
+% updated
+\section{Goals}
+\paragraph{}
+In this project, we explore how we can build a system that is small, suited for real-time applications. For that, we have considered three goals to measure the performance of our system in this project. They are:
+\begin{enumerate}
+\item Accuracy - percentage accuracy in predicting word senses
+\item Speed - time taken to predict word senses and return the results
+\item Size of Model - size of the training model used by the system to predict word senses
+\end{enumerate}
+\paragraph{}
+We intend to build a system that is meant to perform WSD on small amount of text, like a sentence. One application for such a system is a language-assistance based tool to be integrated with web browsers, like a plugin in Firefox, so that users are able to find out more information, like pronunciation and definition, about some words on the web page by selecting the text using the mouse. WSD comes into the picture as we see the need for these information to be context-relevant from where the selected text is from. However we must keep the response time small, so that we can maintain user's experience. One can imagine an user who has the habit of selecting text on web pages very often. Any language tool with slow response will be not ideal.
+
+\paragraph{}
+For that, as much as possible, we intend to keep the model size as small as possible, while retaining a reasonable level of accuracy. We want it to be speedy and responsive. Also, we hope to reduce the amount of pre-processing prior to the prediction of word senses. We believe that by including too many pre-processing features, the system would require additional supporting files that could be significant in terms of file size. 

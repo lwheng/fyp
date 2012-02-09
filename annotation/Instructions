@@ -1,0 +1,157 @@
+>>>>> Introduction <<<<<
+This instruction is prepared as a guide to annotating our dataset
+for research purposes.
+
+The dataset we are working with contains existing research papers
+are in the form of text files (.txt). In this data gathering
+session, we will focusing on citations and references.
+
+Before we begin, you should have the following files:
+
+	1. annotations_[id].txt (E.g. annotations_[43].txt)
+		This will be your main working file.
+
+	2. sample_annotation.txt
+		This file contains several sample annotations.
+
+	3. Sample research papers (E.g. A00-1001.txt)
+		These files are the respective files related to 
+		sample_annotation.txt
+
+	3. Several research papers for your use (E.g. A22-1234.txt)
+		These files are for your use during this session.
+
+What you need:
+
+	1. A text editor with line number display.
+		You might be familiar with Notepad++ (http://notepad-plus-plus.org/)
+		Otherwise, Sublime Text 2 (http://www.sublimetext.com/2)
+
+In the file, annotations_[id].txt, you should see something like this ->
+		A00-1032==>C92-4173
+		A00-1032==>C94-1032
+		A00-1032==>J97-2002
+		A00-1033==>J95-2004
+				:
+				:
+
+Each line is defined as a 'cite'. i.e. A00-1033==>J95-2004 refers 
+to the paper A00-1033.txt citing the paper J95-2004.txt. Notice
+the direction of the arrow, '==>'. [Paper A]==>[Paper B] refers to
+Paper A making reference to some information in Paper B.
+
+For example, in Paper A, one of the paragraph might contain this:
+
+"....implicitly contains lemma-tization. Disambiguation selects the
+most plausible sequence of lexemes by a use of a rule-base model or a
+hidden Markov model (HMM) (Manning and Schiitze, 1999). Disambiguation
+is already language independent, since...."
+
+Notice "(Manning and Schiitze, 1999)". This is Paper A making
+reference to Paper B, in this example, written by the authors
+Manning & Schiitze in 1999.
+
+
+
+
+
+>>>>> Objective & Definition <<<<<
+The objective of this data gathering session is to gather
+manual annotations for our research. We wish to annotate whether
+a citation is "general", "specific" or "bad".
+
+A "general" citation simply means Paper A is citing Paper B in
+general. Paper A is making reference to Paper B as a whole, or
+simply giving credit for the work done by authors of Paper B.
+
+A "specific" citation means Paper A is making reference to a
+specific section of Paper B. For instance, Paper A makes reference
+to a particular system, System ABC, created/described by Paper B
+in Paper B's second section (e.g. Our System). Since Paper A is
+specifically referring to this section of the paper, we say this
+cite is specific.
+
+In some cases, a research paper's text file might look like this:
+
+	<Start of Document>
+	189
+	190
+	191
+	based tagger by inferring rules from a training corpus. However,
+	current implementations of the rule-based tagger run more slowly
+	than previous approaches. In this paper, we present a
+	finite-state tagger, inspired by the rule-based tagger, that
+	operates in optimal time in the sense that the time to assign
+	tags to a sentence corresponds to the time required to follow a
+	single path in a deterministic finite-state machine. This
+	result is achieved by encoding the application of the rules
+	found in the tagger as a nondeterministic finite-state transducer
+	and then turning it into a deterministic transducer. The resulting
+	deterministic 
+	<End of Document>
+
+This is an example of a "bad source". In worst cases, the file
+contains only lines of numbers. These are actually page numbers
+of research journals, but no need to worry about that for now.
+So in any case when either Paper A or Paper B is in this form,
+we define it a "bad" cite.
+
+
+
+
+
+>>>>> Let's Annotate <<<<<
+Let's use the same example: A00-1033==>J95-2004
+From this, we know that A00-1033 cites J95-2004 (Let us now refer
+to A00-1033 as Paper A, J95-2004 as Paper B).
+The information we want to capture is, which type of cite this
+is: "general", "specific" or "bad".
+
+Annotations are captured in lines of 4 "columns":
+
+	Cite 	|	Specific?	|	Location	|	Bad?
+	
+Cite: 		Simply the provided cites (E.g A00-1033==>J95-2004)
+Specific?:	[yes/no]. To determine whether the cite is specific
+Location:	[line no./null] To capture where is the info.
+			Line no. look like this: L20-35.
+Bad?:		[yes/no]. To capture whether it is a "bad" cite
+
+Here's how some annotations might look like: 
+
+	A00-1031==>P98-1081,yes,L64-138,no
+	(This example says it is a "specific" cite, found at line 
+	64-138, and it is not a "bad" cite)
+			:
+	A00-1004==>P93-1002,no,null,yes
+	(This example says it is not a "specific" cite, a "general"
+	one. Has no specific location, so 'null', and it is a "bad"
+	cite)
+			:
+	A00-1004==>P94-1012,yes,L16-26!!L204-205,no
+	(This example, L16-26!!L204-205, means it is "specific",
+	and the info comes from 2 location in Paper B. Notice how it
+	is annotated with 2 exclamation marks (!!) )
+
+OK! Let's get started!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

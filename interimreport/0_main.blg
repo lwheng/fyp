@@ -1,0 +1,68 @@
+This is BibTeX, Version 0.99d (TeX Live 2010)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: 0_main.aux
+The style file: socreport.bst
+Database file #1: bibsource.bib
+`month' is a missing field, not a string, for entry lesk
+while executing---line 1367 of file socreport.bst
+Warning--there's a number but no volume in unsupervised
+`month' is a missing field, not a string, for entry unsupervised
+while executing---line 1367 of file socreport.bst
+`month' is a missing field, not a string, for entry supervisedmethods
+while executing---line 1367 of file socreport.bst
+`month' is a missing field, not a string, for entry minipar
+while executing---line 1367 of file socreport.bst
+Warning--empty booktitle in wikipedia
+Warning--empty address in wikipedia
+`month' is a missing field, not a string, for entry wikipedia
+while executing---line 1367 of file socreport.bst
+`month' is a missing field, not a string, for entry pederson
+while executing---line 1367 of file socreport.bst
+`month' is a missing field, not a string, for entry yarowsky
+while executing---line 1367 of file socreport.bst
+`month' is a missing field, not a string, for entry noisy
+while executing---line 1367 of file socreport.bst
+`month' is a missing field, not a string, for entry itmakessense
+while executing---line 1367 of file socreport.bst
+You've used 12 entries,
+            2653 wiz_defined-function locations,
+            643 strings with 6614 characters,
+and the built_in function-call counts, 5652 in all, are:
+= -- 587
+> -- 174
+< -- 15
++ -- 61
+- -- 50
+* -- 511
+:= -- 896
+add.period$ -- 35
+call.type$ -- 12
+change.case$ -- 80
+chr.to.int$ -- 11
+cite$ -- 27
+duplicate$ -- 216
+empty$ -- 435
+format.name$ -- 84
+if$ -- 1172
+int.to.chr$ -- 2
+int.to.str$ -- 0
+missing$ -- 12
+newline$ -- 62
+num.names$ -- 69
+pop$ -- 86
+preamble$ -- 1
+purify$ -- 80
+quote$ -- 0
+skip$ -- 199
+stack$ -- 0
+substring$ -- 357
+swap$ -- 44
+text.length$ -- 4
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 105
+warning$ -- 3
+while$ -- 55
+width$ -- 0
+write$ -- 207
+(There were 9 error messages)

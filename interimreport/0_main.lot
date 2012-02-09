@@ -1,0 +1,10 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {3.1}{\ignorespaces Model size comparison}}{14}
+\contentsline {table}{\numberline {3.2}{\ignorespaces Comparison of model size and time taken}}{15}
+\contentsline {table}{\numberline {3.3}{\ignorespaces WSD accuracies on \textsc {SensEval} and \textsc {SemEval} all-words tasks}}{16}
+\contentsline {table}{\numberline {3.4}{\ignorespaces Speed Test Experiment 1}}{17}
+\contentsline {table}{\numberline {3.5}{\ignorespaces Speed Test Experiment 2}}{17}
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces Corpus overlap with \textsc {SemCor1.7.1} (with respective test corpus)}}{20}

@@ -1,0 +1,86 @@
+\documentclass[hyp]{socreport}
+\usepackage{fullpage}
+
+\usepackage{url}
+\usepackage{amsmath,amsthm,amsfonts}
+\usepackage{algorithm,algorithmic}
+\usepackage[dvips]{color}
+\usepackage{algorithm,algorithmic}
+\usepackage{graphicx}
+\usepackage{CJKutf8}
+
+\usepackage{tikz}
+\usetikzlibrary{trees}
+\usetikzlibrary[positioning]
+\usetikzlibrary{calc}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{fit}
+\usetikzlibrary{backgrounds}
+\tikzstyle{level 1}=[level distance=4cm, sibling distance=3.5cm]
+\tikzstyle{level 2}=[level distance=4cm, sibling distance=2cm]
+\tikzstyle{bag} = [text width=4em, text centered]
+\tikzstyle{end} = [circle, minimum width=3pt,fill, inner sep=0pt]
+\tikzstyle{fork} = [circle, minimum width=3pt,fill, inner sep=0pt]
+
+\begin{document}
+\pagenumbering{roman}
+\title{Word Sense Prediction Using Decision Trees}
+\author{Heng Low Wee \\ (U096901R)}
+\projyear{2010/11}
+\projnumber{U079330}
+\advisor{A/P Min-Yen Kan}
+\deliverables{
+	\item Report: 1 Volume
+	\item Source Code: 1 DVD}
+\maketitle
+\begin{abstract}
+\paragraph{}
+%%%From Aobo: Better to show the motivation of reducing the size and time, which is to make it more applicable in a real time software like DICE translator.
+%%% updated
+Word sense disambiguation (WSD) is a key task in Natural Language Processing. There are many existing systems that are able to achieve good performance in \textsc{SensEval} and \textsc{SemEval} tasks. However, few systems discuss about reducing the size of the training model and the time taken for the WSD process. For WSD systems to be applied onto real-time softwares, such as building a WSD software for mobile devices, they need to be scaled down in terms of its training model size, and be responsive to enhance user experience. With that, we propose the idea of building a WSD system that is light-weight and speedy.
+
+\paragraph{}
+%%%From Aobo: maybe indicate what is the data size and processing time before reducing, or show how many percentage it has reduced.
+%%% updated
+In this report, we study how we can adopt using Decision Trees to predict the word senses of ambiguous words. Our system aims to reduce the size of the training model and the time taken to predict word senses. In our implementation, we reduced both the size of our training model and the time taken by over 98\%, with our system performing speedily when disambiguating sentences, while retaining a reasonable performance for accuracy.
+
+\begin{descriptors}
+	\item I.2.7 Natural Language Processing
+\end{descriptors}
+\begin{keywords}
+	decision tree,  word sense disambiguation, word sense, ambiguous
+\end{keywords}
+\begin{implement}
+\begin{flushleft}
+\hspace{5 mm}Software: Java, Perl, Weka 3.\\
+\hspace{5 mm}Hardware: MacBook Pro, Intel Core 2 Duo 2.4GHz, 4GB Memory.
+\end{flushleft}
+\end{implement}
+\end{abstract}
+
+\begin{acknowledgement}
+\paragraph{}
+First of all, I would like to thank my supervisor, A/P Min-Yen Kan, for his support throughout the entire duration of this project. He was very patient, and always willing to answer my questions whenever I had any doubts. He also gave me advices on the project, and suggestions on how to make things better.
+
+\paragraph{}
+I am grateful to be offered this opportunity to participate in such a research project and be able  to meet and work with members of Kan's research group, WING. I would like to thank the WING group for their advices during my practice talk sessions with them. On top of that, I would like to thank Wang Ao Bo and Chen Tao, for their advices and for their time spent on helping me make this report better.
+\end{acknowledgement}
+
+\listoffigures
+\listoftables
+\tableofcontents
+
+\input{1_introduction}
+\input{2_relatedwork}
+\input{3_systemdescription}
+%\input{4_evaluation} %combined together with chapter 3
+\input{5_conclusion} 
+%\input{6_futurework} %combined together with chapter 5
+
+
+\bibliographystyle{socreport}
+\bibliography{bibsource}
+
+\appendix
+
+\end{document}
