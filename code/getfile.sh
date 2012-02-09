@@ -1,3 +1,3 @@
 FILENAME=$1
-cat $(cat list | grep $FILENAME) > $FILENAME.txt
+cat $(cat ../annotation/list | grep $FILENAME) > $FILENAME.txt
 open -a "Sublime Text 2" $FILENAME.txt

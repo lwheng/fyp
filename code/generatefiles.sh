@@ -1,11 +1,9 @@
-cat files | while read LINE
-do
-    echo $(echo $LINE | cut -d '>' -f2) >> THISISATEMPFILE.txt
-done
+# This script takes in the listOfFiles, and generate all the files
+# from the corpus by concat-ing them together
 
-cat THISISATEMPFILE.txt | while read LINE1
+LISTOFFILE=$1
+FINDLIST=$2
+cat $LISTOFFILE | while read LINE1
 do
-    cat $(cat list | grep $LINE1) > $LINE1.txt
-    # open -a "Sublime Text 2" $LINE1.txt
+    cat $(cat $FINDLIST | grep $LINE1) > ~/Desktop/Files/$LINE1.txt
 done
-rm THISISATEMPFILE.txt
