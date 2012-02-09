@@ -1,14 +1,11 @@
 >>>>> Introduction <<<<<
-This instruction is prepared as a guide to annotating our dataset
-for research purposes.
+This instruction is prepared as a guide to annotating our dataset for research purposes.
 
-The dataset we are working with contains existing research papers
-are in the form of text files (.txt). In this data gathering
-session, we will focusing on citations and references.
+The dataset we are working with contains existing research papers are in the form of text files (.txt). In this data gathering session, we will focusing on citations and references.
 
 Before we begin, you should have the following files:
 
-	1. annotations_[id].txt (E.g. annotations_[43].txt)
+	1. annotations_[id].txt (E.g. annotations_43.txt)
 		This will be your main working file.
 
 	2. sample_annotation.txt
