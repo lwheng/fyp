@@ -25,12 +25,13 @@ for line in input:
 	newline = ""
 	if is_ascii(line):
 		newline = line
-		output.write(newline)
 	else:
 		for c in line:
 			if ascii_char(c):
 				newline = newline + c
-		output.write(newline)
+	
+	# print newline
+	output.write(newline)
 
 
 # infile = input.read()

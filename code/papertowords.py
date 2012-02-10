@@ -17,17 +17,24 @@ outputname = sys.argv[2]
 input = open(inputname, "r")
 output = open(outputname, "w")
 
-infile = input.read()
-words = infile.split()
+# infile = input.read()
+# words = infile.split()
 
 bag = []
-for w in words:
-	if len(w) > 3:
-		bag.append(w)
+count = 1
+for line in input:
+	# print "Start of line " + str(count)
+	words = line.split()
+	for w in words:
+		if len(w) > 3:
+			bag.append(w)
+	# print "End of line " + str(count)
+	count = count + 1
 		
 voc = FreqDist(bag)
 for w in voc:
 	word = w + "\n"
+	# print w
 	output.write(word)
 	
 input.close()
