@@ -1,3 +1,5 @@
+# This file is written to get rid of non-ascii character in a text file
+
 import sys
 
 if len(sys.argv) < 3:
@@ -6,27 +8,33 @@ if len(sys.argv) < 3:
 	sys.exit()
 
 import string	
-from nltk.probability import FreqDist
 	
 inputname = sys.argv[1]
 outputname = sys.argv[2]
 
+def ascii_char(c):
+	return (ord(c) < 128)
+
+def is_ascii(s):
+	return all(ord(c) < 128 for c in s)
+
 input = open(inputname, "r")
 output = open(outputname, "w")
 
-infile = input.read()
-words = infile.split()
+for line in input:
+	newline = ""
+	if is_ascii(line):
+		newline = line
+		output.write(newline)
+	else:
+		for c in line:
+			if ascii_char(c):
+				newline = newline + c
+		output.write(newline)
 
-bag = []
-for w in words:
-	if len(w) > 3:
-		bag.append(w)
-		
-voc = FreqDist(bag)
-for w in voc:
-	word = w + "\n"
-	output.write(word)
-	
+
+# infile = input.read()
+# words = infile.split()
 input.close()
 output.close()
 		
