@@ -32,4 +32,5 @@ for line in open(inputname, "r"):
 	output.write(newline)
 	print "End of line"
 	
+inputname.close()
 outputname.close()

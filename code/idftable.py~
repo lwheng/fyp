@@ -43,8 +43,5 @@ openlistname.close()
 	
 for keys, value in idfdict:
 	print "Key: " + key + " has value: " + str(value)
-	towrite = key + "=====>" + str(value) + "\n"
-	openoutput.write(towrite)
-
-openoutput.close()
+	
 	
