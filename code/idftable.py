@@ -41,10 +41,8 @@ for f in openlistname:
 			idfdict[w] = number
 openlistname.close()
 	
-for keys, value in idfdict:
-	print "Key: " + key + " has value: " + str(value)
-	towrite = key + "=====>" + str(value) + "\n"
+for key in idfdict:
+	towrite = key + "=====>" + str(idfdict[key]) + "\n"
 	openoutput.write(towrite)
-
 openoutput.close()
 	
