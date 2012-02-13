@@ -21,43 +21,51 @@
 import sys
 import string
 import math
+import getopt
 
-queryfile = sys.argv[1]
-domainfile = sys.argv[2]
-vocabfile = sys.argv[3]
-dftablefile = sys.argv[4]
+queryfile = ""
+domainfile = ""
+vocabfile = ""
+dftablefile = ""
 
-# Read the query into memory
-readquery = open(queryfile, "r")
-query = ""
-for line in readquery:
-	query = line
-readquery.close()
-# query is a line of words, let's split them for future use
-queryarr = query.split()
-
-# Read the domain into memory
+queryarr = []
 domain = ""
-readdomain = open(domainfile, "r")
-for line in readdomain:
-	# add to memory
-readdomain.close()
-
-# Read vocab into memory
-vocab = "" 
-readvocab = open(vocabfile, "r")
-for line in readvocab:
-	# add to memory
-readvocab.close()
-
-# Read DFTable into memory
+vocab = ""
 dftable = {}
-readdftable = open(dftablefile, "r")
-for line in readdftable:
-	info = line.split("=====>")
-	key = info[0]
-	value = info[1]
-	dftable[key] = value
+
+def addAllFilesToMemory():
+	# Read the query into memory
+	readquery = open(queryfile, "r")
+	query = ""
+	for line in readquery:
+		query = line
+	readquery.close()
+	# query is a line of words, let's split them for future use
+	global queryarr
+	queryarr = query.split()
+
+	# Read the domain into memory
+	domain = ""
+	readdomain = open(domainfile, "r")
+	for line in readdomain:
+		# add to memory
+	readdomain.close()
+
+	# Read vocab into memory
+	vocab = "" 
+	readvocab = open(vocabfile, "r")
+	for line in readvocab:
+		# add to memory
+	readvocab.close()
+
+	# Read DFTable into memory
+	readdftable = open(dftablefile, "r")
+	global dftable
+	for line in readdftable:
+		info = line.split("=====>")
+		key = info[0]
+		value = info[1]
+		dftable[key] = value
 
 def cosine(x):
 	# Return the cosine of x radians
@@ -100,6 +108,35 @@ def sim(d1, d2):
 	# d2 : domain
 	# Computes similarity
 	# To be completed
+
+
+def usage():
+	print "USAGE: python " + sys.argv[0] +"-q <queryfile> -d <domainfile> -v <vocabfile> --dftable <dftablefile>"
+
+def main(argv):
+    try:
+
+        opts, args = getopt.getopt(argv, "q:d:v:dftable")
+        for opt, args in opts:
+            if opt == "-q":
+                global queryfile = args
+                queryfile = args
+            elif opt == "-d":
+                global domainfile = args
+                domainfile = args
+            elif opt == "-v":
+                global vocabfile = args
+                vocabfile = args
+            elif opt == "--dftable"
+            	global dftablefile = args
+            	dftablefile = args
+    except getopt.GetoptError:
+        usage()
+        sys.exit(2)
+
+if __name__ == '__main__':
+    main(sys.argv[1:])  
+    addAllFilesToMemory()
 
 
 
