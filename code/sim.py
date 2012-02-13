@@ -49,6 +49,7 @@ def addAllFilesToMemory():
 	readdomain = open(domainfile, "r")
 	for line in readdomain:
 		# add to memory
+		print "Read domain"
 	readdomain.close()
 
 	# Read vocab into memory
@@ -56,6 +57,7 @@ def addAllFilesToMemory():
 	readvocab = open(vocabfile, "r")
 	for line in readvocab:
 		# add to memory
+		print "Read vocab"
 	readvocab.close()
 
 	# Read DFTable into memory
@@ -78,13 +80,11 @@ def log(x):
 def dotproduct(v1, v2):
 	# Computes dot product of 2 vectors
 	# len(v1) must be equal to len(v2) (You don't say!)
-	if (len(v1) != len(v2)) {
+	if (len(v1) != len(v2)):
 		return False
-	}
 	output = 0
-	for (i=0; i<len(v1); i++) {
+	for i in range(len(v1)):
 		output = output + (v1[i]*v2[i])
-	}
 	return output
 
 def magnitude(v):
@@ -108,35 +108,35 @@ def sim(d1, d2):
 	# d2 : domain
 	# Computes similarity
 	# To be completed
-
+	print "sim"
 
 def usage():
-	print "USAGE: python " + sys.argv[0] +"-q <queryfile> -d <domainfile> -v <vocabfile> --dftable <dftablefile>"
+	print "USAGE: python " + sys.argv[0] +" -q <queryfile> -d <domainfile> -v <vocabfile> -f <dftablefile>"
 
 def main(argv):
     try:
 
-        opts, args = getopt.getopt(argv, "q:d:v:dftable")
+        opts, args = getopt.getopt(argv, "q:d:v:f")
         for opt, args in opts:
             if opt == "-q":
-                global queryfile = args
+                global queryfile
                 queryfile = args
             elif opt == "-d":
-                global domainfile = args
+                global domainfile
                 domainfile = args
             elif opt == "-v":
-                global vocabfile = args
+                global vocabfile
                 vocabfile = args
-            elif opt == "--dftable"
-            	global dftablefile = args
+            elif opt == "-f":
+            	global dftablefile
             	dftablefile = args
     except getopt.GetoptError:
-        usage()
-        sys.exit(2)
+	    usage()
+	    sys.exit(2)
 
 if __name__ == '__main__':
-    main(sys.argv[1:])  
-    addAllFilesToMemory()
+	main(sys.argv[1:])  
+	# addAllFilesToMemory()
 
 
 
