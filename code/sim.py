@@ -7,11 +7,11 @@
 # 3. Entire bank of vocab
 
 # Input/Output:
-# Input: Query, Domain, Vocab
+# Input: Query, Domain, Vocab, DFTable
 # Output: Percentage of similarity
 
 # USAGE:
-# python compute.py <queryfile> <domainfile> <vocabfile>
+# python compute.py <queryfile> <domainfile> <vocabfile> <dftablefile>
 
 # LOG:
 # Use Python List for Vectors
@@ -25,8 +25,9 @@ import math
 queryfile = sys.argv[1]
 domainfile = sys.argv[2]
 vocabfile = sys.argv[3]
+dftablefile = sys.argv[4]
 
-# First, let's read the query into memory
+# Read the query into memory
 readquery = open(queryfile, "r")
 query = ""
 for line in readquery:
@@ -35,19 +36,28 @@ readquery.close()
 # query is a line of words, let's split them for future use
 queryarr = query.split()
 
-# Second, let's read the domain into memory
+# Read the domain into memory
 domain = ""
 readdomain = open(domainfile, "r")
 for line in readdomain:
 	# add to memory
 readdomain.close()
 
-# Finally, read vocab into memory
+# Read vocab into memory
 vocab = "" 
 readvocab = open(vocabfile, "r")
 for line in readvocab:
 	# add to memory
 readvocab.close()
+
+# Read DFTable into memory
+dftable = {}
+readdftable = open(dftablefile, "r")
+for line in readdftable:
+	info = line.split("=====>")
+	key = info[0]
+	value = info[1]
+	dftable[key] = value
 
 def cosine(x):
 	# Return the cosine of x radians
@@ -55,7 +65,7 @@ def cosine(x):
 
 def log(x):
 	# Return the natural log of x
-	retur math.log(x)
+	return math.log(x)
 
 def dotproduct(v1, v2):
 	# Computes dot product of 2 vectors
@@ -81,6 +91,9 @@ def magnitude(v):
 def cosinesim(v1, v2):
 	# Computes cosine similarity
 	return dotproduct(v1,v2)/(magnitude(v1)*magnitude(v2))
+
+def idf(df, N):
+	return log(N/df)
 
 def sim(d1, d2):
 	# d1 : query
