@@ -22,6 +22,10 @@ import sys
 import string
 import math
 import getopt
+import nltk
+from nltk.probability import FreqDist
+from nltk.text import TextCollection
+from nltk.corpus.reader.plaintext import PlaintextCorpusReader
 
 queryfile = ""
 domainfile = ""
@@ -74,7 +78,7 @@ def cosine(x):
 	return math.cos(x)
 
 def log(x):
-	# Return the natural log of x
+	# Return the natual log of x
 	return math.log(x)
 
 def dotproduct(v1, v2):
@@ -100,7 +104,16 @@ def cosinesim(v1, v2):
 	# Computes cosine similarity
 	return dotproduct(v1,v2)/(magnitude(v1)*magnitude(v2))
 
-def idf(df, N):
+def tf(term, document):
+
+
+def df(term):
+	if (dftable[term]):
+		return dftable[term]
+	else:
+		return 0
+
+def idf(N, df):
 	return log(N/df)
 
 def sim(d1, d2):
@@ -115,7 +128,6 @@ def usage():
 
 def main(argv):
     try:
-
         opts, args = getopt.getopt(argv, "q:d:v:f")
         for opt, args in opts:
             if opt == "-q":
