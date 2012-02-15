@@ -2,14 +2,14 @@ import sys
 import string	
 from nltk.probability import FreqDist
 
-idfname = sys.argv[1]
-openidfname = open(idfname,"r")
-idfdict = {}
-for line in openidfname:
+dfname = sys.argv[1]
+opendfname = open(dfname,"r")
+dfdict = {}
+for line in opendfname:
 	l = line[:-1]
-	idfdict[l]=0
+	dfdict[l]=0
 # All words are now in dictionary
-openidfname.close()
+opendfname.close()
 
 # Now open the file that contains the list of files
 listname = sys.argv[2]
@@ -30,19 +30,22 @@ for f in openlistname:
 		for w in words:
 			# print "w is " + w
 			word = w.lower()
+			# print "word is: " + word
 			bag.append(word)
 	openfile.close()
 	voc = FreqDist(bag)
 	# Now we have the voc, ready to update the idf dictionary
 	for w in voc:
-		if w in idfdict:
-			number = idfdict[w]
+		if w in dfdict:
+			number = dfdict[w]
 			number = number + 1
-			idfdict[w] = number
+			# print "(w,number): (" + w + ", " + str(number) + ")"
+			dfdict[w] = number
 openlistname.close()
 	
-for key in idfdict:
-	towrite = key + "=====>" + str(idfdict[key]) + "\n"
+for key in dfdict:
+	towrite = key + "=====>" + str(dfdict[key]) + "\n"
+	print "towrite :" + towrite
 	openoutput.write(towrite)
 openoutput.close()
 	

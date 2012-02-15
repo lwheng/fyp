@@ -24,8 +24,7 @@ import math
 import getopt
 import nltk
 from nltk.probability import FreqDist
-from nltk.text import TextCollection
-from nltk.corpus.reader.plaintext import PlaintextCorpusReader
+from nltk.corpus import PlaintextCorpusReader
 
 queryfile = ""
 domainfile = ""
@@ -38,31 +37,34 @@ vocab = ""
 dftable = {}
 
 def addAllFilesToMemory():
-	# Read the query into memory
-	readquery = open(queryfile, "r")
-	query = ""
-	for line in readquery:
-		query = line
-	readquery.close()
-	# query is a line of words, let's split them for future use
-	global queryarr
-	queryarr = query.split()
+	root = "/Users/lwheng/Desktop/FilesCleaned/"
+	corpus = PlaintextCorpusReader(root, ".*\.txt")
 
-	# Read the domain into memory
-	domain = ""
-	readdomain = open(domainfile, "r")
-	for line in readdomain:
-		# add to memory
-		print "Read domain"
-	readdomain.close()
+	# # Read the query into memory
+	# readquery = open(queryfile, "r")
+	# query = ""
+	# for line in readquery:
+	# 	query = line
+	# readquery.close()
+	# # query is a line of words, let's split them for future use
+	# global queryarr
+	# queryarr = query.split()
 
-	# Read vocab into memory
-	vocab = "" 
-	readvocab = open(vocabfile, "r")
-	for line in readvocab:
-		# add to memory
-		print "Read vocab"
-	readvocab.close()
+	# # Read the domain into memory
+	# domain = ""
+	# readdomain = open(domainfile, "r")
+	# for line in readdomain:
+	# 	# add to memory
+	# 	print "Read domain"
+	# readdomain.close()
+
+	# # Read vocab into memory
+	# vocab = "" 
+	# readvocab = open(vocabfile, "r")
+	# for line in readvocab:
+	# 	# add to memory
+	# 	print "Read vocab"
+	# readvocab.close()
 
 	# Read DFTable into memory
 	readdftable = open(dftablefile, "r")
@@ -105,6 +107,7 @@ def cosinesim(v1, v2):
 	return dotproduct(v1,v2)/(magnitude(v1)*magnitude(v2))
 
 def tf(term, document):
+	print "hello"
 
 
 def df(term):
@@ -128,7 +131,7 @@ def usage():
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, "q:d:v:f")
+        opts, args = getopt.getopt(argv, "q:d:v:f:")
         for opt, args in opts:
             if opt == "-q":
                 global queryfile
@@ -147,8 +150,9 @@ def main(argv):
 	    sys.exit(2)
 
 if __name__ == '__main__':
-	main(sys.argv[1:])  
-	# addAllFilesToMemory()
+	main(sys.argv[1:])
+	addAllFilesToMemory()
+	print df("the")
 
 
 

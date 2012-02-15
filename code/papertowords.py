@@ -5,7 +5,7 @@ import sys
 
 if len(sys.argv) < 3:
 	print "Error! Please specify input and output file."
-	print "Usage: python cleaner.py <input file> <output file>"
+	print "Usage: python " + sys.argv[0] + " <input file> <output file>"
 	sys.exit()
 
 import string	
@@ -25,7 +25,8 @@ for line in input:
 	words = line.split()
 	for w in words:
 		# print "w is " + w
-		word = w.lower()
+		word = w.lower()ls
+		
 		bag.append(word)
 		
 voc = FreqDist(bag)
