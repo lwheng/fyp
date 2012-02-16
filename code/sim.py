@@ -1,8 +1,8 @@
-# We need the dictionary, for the set of all words in the corpus
+# We need the vocabulary, for the set of all words in the corpus
 import sys
 import math 
 
-dictFilename = ""
+vocabFilename = ""
 d1Filename = ""
 d2Filename = ""
 dictList = []
@@ -10,16 +10,16 @@ d1Vector = []
 d2Vector = []
 
 def usage():
-	print "USAGE: python " + sys.argv[0] +" -d <dictfile> -1 <d1file> -2 <d2file>"
+	print "USAGE: python " + sys.argv[0] +" -v <vocabfile> -1 <d1file> -2 <d2file>"
 
 import getopt
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, "d:1:2:")
+        opts, args = getopt.getopt(argv, "v:1:2:")
         for opt, args in opts:
-            if opt == "-d":
-                global dictFilename
-                dictFilename = args
+            if opt == "-v":
+                global vocabFilename
+                vocabFilename = args
             elif opt == "-1":
                 global d1Filename
                 d1Filename = args
@@ -31,8 +31,8 @@ def main(argv):
     	sys.exit(2)
 
 
-def addFilesToMemory():
-	dictionary = dictFilename
+def addDictionaryToMemory():
+	dictionary = vocabFilename
 	opendictionary = open(dictionary,"r")
 	# Now read dictionary into memory
 	global dictList
@@ -66,7 +66,7 @@ def cosine(x):
 
 def cosinesim(v1, v2):
 	# Computes cosine similarity
-	
+
 	# Both dotproduct and magnitude done simultaneously to improve efficiency
 	if (len(v1) != len(v2)):
 		return False
@@ -137,9 +137,10 @@ def sim(d1, d2):
 if __name__ == '__main__':
 	if (len(sys.argv) != 7):
 		usage()
+		sys.exit(2)
 	else:
 		main(sys.argv[1:])
-		addFilesToMemory()
+		addDictionaryToMemory()
 		sim(d1Filename,d2Filename)
 
 
