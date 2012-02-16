@@ -29,8 +29,14 @@ openlistname.close()
 outputname = sys.argv[2]
 openoutput = open(outputname,"wb")
 
-import pickle
-pickle.dump(tf, openoutput)
+for key in tf:
+	tempdict = tf[key]
+	for k in tempdict:
+		towrite = key + "=====>" + k + "=====>" + str(tempdict[k]) + "\n"
+		print towrite
+		openoutput.write(towrite)
+# import pickle
+# pickle.dump(tf, openoutput)
 openoutput.close()
 
 
