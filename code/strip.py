@@ -24,12 +24,19 @@ outputname = sys.argv[2]
 
 output = open(outputname, "w")
 
+wc = 0
 for line in open(inputname, "r"):
 	# print line
-	print "Start of line"
-	newline = strip_control_characters(line)
-	newline = newline + "\n"
-	output.write(newline)
-	print "End of line"
+	newline = line[:-1]
+	tokens = newline.split("\t")
+	for i in range(len(tokens)):
+		tokens[i] = strip_control_characters(tokens[i])
+	# newline = strip_control_characters(line)
+	# newline = newline + "\n"
+	if len(tokens) == 3:
+		towrite = tokens[0] + "\t" + tokens[1] + "\t" + tokens[2] + "\n"
+		output.write(towrite)
+		wc = wc + 1
+		print str(wc) + " of 12928923"
 	
 outputname.close()
