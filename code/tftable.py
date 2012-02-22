@@ -27,12 +27,12 @@ for f in openlistname:
 openlistname.close()
 
 outputname = sys.argv[2]
-openoutput = open(outputname,"wb")
+openoutput = open(outputname,"w")
 
 for key in tf:
 	tempdict = tf[key]
 	for k in tempdict:
-		towrite = key + "=====>" + k + "=====>" + str(tempdict[k]) + "\n"
+		towrite = key + "\t" + k + "\t" + str(tempdict[k]) + "\n"
 		print towrite
 		openoutput.write(towrite)
 # import pickle

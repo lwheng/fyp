@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # We need the vocabulary, for the set of all words in the corpus
 import sys
 import math 
