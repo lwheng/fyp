@@ -239,7 +239,7 @@ if __name__ == '__main__':
 		loadDFTableToMemory()
 		loadTFTableToMemory()
 	sim(d1Filename,d2Filename)
-	sys.exit(0)
+	sys.exit()
 
 
 

@@ -1,3 +1,6 @@
+# This script takes a set of documents and generates the
+# Term Frequency tables
+
 import sys
 
 # File that contains the list of files

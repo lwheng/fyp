@@ -1,3 +1,6 @@
+# This script takes in a set of documents and generates
+# the Document Frequency table.
+
 import sys
 import string	
 from nltk.probability import FreqDist
