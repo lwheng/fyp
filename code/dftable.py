@@ -45,10 +45,9 @@ for f in openlistname:
 			# print "(w,number): (" + w + ", " + str(number) + ")"
 			dfdict[w] = number
 openlistname.close()
-	
+
 for key in dfdict:
 	towrite = key + "=====>" + str(dfdict[key]) + "\n"
 	print "towrite :" + towrite
 	openoutput.write(towrite)
 openoutput.close()
-	

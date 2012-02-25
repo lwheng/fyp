@@ -5,7 +5,7 @@ import os
 import sys
 import string
 import getopt
-from nltk.stem.wordnet import WordNetLemmatizer
+# from nltk.stem.wordnet import WordNetLemmatizer
 from datetime import datetime
 
 date = str(datetime.now().date())
@@ -14,7 +14,7 @@ time = str(datetime.now().time())
 fileDirectory = ""
 vocabFile = "/Users/lwheng/Desktop/vocab-(" + date + "-" + time + ").txt"
 
-lmtzr = WordNetLemmatizer()
+# lmtzr = WordNetLemmatizer()
 
 def hyphenated(word):
     tokens = word.split("-")
@@ -42,7 +42,7 @@ def removepunctuation(word):
 def vocab():
     global fileDirectory
     global vocabFile
-    global lmtzr
+    # global lmtzr
 
     vocabDict = {}
     
