@@ -1,87 +1,84 @@
+# Computes cosine similarity,
+# with the option to use tf-idf weighting
+
+# Need:
+# vocabfile
+# dftable
+# tfDirectory
+
+# Input:
+# Query file
+# Domain file
+
+# Output:
+# Value of sim(d1, d2)
+
 import sys
-import math 
+import os
+import math
+import string
+import getopt
 
-vocabFilename = ""
-d1Filename = ""
-d2Filename = ""
-dictList = []
-d1Vector = []
-d2Vector = []
-weightSwitch = False
-N = 8889
+# No. of documents in dataset
+N = 500
 
-# If weightSwitch is True
-# The filenames of the DF and TF tables
-# Amend accordingly
-dftablfilename = "/Users/lwheng/Desktop/dftable.txt"
-tftablefilename = "/Users/lwheng/Desktop/tftablestripped.txt"
+mainDirectory = "/Users/lwheng/Desktop"
+dfFile = "dftable-(2012-02-25-15:53:31.360114).txt"
+vocabFile = "vocab-(2012-02-24-23:03:33.252021).txt"
+
+tfDirectory = str(os.path.join(mainDirectory, "tf"))
+dfPath = str(os.path.join(mainDirectory, dfFile))
+vocabPath = str(os.path.join(mainDirectory,vocabFile))
+
+vocabList = []
 dfDict = {}
 tfDict = {}
 
-def usage():
-	print "USAGE: python " + sys.argv[0] +" -w -v <vocabfile> -1 <d1file> -2 <d2file>"
-	print "-w: To switch on with TF-IDF-weight mode"
-	print "<vocabfile> contains the set of all words in the corpus"
-	print "<d1file> is the query file"
-	print "<d2file> is the domain file"
+weightSwitch = False
 
-import getopt
-def main(argv):
-    try:
-        opts, args = getopt.getopt(argv, "wv:1:2:")
-        for opt, args in opts:
-            if opt == "-v":
-                global vocabFilename
-                vocabFilename = args
-            elif opt == "-1":
-                global d1Filename
-                d1Filename = args
-            elif opt == "-2":
-                global d2Filename
-                d2Filename = args
-            elif opt == "-w":
-            	global weightSwitch
-            	weightSwitch = True
-    except getopt.GetoptError:
-    	usage()
-    	sys.exit(2)
+d1Filename = ""
+d2Filename = ""
 
-
-def loadDictionaryToMemory():
-	dictionary = vocabFilename
-	opendictionary = open(dictionary,"r")
-	# Now read dictionary into memory
-	global dictList
-	dictList = []
-	for l in opendictionary:
+def loadVocab():
+	global vocabList
+	global vocabPath
+	openvocab = open(vocabPath,"r")
+	for l in openvocab:
 		line = l[:-1]
-		dictList.append(line)
-	opendictionary.close()
+		vocabList.append(line)
+	openvocab.close()
 
-def loadDFTableToMemory():
-	opendftable = open(dftablfilename,"r")
+def loadDFTable():
 	global dfDict
-	for l in opendftable:
+	opendf = open(dfPath,"r")
+	for l in opendf:
 		line = l[:-1]
-		tokens = line.split("\t")
+		tokens = line.split()
 		dfDict[tokens[0]] = tokens[1]
-	opendftable.close()
+	opendf.close()
 
-def loadTFTableToMemory():
-	opentftable = open(tftablefilename,"r")
+def loadTFTable():
+	global d2Filename
 	global tfDict
-	previousKey = ""
-	for l in opentftable:
-		line = l[:-1]
-		tokens = line.split("\t")
-		if len(tokens) == 3:
-			if tokens[0] != previousKey:
-				tfDict[tokens[0]] = {}
-				tfDict[tokens[0]][tokens[1]] = tokens[2]
-				previousKey = tokens[0]
-			else:
-				tfDict[tokens[0]][tokens[1]] = tokens[2]
-	opentftable.close()
+	tokens = d2Filename.split("/")
+	tfFilename = tokens[-1].split(".txt")[0] + ".tf"
+	count = 1
+	for dirname, dirnames, filenames in os.walk(tfDirectory):
+		if tfFilename in filenames:
+			tfPath = str(os.path.join(tfDirectory, tfFilename))
+			opentf = open(tfPath,"r")
+			for l in opentf:
+				line = l[:-1]
+				tokens = line.split()
+				term = tokens[0]
+				locations = tokens[1].split("!")
+				tfDict[term] = locations
+			opentf.close()
+		else:
+			print "TF for " + tokens[-1] + " not found."
+			print "Reverting back to weigtless mode"
+			global weightSwitch
+			weightSwitch = False
 
 def magnitude(v):
 	# Computes Euclidean Length of vector
@@ -94,7 +91,6 @@ def magnitude(v):
 
 def dotproduct(v1, v2):
 	# Computes dot product of 2 vectors
-	# len(v1) must be equal to len(v2) (You don't say!)
 	if (len(v1) != len(v2)):
 		return False
 	output = 0
@@ -109,21 +105,6 @@ def cosine(x):
 def log(x):
 	# Return the natual log of x
 	return math.log(x)
-
-def tf(term, doc):
-	global tfDict
-	if doc in tfDict:
-		if term in tfDict[doc]:
-			return tfDict[doc][term]
-		else:
-			print "term not in tfDict[doc]"
-	else:
-		print "doc not in tfDict"
-		print doc
-	# if tfDict[doc]:
-	# 	if tfDict[doc][term]:
-	# 		return tfDict[doc][term]
-	return 0
 
 def df(term):
 	global dfDict
@@ -152,19 +133,36 @@ def cosinesim(v1, v2):
 	
 	return dot/((math.sqrt(sumofsquares1))*(math.sqrt(sumofsquares2)))
 
-	# Original way
-	# return dotproduct(v1,v2)/(magnitude(v1)*magnitude(v2))
+def usage():
+	print "USAGE: python " + sys.argv[0] +" -w -1 <d1file> -2 <d2file>"
+	print "-w: To switch on with TF-IDF-weight mode"
+	print "<d1file> is the query file"
+	print "<d2file> is the domain file"
 
-def sim(d1, d2):
+def main(argv):
+    try:
+        opts, args = getopt.getopt(argv, "w1:2:")
+        for opt, args in opts:
+            if opt == "-1":
+                global d1Filename
+                d1Filename = args
+            elif opt == "-2":
+                global d2Filename
+                d2Filename = args
+            elif opt == "-w":
+            	global weightSwitch
+            	weightSwitch = True
+    except getopt.GetoptError:
+    	usage()
+    	sys.exit(2)
+
+def sim(d1,d2):
 	opend1 = open(d1, "r")
 	opend2 = open(d2, "r")
-
-	global d1Vector
-	global d2Vector
-	d1Vector = []
-	d2Vector = []
 	d1Dict = {}
 	d2Dict = {}
+	d1Vector = []
+	d2Vector = []
 
 	global N
 
@@ -196,29 +194,38 @@ def sim(d1, d2):
 	opend2.close()
 
 	if weightSwitch:
-		fileExtension = ".txt"
-		for term in dictList:
+		# Use dftable and tftable
+		for term in vocabList:
 			if term in d1Dict:
-				idfVal = idf(N, int(df(term)))
-				dTokens = d2Filename.split("/")
-				d = dTokens[-1][:-len(fileExtension)]
-				tfVal = int(tf(term, d))
-				tfidf = tfVal * idfVal
+				idfval = idf(N, float(df(term)))
+				if term in tfDict:
+					tfidf = len(tfDict[term]) * idfval
+				else:
+					tfidf = 0
+
+				# What if idfval is negative? ---> FIX THIS
+				if tfidf < 0:
+					tfidf = 0
 				d1Vector.append(tfidf)
 			else:
 				d1Vector.append(0)
 
 			if term in d2Dict:
-				idfVal = idf(N, int(df(term)))
-				dTokens = d2Filename.split("/")
-				d = dTokens[-1][:-len(fileExtension)]
-				tfVal = int(tf(term, d))
-				tfidf = tfVal * idfVal
+				idfval = idf(N, float(df(term)))
+				if term in tfDict:
+					tfidf = len(tfDict[term]) * idfval
+				else:
+					tfidf = 0
+
+				# What if idfval is negative? ---> FIX THIS
+				if tfidf < 0:
+					tfidf = 0
 				d2Vector.append(tfidf)
 			else:
 				d2Vector.append(0)
+
 	else:
-		for term in dictList:
+		for term in vocabList:
 			if term in d1Dict:
 				d1Vector.append(d1Dict[term])
 			else:
@@ -228,27 +235,14 @@ def sim(d1, d2):
 				d2Vector.append(d2Dict[term])
 			else:
 				d2Vector.append(0)
-
 	cossim = cosinesim(d1Vector,d2Vector)
 	print cossim
 
 if __name__ == '__main__':
 	main(sys.argv[1:])
-	loadDictionaryToMemory()
+	loadVocab()
 	if weightSwitch:
-		loadDFTableToMemory()
-		loadTFTableToMemory()
+		loadDFTable()
+		loadTFTable()
 	sim(d1Filename,d2Filename)
 	sys.exit()
-
-
-
-
-
-
-
-
-
-
-
-
