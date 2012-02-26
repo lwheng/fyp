@@ -35,9 +35,46 @@ dfDict = {}
 tfDict = {}
 
 weightSwitch = False
+fragmentSize = 5
 
 d1Filename = ""
 d2Filename = ""
+
+d1Lines = []
+d2Lines = []
+
+d2DFTable = {}
+
+def loadD1():
+	global d1Filename
+	global d1Lines
+	opend1 = open(d1Filename,"r")
+	for l in opend1:
+		line = l
+		line = line.lower()
+		line = line.replace("\n","")
+		line = line.replace("\t","")
+		line = line.replace("\r","")
+		if len(line) != 0:
+			d1Lines.append(line)
+	opend1.close()
+
+def loadD2():
+	# Now D2 is the "corpus", each fragment (e.g. paragraph)
+	# is a "document" in this "corpus"
+	# So, we need DFTable and TFTable for this new "corpus"
+	global d2Filename
+	global d2Lines
+	opend2 = open(d2Filename,"r")
+	for l in opend2:
+		line = l
+		line = line.lower()
+		line = line.replace("\n","")
+		line = line.replace("\t","")
+		line = line.replace("\r","")
+		if len(line) != 0:
+			d2Lines.append(line)
+	opend2.close()
 
 def loadVocab():
 	global vocabList
@@ -80,6 +117,29 @@ def loadTFTable():
 			global weightSwitch
 			weightSwitch = False
 
+def hyphenated(word):
+    tokens = word.split("-")
+    for t in tokens:
+        if not t.isalnum():
+            return False
+    return True
+
+def apos(word):
+    tokens = word.split("'")
+    if len(tokens) != 2:
+        return False
+    for t in tokens:
+        if not t.isalnum():
+            return False
+    return True
+
+def removepunctuation(word):
+    output = ""
+    for w in word:
+        if not w in string.punctuation:
+            output += w
+    return output
+
 def magnitude(v):
 	# Computes Euclidean Length of vector
 	output = 0
@@ -118,7 +178,6 @@ def idf(N, df):
 
 def cosinesim(v1, v2):
 	# Computes cosine similarity
-
 	# Both dotproduct and magnitude done simultaneously to improve efficiency
 	if (len(v1) != len(v2)):
 		return False
@@ -134,14 +193,15 @@ def cosinesim(v1, v2):
 	return dot/((math.sqrt(sumofsquares1))*(math.sqrt(sumofsquares2)))
 
 def usage():
-	print "USAGE: python " + sys.argv[0] +" -w -1 <d1file> -2 <d2file>"
-	print "-w: To switch on with TF-IDF-weight mode"
+	print "USAGE: python " + sys.argv[0] +" [-w] [-n <fragment size>] -1 <d1file> -2 <d2file>"
+	print "-n: To specify size of fragments (by no. of lines). Default is 5"
+	print "-w: To switch on with TF-IDF-weight mode. Default is False"
 	print "<d1file> is the query file"
 	print "<d2file> is the domain file"
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, "w1:2:")
+        opts, args = getopt.getopt(argv, "wn:1:2:")
         for opt, args in opts:
             if opt == "-1":
                 global d1Filename
@@ -152,79 +212,89 @@ def main(argv):
             elif opt == "-w":
             	global weightSwitch
             	weightSwitch = True
+            elif opt == "-n":
+            	global fragmentSize
+            	fragmentSize = int(args)
     except getopt.GetoptError:
     	usage()
     	sys.exit(2)
 
-def sim(d1,d2):
-	opend1 = open(d1, "r")
-	opend2 = open(d2, "r")
+def maxsim(d1,d2):
+	# d1 is query file in lines
+	# d2 is the domain file in lines,
+	# now the "corpora". To be divided into "documents" (fragments)
+	
+	# Now we divide d2 into fragments
+	global fragmentSize
+	d2Fragments = []
+	for i in xrange(0, len(d2), fragmentSize):
+		d2Fragments.append(d2[i:i+fragmentSize])
+
+	# We need to compute the DFTable just for this "corpus"
+	d2DFTable = {}
+
+	# Now we find the maxsim
+	resultsList = []
+	for fragment in d2Fragments:
+		resultsList.append(sim(d1, fragment, len(d2Fragments)))
+
+	maxScore = 0
+	fragmentMax = 0
+	print "Fragment Scores:"
+	for i in range(len(resultsList)):
+		if resultsList[i] != 0:
+			print "Fragment " + str(i) + "\t" + str(resultsList[i])
+			if resultsList[i] > maxScore:
+				maxScore = resultsList[i]
+				fragmentMax = i
+	print "Fragment " + str(fragmentMax) + " has the highest score of " + str(maxScore)
+
+
+def sim(d1,d2,N):
+	# d1 is query in lines
+	# d2 is a fragment in lines
+	# N is no. of fragments
+
 	d1Dict = {}
 	d2Dict = {}
 	d1Vector = []
 	d2Vector = []
 
-	global N
+	# We use the actual corpus's vocab
+	# Why? Because it simply has more words
 	global vocabList
 
-	# Load d1 and d2 into memory
-	for l in opend1:
-		if l[-1] == "\n":
-			line = l[:-1]
-		else:
-			line = l
-		line = line.lower()
-		tokens = line.split()
+	for l in d1:
+		tokens = l.split()
 		for t in tokens:
-			if t not in d1Dict:
-				d1Dict[t] = 0
-			d1Dict[t] += 1
-	opend1.close()
+			toadd = ""
+			if t.isalnum() or hyphenated(t) or apos(t):
+				toadd = t
+			elif removepunctuation(t).isalnum():
+				toadd = removepunctuation(t)
 
-	for l in opend2:
-		if l[-1] == "\n":
-			line = l[:-1]
-		else:
-			line = l
-		line = line.lower()
-		tokens = line.split()
+			if len(toadd) != 0:
+				if toadd not in d1Dict:
+					d1Dict[toadd] = 0
+				d1Dict[toadd] += 1
+	for l in d2:
+		tokens = l.split()
 		for t in tokens:
-			if t not in d2Dict:
-				d2Dict[t] = 0
-			d2Dict[t] += 1
-	opend2.close()
+			toadd = ""
+			if t.isalnum() or hyphenated(t) or apos(t):
+				toadd = t
+			elif removepunctuation(t).isalnum():
+				toadd = removepunctuation(t)
+
+			if len(toadd) != 0:
+				if toadd not in d2Dict:
+					d2Dict[toadd] = 0
+				d2Dict[toadd] += 1
 
 	if weightSwitch:
-		# Use dftable and tftable
-		for term in vocabList:
-			if term in d1Dict:
-				idfval = idf(N, float(df(term)))
-				if term in tfDict:
-					tfidf = len(tfDict[term]) * idfval
-				else:
-					tfidf = 0
-
-				# What if idfval is negative? ---> FIX THIS
-				if tfidf < 0:
-					tfidf = 0
-				d1Vector.append(tfidf)
-			else:
-				d1Vector.append(0)
-
-			if term in d2Dict:
-				idfval = idf(N, float(df(term)))
-				if term in tfDict:
-					tfidf = len(tfDict[term]) * idfval
-				else:
-					tfidf = 0
-
-				# What if idfval is negative? ---> FIX THIS
-				if tfidf < 0:
-					tfidf = 0
-				d2Vector.append(tfidf)
-			else:
-				d2Vector.append(0)
-
+		# Need to compute the DFTable just for this "corpus"
+		# TFTable for this "corpus" we already have
+		print "hello"
 	else:
 		for term in vocabList:
 			if term in d1Dict:
@@ -236,8 +306,9 @@ def sim(d1,d2):
 				d2Vector.append(d2Dict[term])
 			else:
 				d2Vector.append(0)
+
 	cossim = cosinesim(d1Vector,d2Vector)
-	print cossim
+	return cossim
 
 if __name__ == '__main__':
 	if len(sys.argv) < 3:
@@ -245,8 +316,10 @@ if __name__ == '__main__':
 		sys.exit()
 	main(sys.argv[1:])
 	loadVocab()
+	loadD1()
+	loadD2()
 	if weightSwitch:
-		loadDFTable()
+		# loadDFTable()
 		loadTFTable()
-	sim(d1Filename,d2Filename)
+	maxsim(d1Lines,d2Lines)
 	sys.exit()
