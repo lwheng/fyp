@@ -187,8 +187,11 @@ def cosinesim(v1, v2):
 	sumofsquares2 = 0
 	for i in range(len(v1)):
 		dot = dot + (v1[i]*v2[i])
-		sumofsquares1 = sumofsquares1 + v1[i]**2
-		sumofsquares2 = sumofsquares2 + v2[i]**2
+		sumofsquares1 = sumofsquares1 + (v1[i])**2
+		sumofsquares2 = sumofsquares2 + (v2[i])**2
+
+	if sumofsquares1==0 or sumofsquares2==0:
+		return 0
 	
 	return dot/((math.sqrt(sumofsquares1))*(math.sqrt(sumofsquares2)))
 
@@ -236,23 +239,43 @@ def maxsim(d1,d2):
 		d2FragmentsOverlap = []
 		for i in range(len(d2Fragments)-1):
 			d2FragmentsOverlap.append(d2Fragments[i])
-			d2FragmentsOverlap.append(d2Fragments[i][:-fragmentSizeHalf] + d2Fragments[i+1][0:fragmentSizeHalf])
+			d2FragmentsOverlap.append(d2Fragments[i][fragmentSizeHalf:] + d2Fragments[i+1][0:fragmentSizeHalf])
 		d2FragmentsOverlap.append(d2Fragments[-1])
 		d2FragmentsToTest = d2FragmentsOverlap
 	else:
 		d2FragmentsToTest = d2Fragments
 
 	# We need to compute the DFTable just for this "corpus"
-	d2DFTable = {}
+	global d2DFTable
+	for l in d2:
+		line = l.lower()
+		line = l.replace("\n", "")
+		line = l.replace("\r", "")
+		line = l.replace("\t", "")
+		tokens = line.split()
+		for t in tokens:
+			toadd = ""
+			if t.isalnum() or hyphenated(t) or apos(t):
+				toadd = t
+			elif removepunctuation(t).isalnum():
+				toadd = removepunctuation(t)
+
+			if len(toadd) != 0:
+				if toadd not in d2DFTable:
+					d2DFTable[toadd] = 0
+				d2DFTable[toadd] += 1
 
 	# Now we find the maxsim
 	resultsList = []
-	for fragment in d2FragmentsToTest:
-		resultsList.append(sim(d1, fragment, len(d2FragmentsToTest)))
+	fragmentsCount = len(d2FragmentsToTest)
+	# for fragment in d2FragmentsToTest:
+		# resultsList.append(sim(d1, fragment, len(d2FragmentsToTest)))
+	for i in range(len(d2FragmentsToTest)):
+		resultsList.append(sim(d1, d2FragmentsToTest[i], fragmentsCount, range(i*fragmentSize+1, (i+1)*fragmentSize+1)))
 
 	maxScore = 0
 	fragmentMax = 0
-	print "Total no. of fragments:\t" + str(len(d2FragmentsToTest))
+	print "Total no. of fragments:\t" + str(fragmentsCount)
 	print "Fragment Scores:"
 	for i in range(len(resultsList)):
 		if resultsList[i] != 0:
@@ -267,19 +290,20 @@ def maxsim(d1,d2):
 	print d2FragmentsToTest[fragmentMax]
 
 
-def sim(d1,d2,N):
+def sim(d1,fragment,fragmentsCount,lineRange):
 	# d1 is query in lines
-	# d2 is a fragment in lines
-	# N is no. of fragments
+	# fragment is a fragment in lines
+	# fragmentsCount is no. of fragments
 
 	d1Dict = {}
-	d2Dict = {}
+	fragmentDict = {}
 	d1Vector = []
-	d2Vector = []
+	fragmentVector = []
 
 	# We use the actual corpus's vocab
 	# Why? Because it simply has more words
 	global vocabList
+	global d2DFTable
 
 	for l in d1:
 		tokens = l.split()
@@ -294,7 +318,7 @@ def sim(d1,d2,N):
 				if toadd not in d1Dict:
 					d1Dict[toadd] = 0
 				d1Dict[toadd] += 1
-	for l in d2:
+	for l in fragment:
 		tokens = l.split()
 		for t in tokens:
 			toadd = ""
@@ -304,14 +328,49 @@ def sim(d1,d2,N):
 				toadd = removepunctuation(t)
 
 			if len(toadd) != 0:
-				if toadd not in d2Dict:
-					d2Dict[toadd] = 0
-				d2Dict[toadd] += 1
+				if toadd not in fragmentDict:
+					fragmentDict[toadd] = 0
+				fragmentDict[toadd] += 1
 
 	if weightSwitch:
-		# Need to compute the DFTable just for this "corpus"
+		# DFTable just for this "corpus" is computed by maxsim
 		# TFTable for this "corpus" we already have
-		print "hello"
+		for term in vocabList:
+			if (term in d1Dict) and (term in d2DFTable):
+				idfval = idf(fragmentsCount, float(d2DFTable[term]))
+				if term in tfDict:
+					locations = tfDict[term]
+					tf = 0
+					for location in locations:
+						if int(location) in lineRange:
+							tf += 1
+					tfidf = tf * idfval
+				else:
+					tfidf = 0
+
+				if tfidf < 0:
+					tfidf = 0
+				d1Vector.append(tfidf)
+			else:
+				d1Vector.append(0)
+
+			if (term in fragmentDict) and (term in d2DFTable):
+				idfval = idf(fragmentsCount, float(d2DFTable[term]))
+				if term in tfDict:
+					locations = tfDict[term]
+					tf = 0
+					for location in locations:
+						if int(location) in lineRange:
+							tf += 1
+					tfidf = tf * idfval
+				else:
+					tfidf = 0
+
+				if tfidf < 0:
+					tfidf = 0
+				fragmentVector.append(tfidf)
+			else:
+				fragmentVector.append(0)
 	else:
 		for term in vocabList:
 			if term in d1Dict:
@@ -319,12 +378,12 @@ def sim(d1,d2,N):
 			else:
 				d1Vector.append(0)
 
-			if term in d2Dict:
-				d2Vector.append(d2Dict[term])
+			if term in fragmentDict:
+				fragmentVector.append(fragmentDict[term])
 			else:
-				d2Vector.append(0)
+				fragmentVector.append(0)
 
-	cossim = cosinesim(d1Vector,d2Vector)
+	cossim = cosinesim(d1Vector,fragmentVector)
 	return cossim
 
 if __name__ == '__main__':
