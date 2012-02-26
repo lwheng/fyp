@@ -230,16 +230,29 @@ def maxsim(d1,d2):
 	for i in xrange(0, len(d2), fragmentSize):
 		d2Fragments.append(d2[i:i+fragmentSize])
 
+	d2FragmentsToTest = []
+	if fragmentSize > 1:
+		fragmentSizeHalf = fragmentSize/2
+		d2FragmentsOverlap = []
+		for i in range(len(d2Fragments)-1):
+			d2FragmentsOverlap.append(d2Fragments[i])
+			d2FragmentsOverlap.append(d2Fragments[i][:-fragmentSizeHalf] + d2Fragments[i+1][0:fragmentSizeHalf])
+		d2FragmentsOverlap.append(d2Fragments[-1])
+		d2FragmentsToTest = d2FragmentsOverlap
+	else:
+		d2FragmentsToTest = d2Fragments
+
 	# We need to compute the DFTable just for this "corpus"
 	d2DFTable = {}
 
 	# Now we find the maxsim
 	resultsList = []
-	for fragment in d2Fragments:
-		resultsList.append(sim(d1, fragment, len(d2Fragments)))
+	for fragment in d2FragmentsToTest:
+		resultsList.append(sim(d1, fragment, len(d2FragmentsToTest)))
 
 	maxScore = 0
 	fragmentMax = 0
+	print "Total no. of fragments:\t" + str(len(d2FragmentsToTest))
 	print "Fragment Scores:"
 	for i in range(len(resultsList)):
 		if resultsList[i] != 0:
@@ -247,7 +260,11 @@ def maxsim(d1,d2):
 			if resultsList[i] > maxScore:
 				maxScore = resultsList[i]
 				fragmentMax = i
+
+	print "------------------------------"
 	print "Fragment " + str(fragmentMax) + " has the highest score of " + str(maxScore)
+	print "Contents of fragment " + str(fragmentMax) + ":"
+	print d2FragmentsToTest[fragmentMax]
 
 
 def sim(d1,d2,N):
