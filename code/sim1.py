@@ -247,11 +247,16 @@ def maxsim(d1,d2):
 
 	# We need to compute the DFTable just for this "corpus"
 	global d2DFTable
-	for l in d2:
+	d2Lines = {}
+	for i in range(len(d2)):
+		l = d2[i]
 		line = l.lower()
 		line = l.replace("\n", "")
 		line = l.replace("\r", "")
 		line = l.replace("\t", "")
+		if len(line) != 0:
+			d2Lines[line] = i+1
+
 		tokens = line.split()
 		for t in tokens:
 			toadd = ""
@@ -284,10 +289,21 @@ def maxsim(d1,d2):
 				maxScore = resultsList[i]
 				fragmentMax = i
 
-	print "------------------------------"
-	print "Fragment " + str(fragmentMax) + " has the highest score of " + str(maxScore)
-	print "Contents of fragment " + str(fragmentMax) + ":"
-	print d2FragmentsToTest[fragmentMax]
+	if maxScore == 0:
+		print "No fragments match!!"
+		print "------------------------------"
+		print "The search query did not match any of the fragments. Score is 0.0"
+	else:
+		print "------------------------------"
+		print "Fragment " + str(fragmentMax) + " has the highest score of " + str(maxScore)
+		print "------------------------------"
+		print "Contents of fragment " + str(fragmentMax) + ":"
+		print d2FragmentsToTest[fragmentMax]
+		print "------------------------------"
+		print "Location of fragment in domain document:"
+		print "This fragment is found from line " + str(d2Lines[d2FragmentsToTest[fragmentMax][0]]) \
+			+ "-" + str(d2Lines[d2FragmentsToTest[fragmentMax][-1]]) \
+			+ " of the domain document"
 
 
 def sim(d1,fragment,fragmentsCount,lineRange):
