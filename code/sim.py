@@ -4,7 +4,6 @@ import math
 import string
 import getopt
 import myUtils
-from datetime import datetime
 
 # No. of documents in corpora
 N = 500
@@ -26,8 +25,8 @@ weightSwitch = False    # Weight switch, to use TF-IDF or not
 fragmentSize = 5        # Default fragment size
 d1Filename = ""         # Query file
 d2Filename = ""         # Search domain file
-d1Lines = []            # Lines of d1
-d2Lines = []            # Lines of d2
+d1Lines = []            # Lines of d1, for printing only
+d2Lines = []            # Lines of d2, for printing only
 d2DFTable = {}          # DFTable specifically for d2
 d2TFDict = {}           # TFTable specifically for d2
 
@@ -57,7 +56,6 @@ def loadD2():
 	opend2 = open(d2Filename,"r")
 	for l in opend2:
 		line = myUtils.removespecialcharacters(l)
-		line = line.lower()
 		if len(line) != 0:
 			d2Lines.append(line)
 	opend2.close()
@@ -92,15 +90,50 @@ def loadTFTable():
 		weightSwitch = False
 
 def loadFiles():
-	print "Loading files..."
-	before = datetime.now()
+	print "-----\tLoading Files\t-----"
 	loadVocab()
 	loadD1()
 	loadD2()
 	loadDFTable()
-	loadTFTable()
-	after = datetime.now()
-	print "Loading done!"
+	if weightSwitch:
+		loadTFTable()
+	print "-----\tLoading Done!\t-----"
+
+def maxsim(d1lines, d2lines):
+	# Remember: d1lines and d2lines are only for printing
+	print "-----\tComputing Max Sim()\t-----"
+
+	# Lowercase all lines, for computation use
+	d1 = []
+	d2 = []
+	for i in range(len(d1lines)):
+		d1.append(d1lines[i].lower())
+	for i in range(len(d2lines)):
+		d2.append(d2lines[i].lower())
+
+	# Divide D2 into fragments using fragmentSize
+	# Note that d2Fragments has no overlapping
+	global fragmentSize
+	d2Fragments = []
+	for i in xrange(0, len(d2), fragmentSize):
+		d2Fragments.append(d2[i:i+fragmentSize])
+
+	# Overlap the fragments
+	d2FragmentsToTest = []
+	if fragmentSize > 1:
+		fragmentSizeHalf = fragmentSize/2
+		d2FragmentsOverlap = []
+		for i in range(len(d2Fragments)-1):
+			d2FragmentsOverlap.append(d2Fragments[i])
+			d2FragmentsOverlap.append(d2Fragments[i][fragmentSizeHalf:] + d2Fragments[i+1][0:fragmentSizeHalf])
+		d2FragmentsOverlap.append(d2Fragments[-1])
+		d2FragmentsToTest = d2FragmentsOverlap
+	else:
+		d2FragmentsToTest = d2Fragments
+
+
+	print "-----\tMax Sim() Computed!\t-----"
+	print "-----\tResults\t-----"
 
 def usage():
 	print "USAGE: python " + sys.argv[0] + " [-w] [-n <fragment size>] -1 <d1file> -2 <d2file>"
@@ -136,4 +169,5 @@ if __name__ == '__main__':
 		sys.exit()
 	main(sys.argv[1:])
 	loadFiles()
+	maxsim(d1Lines,d2Lines)
 	sys.exit()
