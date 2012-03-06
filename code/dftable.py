@@ -1,53 +1,96 @@
 # This script takes in a set of documents and generates
 # the Document Frequency table.
 
+# Needs
+# 1. vocab
+# 2. Document directory
+
+import os
 import sys
-import string	
-from nltk.probability import FreqDist
+import string   
+import getopt
+import myUtils
 
-dfname = sys.argv[1]
-opendfname = open(dfname,"r")
-dfdict = {}
-for line in opendfname:
-	l = line[:-1]
-	dfdict[l]=0
-# All words are now in dictionary
-opendfname.close()
+from datetime import datetime
 
-# Now open the file that contains the list of files
-listname = sys.argv[2]
-openlistname = open(listname, "r")
+date = str(datetime.now().date())
+time = str(datetime.now().time())
 
-outputname = sys.argv[3]
-openoutput = open(outputname,"w")
+fileDirectory = ""
+dftableFile = "/Users/lwheng/Desktop/dftable-(" + date + "-" + time + ").txt"
 
-for f in openlistname:
-	# filename is something like A00-1001.txt, need to open it again
-	filename = f[:-1]
-	print "Now we are at this file: " + filename
-	# At this point, perform steps like papertowords to get bag
-	openfile = open(filename,"r")
-	bag = []
-	for line in openfile:
-		words = line.split()
-		for w in words:
-			# print "w is " + w
-			word = w.lower()
-			# print "word is: " + word
-			bag.append(word)
-	openfile.close()
-	voc = FreqDist(bag)
-	# Now we have the voc, ready to update the idf dictionary
-	for w in voc:
-		if w in dfdict:
-			number = dfdict[w]
-			number = number + 1
-			# print "(w,number): (" + w + ", " + str(number) + ")"
-			dfdict[w] = number
-openlistname.close()
+dftableDict = {}
 
-for key in dfdict:
-	towrite = key + "=====>" + str(dfdict[key]) + "\n"
-	print "towrite :" + towrite
-	openoutput.write(towrite)
-openoutput.close()
+def loadVocabFile():
+	global vocabFile
+	global dftableDict
+	openvocab = open(vocabFile,"r")
+	for l in openvocab:
+		line = l[:-1]
+		dftableDict[line] = 0
+	openvocab.close()
+
+def dftable():
+	global fileDirectory
+	global dftableFile
+
+	for dirname, dirnames, filenames in os.walk(fileDirectory):
+		for filename in filenames:
+			thefile = str(os.path.join(dirname, filename))
+			openthefile = open(thefile,"r")
+			for l in openthefile:
+				fileDict = {}
+				line = myUtils.removespecialcharacters(l)
+				line = line.lower()
+				tokens = line.split()
+				for t in tokens:
+					toadd = ""
+					if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
+						toadd = t
+					elif (myUtils.removepunctuation(t)).isalnum():
+						toadd = myUtils.removepunctuation(t)
+
+					if len(toadd) != 0:
+						if toadd not in fileDict:
+							fileDict[toadd] = 0
+						fileDict[toadd] += 1
+				for key in fileDict:
+					if key in dftableDict:
+						dftableDict[key] += 1
+			openthefile.close()
+	openoutput = open(dftableFile,"w")
+	for k in dftableDict:
+		towrite = k + "\t" + str(dftableDict[k]) + "\n"
+		openoutput.write(towrite)
+	openoutput.close()
+
+def usage():
+	print "USAGE: python " + sys.argv[0] +" -v <vocab file> -d <fileDirectory>"
+	print "Default output location is Desktop, dftable-(timestamp).txt"
+	print "To specify output, add this: -o <output filename>"
+
+def main(argv):
+	try:
+		opts, args = getopt.getopt(argv, "v:d:o:")
+		for opt, args in opts:
+			if opt == "-d":
+				global fileDirectory
+				fileDirectory = args
+			elif opt == "-v":
+				global vocabFile
+				vocabFile = args
+			elif opt == "-o":
+				global dftableFile
+				dftableFile = args
+	except getopt.GetoptError:
+		usage()
+		sys.exit(2)
+
+if __name__ == '__main__':
+	if len(sys.argv) < 5:
+		usage()
+		sys.exit()
+	main(sys.argv[1:])
+	loadVocabFile()
+	dftable()
+	

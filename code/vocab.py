@@ -5,7 +5,7 @@ import os
 import sys
 import string
 import getopt
-# from nltk.stem.wordnet import WordNetLemmatizer
+import myUtils
 from datetime import datetime
 
 date = str(datetime.now().date())
@@ -14,35 +14,9 @@ time = str(datetime.now().time())
 fileDirectory = ""
 vocabFile = "/Users/lwheng/Desktop/vocab-(" + date + "-" + time + ").txt"
 
-# lmtzr = WordNetLemmatizer()
-
-def hyphenated(word):
-    tokens = word.split("-")
-    for t in tokens:
-        if not t.isalnum():
-            return False
-    return True
-
-def apos(word):
-    tokens = word.split("'")
-    if len(tokens) != 2:
-        return False
-    for t in tokens:
-        if not t.isalnum():
-            return False
-    return True
-
-def removepunctuation(word):
-    output = ""
-    for w in word:
-        if not w in string.punctuation:
-            output += w
-    return output
-
 def vocab():
     global fileDirectory
     global vocabFile
-    # global lmtzr
 
     vocabDict = {}
     
@@ -51,15 +25,15 @@ def vocab():
             thefile = str(os.path.join(dirname, filename))
             openthefile = open(thefile, "r")
             for l in openthefile:
-                line = l[:-1]
+                line = myUtils.removespecialcharacters(l)
                 line = line.lower()
                 tokens = line.split()
                 for t in tokens:
                     toadd = ""
-                    if t.isalnum() or hyphenated(t) or apos(t):
+                    if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
                         toadd = t
-                    elif removepunctuation(t).isalnum():
-                        toadd = removepunctuation(t)
+                    elif (myUtils.removepunctuation(t)).isalnum():
+                        toadd = myUtils.removepunctuation(t)
 
                     if len(toadd) != 0:
                         if toadd not in vocabDict:
@@ -96,12 +70,3 @@ if __name__ == '__main__':
         sys.exit()
     main(sys.argv[1:])
     vocab()
-
-
-
-
-
-
-
-
-

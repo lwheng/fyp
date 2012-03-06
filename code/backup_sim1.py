@@ -174,6 +174,7 @@ def df(term):
 		return 0
 
 def idf(N, df):
+	# try log - log
 	return log(N/df)
 
 def cosinesim(v1, v2):

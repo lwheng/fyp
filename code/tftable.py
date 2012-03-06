@@ -1,45 +1,79 @@
-# This script takes a set of documents and generates the
-# Term Frequency tables
+# This script takes in a set of documents and generates
+# the Term Frequency Table for each file
 
+# Input
+# Set of documents
+# Output
+# Set of .tf files
+
+import os
 import sys
+import string   
+import getopt
+import myUtils
 
-# File that contains the list of files
-listname = sys.argv[1]
-openlistname = open(listname,"r")
+fileDirectory = ""
+tfDirectory = "/Users/lwheng/Desktop/tf"
+if not os.path.isdir(tfDirectory):
+	os.makedirs(tfDirectory)
 
-# This is the master dict
-tf = {}
+def tftable():
+	global fileDirectory
+	global tfDirectory
 
-for f in openlistname:
-	filename = f[:-1]
-	filestokens = filename.split("/")
-	file_id = filestokens[-1]
-	new_dict = {}
-	openfilename = open(filename,"r")
-	print "Now at file: " + filename
-	for l in openfilename:
-		line = l[:-1].lower()
-		words = line.split()
-		for w in words:
-			# new_bag.append(w)
-			if (w not in new_dict):
-				new_dict[w] = 0
-			new_dict[w] += 1
-	openfilename.close()
-	tf[file_id] = new_dict
-openlistname.close()
+	for dirname, dirnames, filenames in os.walk(fileDirectory):
+		for filename in filenames:
+			tffilename = filename.replace(".txt", ".tf")
+			inputName = str(os.path.join(fileDirectory, filename))
+			outputName = str(os.path.join(tfDirectory, tffilename))
+			
+			openinput = open(inputName,"r")
+			fileDict = {}
+			linenumber = 1
+			for l in openinput:
+				line = myUtils.removespecialcharacters(l)
+				line = line.lower()
+				tokens = line.split()
+				for t in tokens:
+					toadd = ""
+					if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
+						toadd = t
+					elif (myUtils.removepunctuation(t)).isalnum():
+						toadd = myUtils.removepunctuation(t)
 
-outputname = sys.argv[2]
-openoutput = open(outputname,"w")
+					if len(toadd) != 0:
+						if toadd not in fileDict:
+							fileDict[toadd] = []
+						fileDict[toadd].append(linenumber)
+				linenumber += 1
+			openinput.close()
+			openoutput = open(outputName,"w")
+			for k in fileDict:
+				locations = fileDict[k]
+				towrite = k + "\t"
+				for l in locations:
+					towrite += str(l) + "!"
+				towrite = towrite[:-1] + "\n"
+				openoutput.write(towrite)
+			openoutput.close()
 
-for key in tf:
-	tempdict = tf[key]
-	for k in tempdict:
-		towrite = key + "\t" + k + "\t" + str(tempdict[k]) + "\n"
-		print towrite
-		openoutput.write(towrite)
-# import pickle
-# pickle.dump(tf, openoutput)
-openoutput.close()
+def usage():
+	print "USAGE: python " + sys.argv[0] +" -d <fileDirectory>"
 
+def main(argv):
+	try:
+		opts, args = getopt.getopt(argv, "d:")
+		for opt, args in opts:
+			if opt == "-d":
+				global fileDirectory
+				fileDirectory = args
+	except getopt.GetoptError:
+		usage()
+		sys.exit(2)
 
+if __name__ == '__main__':
+	if len(sys.argv) < 3:
+		usage()
+		sys.exit()
+	main(sys.argv[1:])
+	tftable()

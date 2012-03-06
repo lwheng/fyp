@@ -1,252 +1,139 @@
-# Computes cosine similarity,
-# with the option to use tf-idf weighting
-
-# Need:
-# vocabfile
-# dftable
-# tfDirectory
-
-# Input:
-# Query file
-# Domain file
-
-# Output:
-# Value of sim(d1, d2)
-
 import sys
 import os
 import math
 import string
 import getopt
+import myUtils
+from datetime import datetime
 
 # No. of documents in corpora
 N = 500
 
 mainDirectory = "/Users/lwheng/Desktop"
-dfFile = "dftable-(2012-02-25-15:53:31.360114).txt"
-vocabFile = "vocab-(2012-02-24-23:03:33.252021).txt"
+dfFile = "dftable-(2012-03-06-14:43:35.454643).txt"
+vocabFile = "vocab-(2012-03-06-14:43:19.751722).txt"
 
+# Where all TF files are found
 tfDirectory = str(os.path.join(mainDirectory, "tf"))
+# Where the DFTable (general) is found
 dfPath = str(os.path.join(mainDirectory, dfFile))
+# Where the vocab file is found
 vocabPath = str(os.path.join(mainDirectory,vocabFile))
 
-vocabList = []
-dfDict = {}
-tfDict = {}
-
-weightSwitch = False
-
-d1Filename = ""
-d2Filename = ""
+vocabList = []          # Vocab
+dfDict = {}             # DFTable
+weightSwitch = False    # Weight switch, to use TF-IDF or not
+fragmentSize = 5        # Default fragment size
+d1Filename = ""         # Query file
+d2Filename = ""         # Search domain file
+d1Lines = []            # Lines of d1
+d2Lines = []            # Lines of d2
+d2DFTable = {}          # DFTable specifically for d2
+d2TFDict = {}           # TFTable specifically for d2
 
 def loadVocab():
 	global vocabList
 	global vocabPath
 	openvocab = open(vocabPath,"r")
-	for l in openvocab:
-		line = l[:-1]
+	for l in  openvocab:
+		line = myUtils.removespecialcharacters(l)
 		vocabList.append(line)
 	openvocab.close()
 
+def loadD1():
+	global d1Filename
+	global d1Lines
+	opend1 = open(d1Filename,"r")
+	for l in opend1:
+		line = myUtils.removespecialcharacters(l)
+		line = line.lower()
+		if len(line) != 0:
+			d1Lines.append(line)
+	opend1.close()
+
+def loadD2():
+	global d2Filename
+	global d2Lines
+	opend2 = open(d2Filename,"r")
+	for l in opend2:
+		line = myUtils.removespecialcharacters(l)
+		line = line.lower()
+		if len(line) != 0:
+			d2Lines.append(line)
+	opend2.close()
+
 def loadDFTable():
+	global dfPath
 	global dfDict
 	opendf = open(dfPath,"r")
 	for l in opendf:
-		line = l[:-1]
-		tokens = line.split()
-		dfDict[tokens[0]] = tokens[1]
+		tokens = l.split()
+		dfDict[tokens[0]] = myUtils.removespecialcharacters(tokens[1])
 	opendf.close()
 
 def loadTFTable():
 	global d2Filename
-	global tfDict
+	global d2TFDict
 	tokens = d2Filename.split("/")
-	tfFilename = tokens[-1].split(".txt")[0] + ".tf"
-	count = 1
-	for dirname, dirnames, filenames in os.walk(tfDirectory):
-		if tfFilename in filenames:
-			tfPath = str(os.path.join(tfDirectory, tfFilename))
-			opentf = open(tfPath,"r")
-			for l in opentf:
-				line = l[:-1]
-				tokens = line.split()
-				term = tokens[0]
-				locations = tokens[1].split("!")
-				tfDict[term] = locations
-			opentf.close()
-		else:
-			print "TF for " + tokens[-1] + " not found."
-			print "Reverting back to weightless mode"
-			global weightSwitch
-			weightSwitch = False
-
-def magnitude(v):
-	# Computes Euclidean Length of vector
-	output = 0
-	sumofsquares = 0
-	for i in v:
-		sumofsquares = sumofsquares + i**2
-	output = math.sqrt(sumofsquares)
-	return output
-
-def dotproduct(v1, v2):
-	# Computes dot product of 2 vectors
-	if (len(v1) != len(v2)):
-		return False
-	output = 0
-	for i in range(len(v1)):
-		output = output + (v1[i]*v2[i])
-	return output
-
-def cosine(x):
-	# Return the cosine of x radians
-	return math.cos(x)
-
-def log(x):
-	# Return the natual log of x
-	return math.log(x)
-
-def df(term):
-	global dfDict
-	if (dfDict[term]):
-		return dfDict[term]
+	tfFilename = tokens[-1].replace(".txt", ".tf")
+	tfPath = os.path.join(tfDirectory,tfFilename)
+	if os.path.exists(tfPath):
+		opentf = open(tfPath,"r")
+		for l in opentf:
+			tokens = l.split()
+			term = tokens[0]
+			locations = (myUtils.removespecialcharacters(tokens[1])).split("!")
+			d2TFDict[term] = locations
+		opentf.close()
 	else:
-		return 0
+		print "TF file " + tfFilename + " not found."
+		print "Reverting back to weightless mode."
+		global weightSwitch
+		weightSwitch = False
 
-def idf(N, df):
-	return log(N/df)
-
-def cosinesim(v1, v2):
-	# Computes cosine similarity
-
-	# Both dotproduct and magnitude done simultaneously to improve efficiency
-	if (len(v1) != len(v2)):
-		return False
-	output = 0
-	dot = 0
-	sumofsquares1 = 0
-	sumofsquares2 = 0
-	for i in range(len(v1)):
-		dot = dot + (v1[i]*v2[i])
-		sumofsquares1 = sumofsquares1 + v1[i]**2
-		sumofsquares2 = sumofsquares2 + v2[i]**2
-	
-	return dot/((math.sqrt(sumofsquares1))*(math.sqrt(sumofsquares2)))
+def loadFiles():
+	print "Loading files..."
+	before = datetime.now()
+	loadVocab()
+	loadD1()
+	loadD2()
+	loadDFTable()
+	loadTFTable()
+	after = datetime.now()
+	print "Loading done!"
 
 def usage():
-	print "USAGE: python " + sys.argv[0] +" -w -1 <d1file> -2 <d2file>"
-	print "-w: To switch on with TF-IDF-weight mode"
+	print "USAGE: python " + sys.argv[0] + " [-w] [-n <fragment size>] -1 <d1file> -2 <d2file>"
+	print "-n: To specify size of fragments (by no. of lines). Default is 5"
+	print "-w: To switch on with TF-IDF-weight mode. Default is False"
 	print "<d1file> is the query file"
 	print "<d2file> is the domain file"
+	print "E.g. python " + sys.argv[0] + " -w -n 20 -1 search.txt -2 A00-1001.txt"
 
 def main(argv):
-    try:
-        opts, args = getopt.getopt(argv, "w1:2:")
-        for opt, args in opts:
-            if opt == "-1":
-                global d1Filename
-                d1Filename = args
-            elif opt == "-2":
-                global d2Filename
-                d2Filename = args
-            elif opt == "-w":
-            	global weightSwitch
-            	weightSwitch = True
-    except getopt.GetoptError:
-    	usage()
-    	sys.exit(2)
-
-def sim(d1,d2):
-	opend1 = open(d1, "r")
-	opend2 = open(d2, "r")
-	d1Dict = {}
-	d2Dict = {}
-	d1Vector = []
-	d2Vector = []
-
-	global N
-	global vocabList
-
-	# Load d1 and d2 into memory
-	for l in opend1:
-		if l[-1] == "\n":
-			line = l[:-1]
-		else:
-			line = l
-		line = line.lower()
-		tokens = line.split()
-		for t in tokens:
-			if t not in d1Dict:
-				d1Dict[t] = 0
-			d1Dict[t] += 1
-	opend1.close()
-
-	for l in opend2:
-		if l[-1] == "\n":
-			line = l[:-1]
-		else:
-			line = l
-		line = line.lower()
-		tokens = line.split()
-		for t in tokens:
-			if t not in d2Dict:
-				d2Dict[t] = 0
-			d2Dict[t] += 1
-	opend2.close()
-
-	if weightSwitch:
-		# Use dftable and tftable
-		for term in vocabList:
-			if term in d1Dict:
-				idfval = idf(N, float(df(term)))
-				if term in tfDict:
-					tfidf = len(tfDict[term]) * idfval
-				else:
-					tfidf = 0
-
-				# What if idfval is negative? ---> FIX THIS
-				if tfidf < 0:
-					tfidf = 0
-				d1Vector.append(tfidf)
-			else:
-				d1Vector.append(0)
-
-			if term in d2Dict:
-				idfval = idf(N, float(df(term)))
-				if term in tfDict:
-					tfidf = len(tfDict[term]) * idfval
-				else:
-					tfidf = 0
-
-				# What if idfval is negative? ---> FIX THIS
-				if tfidf < 0:
-					tfidf = 0
-				d2Vector.append(tfidf)
-			else:
-				d2Vector.append(0)
-
-	else:
-		for term in vocabList:
-			if term in d1Dict:
-				d1Vector.append(d1Dict[term])
-			else:
-				d1Vector.append(0)
-
-			if term in d2Dict:
-				d2Vector.append(d2Dict[term])
-			else:
-				d2Vector.append(0)
-	cossim = cosinesim(d1Vector,d2Vector)
-	print cossim
+	try:
+		opts, args = getopt.getopt(argv, "wn:1:2:")
+		for opt, args in opts:
+			if opt == "-1":
+				global d1Filename
+				d1Filename = args
+			elif opt == "-2":
+				global d2Filename
+				d2Filename = args
+			elif opt == "-w":
+				global weightSwitch
+				weightSwitch = True
+			elif opt == "-n":
+				global fragmentSize
+				fragmentSize = int(args)
+	except getopt.GetoptError:
+		usage()
+		sys.exit(2)
 
 if __name__ == '__main__':
-	if len(sys.argv) < 3:
+	if len(sys.argv) < 5:
 		usage()
 		sys.exit()
 	main(sys.argv[1:])
-	loadVocab()
-	if weightSwitch:
-		loadDFTable()
-		loadTFTable()
-	sim(d1Filename,d2Filename)
+	loadFiles()
 	sys.exit()
