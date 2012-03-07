@@ -30,6 +30,14 @@ d2Lines = []            # Lines of d2, for printing only
 d2DFTable = {}          # DFTable specifically for d2
 d2TFDict = {}           # TFTable specifically for d2
 
+# To capture info about d1
+d1Dict = {}
+d1Vector = []
+
+# To capture fragments of d2
+d2Fragments = []
+d2FragmentsToTest = []
+
 def loadVocab():
 	global vocabList
 	global vocabPath
@@ -99,6 +107,29 @@ def loadFiles():
 		loadTFTable()
 	print "-----\tLoading Done!\t-----"
 
+def log(x):
+	return math.log(x)
+
+def idf(term):
+	global N
+	global dfDict
+	return (log(N) - log(int(dfDict[term])))
+
+def cosinesim(v1,v2):
+	# Computes cosine similarity
+	# Both dotproduct and magnitude done simultaneously to improve efficiency
+	if (len(v1) != len(v2)):
+		return False
+	output = 0
+	dot = 0
+	sumofsquares1 = 0
+	sumofsquares2 = 0
+	for i in range(len(v1)):
+		dot = dot + (v1[i]*v2[i])
+		sumofsquares1 = sumofsquares1 + (v1[i])**2
+		sumofsquares2 = sumofsquares2 + (v2[i])**2
+	return dot/((math.sqrt(sumofsquares1))*(math.sqrt(sumofsquares2)))
+
 def maxsim(d1lines, d2lines):
 	# Remember: d1lines and d2lines are only for printing
 	print "-----\tComputing Max Sim()\t-----"
@@ -114,11 +145,13 @@ def maxsim(d1lines, d2lines):
 	# Divide D2 into fragments using fragmentSize
 	# Note that d2Fragments has no overlapping
 	global fragmentSize
+	global d2Fragments
 	d2Fragments = []
 	for i in xrange(0, len(d2), fragmentSize):
 		d2Fragments.append(d2[i:i+fragmentSize])
 
 	# Overlap the fragments
+	global d2FragmentsToTest
 	d2FragmentsToTest = []
 	if fragmentSize > 1:
 		fragmentSizeHalf = fragmentSize/2
@@ -131,9 +164,162 @@ def maxsim(d1lines, d2lines):
 	else:
 		d2FragmentsToTest = d2Fragments
 
+	# Preparing the lineRanges using fragmentSize
+	lineRanges = []
+	if fragmentSize > 1:
+		fragmentSizeHalf = fragmentSize/2
+		for i in range(len(d2Fragments)-1):
+			lower = (i*fragmentSize)+1
+			upper = (i+1)*fragmentSize
+			lineRanges.append(range(lower,upper+1))
+			lineRanges.append(range(lower+fragmentSizeHalf,upper+1+fragmentSizeHalf))
+		lineRanges.append(range((len(d2Fragments)-1)*fragmentSize + 1, len(d2Fragments)*fragmentSize + 1))
+	else:
+		for i in range(len(d2Lines)):
+			lineRanges.append([i])
 
+	# In this version, V and DF is "general"
+	# So we use this V to generate the vectors, and DF
+	# to compute the TD.IDF value
+
+	# We compute the d1Dict, since it is only to be computed one
+	global d1Dict
+	for l in d1:
+		tokens = l.split()
+		for t in tokens:
+			toadd = ""
+			if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
+				toadd = t
+			elif (myUtils.removepunctuation(t)).isalnum():
+				toadd = myUtils.removepunctuation(t)
+
+			if len(toadd) != 0:
+				if toadd not in d1Dict:
+					d1Dict[toadd] = 0
+				d1Dict[toadd] += 1
+	if weightSwitch:
+		for k in d1Dict:
+			d1Dict[k] = d1Dict[k]*idf(k)
+	# Now we generate the vector for d1
+	global vocabList
+	for v in vocabList:
+		if v in d1Dict:
+			d1Vector.append(d1Dict[v])
+		else:
+			d1Vector.append(0)
+
+	# Let's compute the results
+	resultsList = []
+	fragmentsCount = len(d2FragmentsToTest)
+	for i in range(fragmentsCount):
+		result = sim(None, d2FragmentsToTest[i], fragmentsCount, lineRanges[i])
+		resultsList.append(result)
 	print "-----\tMax Sim() Computed!\t-----"
+
 	print "-----\tResults\t-----"
+	maxScore = 0
+	fragmentMax = 0
+	print "Total no. of fragments:\t" + str(fragmentsCount)
+	print "Fragment Scores:"
+	for i in range(len(resultsList)):
+		if resultsList[i] > 0:
+			print "Fragment " + str(i) + "\t" + str(resultsList[i])
+			if resultsList[i] > maxScore:
+				maxScore = resultsList[i]
+				fragmentMax = i
+
+	if maxScore == 0:
+		print "No fragments match!!"
+		print "------------------------------"
+		print "The search query did not match any of the fragments. Score is 0.0"
+	else:
+		print "------------------------------"
+		print "Fragment " + str(fragmentMax) + " has the highest score of " + str(maxScore)
+		print "------------------------------"
+		print "Contents of fragment " + str(fragmentMax) + ":"
+		print d2FragmentsToTest[fragmentMax]
+		print "------------------------------"
+		print "Location of fragment in domain document:"
+		print "This fragment is found from line " + str(lineRanges[fragmentMax][0]) + "-" + str(lineRanges[fragmentMax][-1]) + " of the domain document"
+
+
+def sim(d1,fragment,fragmentsCount,lineRange):
+	# d1 is query in lines
+	# fragment is fragment in lines, aka the "d2"
+	# fragmentsCount is no. of fragments
+
+	d1dict = {}
+	d1vector = []
+	fragmentdict = {}
+	fragmentvector = []
+	
+	if d1:
+		for l in d1:
+			tokens = l.split()
+			for t in tokens:
+				toadd = ""
+				if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
+					toadd = t
+				elif (myUtils.removepunctuation(t)).isalnum():
+					toadd = myUtils.removepunctuation(t)
+
+				if len(toadd) != 0:
+					if toadd not in d1dict:
+						d1dict[toadd] = 0
+					d1dict[toadd] += 1
+	else:
+		global d1Dict
+		global d1Vector
+		d1dict = d1Dict
+		d1vector = d1Vector
+
+	for l in fragment:
+		tokens = l.split()
+		for t in tokens:
+			toadd = ""
+			if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
+				toadd = t
+			elif (myUtils.removepunctuation(t)).isalnum():
+				toadd = myUtils.removepunctuation(t)
+
+			if len(toadd) != 0:
+				if toadd not in fragmentdict:
+					fragmentdict[toadd] = 0
+				fragmentdict[toadd] += 1
+
+	if weightSwitch:
+		if d1:
+			for k in d1dict:
+				# We don't need tf since tf = d1dict[k]
+				d1dict[k] = d1dict[k]*idf(k)
+		for k in fragmentdict:
+			if k in d2TFDict:
+				locations = d2TFDict[k]
+				tf = 0
+				for location in locations:
+					if int(location) in lineRange:
+						tf += 1
+			fragmentdict[k] = fragmentdict[k]*tf*idf(k)
+			if fragmentdict[k] == 0:
+				fragmentdict[k] = 0.0
+
+	# d1dict and fragmentdict ready to be put into vectors
+	global vocabList
+	for v in vocabList:
+		if d1:
+			if v in d1dict:
+				d1vector.append(d1dict[v])
+			else:
+				d1vector.append(0)
+
+		if v in fragmentdict:
+			fragmentvector.append(fragmentdict[v])
+		else:
+			fragmentvector.append(0)
+
+	# Vectors ready
+	cossim = cosinesim(d1vector,fragmentvector)
+	return cossim
 
 def usage():
 	print "USAGE: python " + sys.argv[0] + " [-w] [-n <fragment size>] -1 <d1file> -2 <d2file>"
