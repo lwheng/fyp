@@ -4,6 +4,8 @@ import math
 import string
 import getopt
 import myUtils
+import heapq
+# from heapq import nlargest
 
 # No. of documents in corpora
 N = 500
@@ -102,8 +104,8 @@ def loadFiles():
 	loadVocab()
 	loadD1()
 	loadD2()
-	loadDFTable()
 	if weightSwitch:
+		loadDFTable()
 		loadTFTable()
 	print "-----\tLoading Done!\t-----"
 
@@ -199,6 +201,7 @@ def maxsim(d1lines, d2lines):
 				d1Dict[toadd] += 1
 	if weightSwitch:
 		for k in d1Dict:
+			# We don't need tf since tf = d1Dict[k]
 			d1Dict[k] = d1Dict[k]*idf(k)
 	# Now we generate the vector for d1
 	global vocabList
@@ -209,38 +212,37 @@ def maxsim(d1lines, d2lines):
 			d1Vector.append(0)
 
 	# Let's compute the results
-	resultsList = []
+	resultsDict = {}
+	scores = []
 	fragmentsCount = len(d2FragmentsToTest)
 	for i in range(fragmentsCount):
 		result = sim(None, d2FragmentsToTest[i], fragmentsCount, lineRanges[i])
-		resultsList.append(result)
+		resultsDict[result] = i
+		scores.append(result)
 	print "-----\tMax Sim() Computed!\t-----"
 
 	print "-----\tResults\t-----"
-	maxScore = 0
-	fragmentMax = 0
 	print "Total no. of fragments:\t" + str(fragmentsCount)
-	print "Fragment Scores:"
-	for i in range(len(resultsList)):
-		if resultsList[i] > 0:
-			print "Fragment " + str(i) + "\t" + str(resultsList[i])
-			if resultsList[i] > maxScore:
-				maxScore = resultsList[i]
-				fragmentMax = i
+	print "Fragment Scores (Top 10 Only):"
 
-	if maxScore == 0:
+	top = heapq.nlargest(10,scores)
+	for i in range(len(top)):
+		print "Fragment " + str(resultsDict[top[i]]) + "\t" + str(top[i])
+
+	if top[0] == 0:
 		print "No fragments match!!"
 		print "------------------------------"
 		print "The search query did not match any of the fragments. Score is 0.0"
 	else:
 		print "------------------------------"
-		print "Fragment " + str(fragmentMax) + " has the highest score of " + str(maxScore)
+		print "Fragment " + str(resultsDict[top[0]]) + " has the highest score of " + str(top[0])
 		print "------------------------------"
-		print "Contents of fragment " + str(fragmentMax) + ":"
-		print d2FragmentsToTest[fragmentMax]
+		print "Contents of fragment " + str(resultsDict[top[0]]) + ":"
+		print d2FragmentsToTest[resultsDict[top[0]]]
 		print "------------------------------"
 		print "Location of fragment in domain document:"
-		print "This fragment is found from line " + str(lineRanges[fragmentMax][0]) + "-" + str(lineRanges[fragmentMax][-1]) + " of the domain document"
+		print "This fragment is found from line " + str(lineRanges[resultsDict[top[0]]][0]) + "-" + str(lineRanges[resultsDict[top[0]]][-1]) + " of the domain document"
+		print "------------------------------"
 
 
 def sim(d1,fragment,fragmentsCount,lineRange):
