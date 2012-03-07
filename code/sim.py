@@ -11,8 +11,8 @@ import heapq
 N = 500
 
 mainDirectory = "/Users/lwheng/Desktop"
-dfFile = "dftable-(2012-03-06-14:43:35.454643).txt"
-vocabFile = "vocab-(2012-03-06-14:43:19.751722).txt"
+dfFile = "dftable-(2012-03-07-20:25:49.094468).txt"
+vocabFile = "vocab-(2012-03-07-20:17:59.878950).txt"
 
 # Where all TF files are found
 tfDirectory = str(os.path.join(mainDirectory, "tf"))
@@ -39,6 +39,11 @@ d1Vector = []
 # To capture fragments of d2
 d2Fragments = []
 d2FragmentsToTest = []
+
+# To capture the results
+top = []
+interactiveResults = []
+resultsDict = {}
 
 def loadVocab():
 	global vocabList
@@ -212,11 +217,14 @@ def maxsim(d1lines, d2lines):
 			d1Vector.append(0)
 
 	# Let's compute the results
+	global interactiveResults
+	global resultsDict
 	resultsDict = {}
 	scores = []
 	fragmentsCount = len(d2FragmentsToTest)
 	for i in range(fragmentsCount):
 		result = sim(None, d2FragmentsToTest[i], fragmentsCount, lineRanges[i])
+		interactiveResults.append(result)
 		resultsDict[result] = i
 		scores.append(result)
 	print "-----\tMax Sim() Computed!\t-----"
@@ -225,6 +233,7 @@ def maxsim(d1lines, d2lines):
 	print "Total no. of fragments:\t" + str(fragmentsCount)
 	print "Fragment Scores (Top 10 Only):"
 
+	global top
 	top = heapq.nlargest(10,scores)
 	for i in range(len(top)):
 		print "Fragment " + str(resultsDict[top[i]]) + "\t" + str(top[i])
@@ -351,6 +360,110 @@ def main(argv):
 		usage()
 		sys.exit(2)
 
+import cmd
+class interactive(cmd.Cmd):
+	"""Simple command processor example."""
+
+	def do_df(self, term):
+		"""USAGE:\tdf [term]
+OUTPUT:\tRetrieve document frequency for [term]"""
+		if term:
+			global dfDict
+			if term in dfDict:
+				print dfDict[term]
+			else:
+				print "Record not found!"
+		else:
+			print "USAGE: df [term]"
+
+	def do_idf(self, term):
+		"""USAGE:\tidf [term]
+OUTPUT:\tRetrieve inverse document frequency for [term]"""
+		if term:
+			global dfDict
+			if term in dfDict:
+				print (log(N) - log(int(dfDict[term])))
+			else:
+				print "Record not found!"
+		else:
+			print "USAGE: idf [term]"
+
+	def do_tf(self, term):
+		"""USAGE:\ttf [term]
+OUTPUT:\tRetrieve term frequency for [term] in domain file"""	
+		if term:
+			if weightSwitch:
+				global d2TFDict
+				if term in d2TFDict:
+					print len(d2TFDict[term])
+					print "Lines: " + str(d2TFDict[term])
+				else:
+					print "Record not found!"
+			else:
+				print "TF file not loaded!"
+
+	def do_score(self, term):
+		"""USAGE:\tscore [|<fragment id>|max]
+OUTPUT:\tPrints out the scores of the fragments"""
+		global interactiveResults
+		global resultsDict
+		global top
+		if term:
+			if term.isdigit() and (int(term) in range(0, len(interactiveResults))):
+				print "Fragment " + str(term) + ": " + str(interactiveResults[int(term)]) 
+			elif term == "max":
+				print "Fragment " + str(resultsDict[top[0]]) + " has the max score of " + str(top[0])
+		else:
+			for i in range(len(interactiveResults)):
+				print "Fragment " + str(i) + ": " + str(interactiveResults[i])
+
+	def do_print(self, line):
+		"""USAGE:\tprint [-q |-f <fragment id> | -l <line no.>]
+OUTPUT:\tPrints out the contents of query, fragment or line."""
+		if line:
+			tokens = line.split()
+			if len(tokens)>2:
+				print "USAGE:\tprint [-q |-f <fragment id> | -l <line no.>]"
+			else:
+				try:
+					opts, args = getopt.getopt(tokens, "qf:l:")
+					for opt, args in opts:
+						if opt == "-q":
+							global d1Lines
+							for l in d1Lines:
+								print l
+						elif opt == "-f":
+							global d2FragmentsToTest
+							index = int(args)
+							if index>=0 and index<len(d2FragmentsToTest):
+								print d2FragmentsToTest[index]
+							else:
+								print "Fragment ID range: 0-" + str(len(d2FragmentsToTest))
+						elif opt == "-l":
+							global d2Lines
+							index = int(args)
+							if index>0 and index<len(d2Lines):
+								print d2Lines[index-1]
+							else:
+								print "Line no. range: 1-" + str(len(d2Lines))
+				except getopt.GetoptError:
+					print "USAGE:\tprint [-q |-f <fragment id> | -l <line no.>]"
+		else:
+			print "USAGE:\tprint [-q |-f <fragment id> | -l <line no.>]"
+
+	def do_quit(self, line):
+		"""Exit the program"""
+		print "Good Bye!"
+		sys.exit()
+
+	def do_EOF(self, line):
+		print 
+		print "Good Bye!"
+		sys.exit()
+
+	def postloop(self):
+		print
+
 if __name__ == '__main__':
 	if len(sys.argv) < 5:
 		usage()
@@ -358,4 +471,9 @@ if __name__ == '__main__':
 	main(sys.argv[1:])
 	loadFiles()
 	maxsim(d1Lines,d2Lines)
-	sys.exit()
+	print "-----\tEntering interactive mode\t-----"
+	interactive().cmdloop()
+
+
+
+

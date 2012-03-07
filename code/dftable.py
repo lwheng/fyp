@@ -38,8 +38,8 @@ def dftable():
 		for filename in filenames:
 			thefile = str(os.path.join(dirname, filename))
 			openthefile = open(thefile,"r")
+			fileDict = {}
 			for l in openthefile:
-				fileDict = {}
 				line = myUtils.removespecialcharacters(l)
 				line = line.lower()
 				tokens = line.split()
@@ -54,9 +54,9 @@ def dftable():
 						if toadd not in fileDict:
 							fileDict[toadd] = 0
 						fileDict[toadd] += 1
-				for key in fileDict:
-					if key in dftableDict:
-						dftableDict[key] += 1
+			for key in fileDict:
+				if key in dftableDict:
+					dftableDict[key] += 1
 			openthefile.close()
 	openoutput = open(dftableFile,"w")
 	for k in dftableDict:
