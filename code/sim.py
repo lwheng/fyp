@@ -48,6 +48,9 @@ resultsDict = {}
 # To check interactive mode
 interactive = False
 
+# To check TF file loaded
+tfLoaded = False
+
 def loadVocab():
 	global vocabList
 	global vocabPath
@@ -90,22 +93,27 @@ def loadDFTable():
 def loadTFTable():
 	global d2Filename
 	global d2TFDict
-	tokens = d2Filename.split("/")
-	tfFilename = tokens[-1].replace(".txt", ".tf")
-	tfPath = os.path.join(tfDirectory,tfFilename)
-	if os.path.exists(tfPath):
-		opentf = open(tfPath,"r")
-		for l in opentf:
-			tokens = l.split()
-			term = tokens[0]
-			locations = (myUtils.removespecialcharacters(tokens[1])).split("!")
-			d2TFDict[term] = locations
-		opentf.close()
-	else:
-		print "TF file " + tfFilename + " not found."
-		print "Reverting back to weightless mode."
-		global weightSwitch
-		weightSwitch = False
+	global tfLoaded
+	if not tfLoaded:
+		tokens = d2Filename.split("/")
+		tfFilename = tokens[-1].replace(".txt", ".tf")
+		tfPath = os.path.join(tfDirectory,tfFilename)
+		if os.path.exists(tfPath):
+			opentf = open(tfPath,"r")
+			for l in opentf:
+				tokens = l.split()
+				term = tokens[0]
+				locations = (myUtils.removespecialcharacters(tokens[1])).split("!")
+				d2TFDict[term] = locations
+			opentf.close()
+			tfLoaded = True
+		else:
+			print "TF file " + tfFilename + " not found."
+			print "Reverting back to weightless mode."
+			global weightSwitch
+			weightSwitch = False
+			tfLoaded = False
+
 
 def loadFiles():
 	print "-----\tLoading Files\t-----"
@@ -391,7 +399,7 @@ class interactive(cmd.Cmd):
 		else:
 			print "USAGE: df [term]"
 	def help_df(self):
-		print "\n".join(["USAGE:\tdf [term]","OUTPUT:\tRetrieve document frequency for [term]"])
+		print "\n".join(["USAGE:\tdf [term]","OUTPUT:\tRetrieve document frequency for [term]."])
 
 	def do_idf(self, term):
 		if term:
@@ -403,11 +411,12 @@ class interactive(cmd.Cmd):
 		else:
 			print "USAGE: idf [term]"
 	def help_idf(self):
-		print "\n".join(["USAGE:\tidf [term]","OUTPUT:\tRetrieve inverse document frequency for [term]"])
+		print "\n".join(["USAGE:\tidf [term]","OUTPUT:\tRetrieve inverse document frequency for [term]."])
 
 	def do_tf(self, term):
+		global tfLoaded
 		if term:
-			if weightSwitch:
+			if tfLoaded:
 				global d2TFDict
 				if term in d2TFDict:
 					print len(d2TFDict[term])
@@ -415,11 +424,11 @@ class interactive(cmd.Cmd):
 				else:
 					print "Record not found!"
 			else:
-				print "TF file not loaded!"
+				print "TF file was not loaded!"
 		else:
 			print "USAGE:\ttf [term]"
 	def help_tf(self):
-		print "\n".join(["USAGE:\ttf [term]","OUTPUT:\tRetrieve term frequency for [term] in domain file"])
+		print "\n".join(["USAGE:\ttf [term]","OUTPUT:\tRetrieve term frequency for [term] in domain file."])
 
 	def do_score(self, term):
 		global interactiveResults
@@ -434,7 +443,7 @@ class interactive(cmd.Cmd):
 			for i in range(len(interactiveResults)):
 				print "Fragment " + str(i) + ": " + str(interactiveResults[i])
 	def help_score(self):
-		print "\n".join(["USAGE:\tscore [ | <fragment id> | max]","OUTPUT:\tPrints out the scores of the fragments"])
+		print "\n".join(["USAGE:\tscore [ | <fragment id> | max]","OUTPUT:\tPrints out the scores of the fragments."])
 
 	def do_print(self, line):
 		if line:
@@ -453,9 +462,11 @@ class interactive(cmd.Cmd):
 							global d2FragmentsToTest
 							index = int(args)
 							if index>=0 and index<len(d2FragmentsToTest):
-								print d2FragmentsToTest[index]
+								printout = d2FragmentsToTest[index]
+								for i in printout:
+									print i
 							else:
-								print "Fragment ID range: 0-" + str(len(d2FragmentsToTest))
+								print "Out of range. Fragment ID range: 0-" + str(len(d2FragmentsToTest)) + "."
 						elif opt == "-l":
 							global d2Lines
 							if "-" in args:
@@ -466,7 +477,7 @@ class interactive(cmd.Cmd):
 									for i in range(start, end+1):
 										print d2Lines[i-1]
 								else:
-									print "Line no. range: 1-" + str(len(d2Lines))
+									print "Out of range. Line no. range: 1-" + str(len(d2Lines)) + "."
 							else:
 								index = int(args)
 								if index>0 and index<len(d2Lines):
@@ -478,7 +489,7 @@ class interactive(cmd.Cmd):
 		else:
 			print "USAGE:\tprint [-q | -f <fragment id> | -l <[<line no.>|<line range>]>]"
 	def help_print(self):
-		print "\n".join(["USAGE:\tprint [-q | -f <fragment id> | -l <[<line no.>|<line range>]>]","OUTPUT:\tPrints out the contents of query, fragment or line."])
+		print "\n".join(["USAGE:\tprint [-q | -f <fragment id> | -l <[<line no.>|<line range>]>]","OUTPUT:\tPrints out the contents of query, fragment or lines."])
 
 	# def do_fragmentsize(self, line):
 	# 	global fragmentSize
@@ -523,7 +534,7 @@ class interactive(cmd.Cmd):
 				for opt, args in opts:
 					if opt == "-w":
 						weightSwitch = not weightSwitch
-						print "TF-IDF weight usage is now "+ ("ON" if weightSwitch else "OFF")
+						print "TF-IDF weight usage is now "+ ("ON" if weightSwitch else "OFF") + "."
 					elif opt == "-n":
 						newsize = int(args)
 						if newsize>0 and newsize<=len(d2Lines):
@@ -532,9 +543,9 @@ class interactive(cmd.Cmd):
 						else:
 							print "Invalid fragment size. Document has " + str(len(d2Lines)) + " lines."
 			except getopt.GetoptError:
-				print "USAGE:\settings [-w] [-n <fragment size>]"
+				print "USAGE:\tsettings [-w] [-n <fragment size>]"
 		else:
-			print "TF-IDF weight usage is now "+ ("ON" if weightSwitch else "OFF")
+			print "TF-IDF weight usage is now " + ("ON" if weightSwitch else "OFF") + "."
 			print "Fragment size is now " + str(fragmentSize) + " lines."
 	def help_settings(self):
 		print "\n".join(["USAGE:\tsettings [-w] [-n <fragment size>]","OUTPUT:\tPrints current settings. Add respective tag to modify settings."])
@@ -544,7 +555,7 @@ class interactive(cmd.Cmd):
 			global fragmentSize
 			global weightSwitch
 			print "Current settings:"
-			print "Weight Switch:\t" + ("On" if weightSwitch else "Off")
+			print "Weight Switch:\t" + ("On" if weightSwitch else "Off") + "."
 			print "Fragment Size:\t" + str(fragmentSize) + " lines."
 			global d1Lines
 			d1Lines = []
@@ -552,16 +563,18 @@ class interactive(cmd.Cmd):
 			maxsim(d1Lines,d2Lines)
 		else:
 			print "USAGE:\tquery <your search query>"
-			print "INFO:\tUse commands 'fragmentsize' and 'weightswitch' to modify settings."
+			print "OUTPUT:\tRun computations using your new query."
+			print "INFO:\tUse 'settings' command to modify settings."
 	def help_query(self):
-		print "\n".join(["USAGE:\tquery <your search query>","OUTPUT:\tComputes the cosine similarity between your query and the document.","INFO:\tUse commands 'fragmentsize' and 'weightswitch' to modify settings."])
+		print "\n".join(["USAGE:\tquery <your search query>","OUTPUT:\tComputes the cosine similarity between your query and the document.","INFO:\tUse 'settings' command to modify settings."])
 
 	def do_quit(self, line):
-		"""INFO:\tExits the program"""
+		"""INFO:\tExits the program."""
 		print "Good Bye!"
 		sys.exit()
 
 	def do_EOF(self, line):
+		"""INFO:\tTerminates the program."""
 		print 
 		print "Good Bye!"
 		sys.exit()
@@ -578,6 +591,7 @@ if __name__ == '__main__':
 	maxsim(d1Lines,d2Lines)
 	print "-----\tEntering interactive mode\t-----"
 	interactive().cmdloop()
+	sys.exit()
 
 
 
