@@ -277,31 +277,6 @@ def sim(d1,fragment,fragmentsCount,lineRange):
 	# fragment is fragment in lines, aka the "d2"
 	# fragmentsCount is no. of fragments
 
-	# d1dict = {}
-	# d1vector = []
-	# fragmentdict = {}
-	# fragmentvector = []
-	
-	# if d1:
-	# 	for l in d1:
-	# 		tokens = l.split()
-	# 		for t in tokens:
-	# 			toadd = ""
-	# 			if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
-	# 				toadd = t
-	# 			elif (myUtils.removepunctuation(t)).isalnum():
-	# 				toadd = myUtils.removepunctuation(t)
-
-	# 			if len(toadd) != 0:
-	# 				if toadd not in d1dict:
-	# 					d1dict[toadd] = 0
-	# 				d1dict[toadd] += 1
-	# else:
-	# 	global d1Dict
-	# 	global d1Vector
-	# 	d1dict = d1Dict
-	# 	d1vector = d1Vector
-
 	global d1Vector
 	d1dict = d1
 	d1vector = d1Vector
@@ -323,10 +298,6 @@ def sim(d1,fragment,fragmentsCount,lineRange):
 				fragmentdict[toadd] += 1
 
 	if weightSwitch:
-		# if d1:
-		# 	for k in d1dict:
-		# 		# We don't need tf since tf = d1dict[k]
-		# 		d1dict[k] = d1dict[k]*idf(k)
 		for k in fragmentdict:
 			if k in d2TFDict:
 				locations = d2TFDict[k]
@@ -341,12 +312,6 @@ def sim(d1,fragment,fragmentsCount,lineRange):
 	# d1dict and fragmentdict ready to be put into vectors
 	global vocabList
 	for v in vocabList:
-		# if d1:
-		# 	if v in d1dict:
-		# 		d1vector.append(d1dict[v])
-		# 	else:
-		# 		d1vector.append(0)
-
 		if v in fragmentdict:
 			fragmentvector.append(fragmentdict[v])
 		else:
@@ -490,39 +455,6 @@ class interactive(cmd.Cmd):
 			print "USAGE:\tprint [-q | -f <fragment id> | -l <[<line no.>|<line range>]>]"
 	def help_print(self):
 		print "\n".join(["USAGE:\tprint [-q | -f <fragment id> | -l <[<line no.>|<line range>]>]","OUTPUT:\tPrints out the contents of query, fragment or lines."])
-
-	# def do_fragmentsize(self, line):
-	# 	global fragmentSize
-	# 	if line:
-	# 		if len(line.split()) == 2:
-	# 			try:
-	# 				opts,args = getopt.getopt(line.split(), "m:")
-	# 				for opt, args in opts:
-	# 					if opt == "-m":
-	# 						newsize = int(args)
-	# 						if newsize>0 and newsize<=len(d2Lines):
-	# 							fragmentSize = newsize
-	# 							print "Fragment size is now " + str(fragmentSize) + " lines."
-	# 						else:
-	# 							print "Invalid fragment size. Document has " + str(len(d2Lines)) + " lines."
-	# 			except getopt.GetoptError:
-	# 				print "USAGE:\tfragmentsize [-m <new fragment size>]"
-	# 		else:
-	# 			print "USAGE:\tfragmentsize [-m <new fragment size>]"
-	# 	else:
-	# 		print str(fragmentSize) + " lines."
-	# def help_fragmentsize(self):
-	# 	print "\n".join(["USAGE:\tfragmentsize [-m <new fragment size>]","OUTPUT:\tPrints current fragment size. Add -m tag to modify."])
-
-	# def do_weightswitch(self,line):
-	# 	global weightSwitch
-	# 	if line:
-	# 		weightSwitch = not weightSwitch
-	# 		print "TF-IDF weight usage is now "+ ("ON" if weightSwitch else "OFF")
-	# 	else:
-	# 		print "TF-IDF weight usage is " + ("ON" if weightSwitch else "OFF")
-	# def help_weightswitch(self):
-	# 	print "\n".join(["USAGE:\tweightswitch [-t]","OUTPUT:\tPrints out current setting for TD-IDF weight usage. Add -t tag to toggle."])
 
 	def do_settings(self,line):
 		global fragmentSize
