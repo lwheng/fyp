@@ -45,6 +45,9 @@ top = []
 interactiveResults = []
 resultsDict = {}
 
+# To check interactive mode
+interactive = False
+
 def loadVocab():
 	global vocabList
 	global vocabPath
@@ -191,6 +194,7 @@ def maxsim(d1lines, d2lines):
 
 	# We compute the d1Dict, since it is only to be computed one
 	global d1Dict
+	d1Dict = {}
 	for l in d1:
 		tokens = l.split()
 		for t in tokens:
@@ -208,8 +212,11 @@ def maxsim(d1lines, d2lines):
 		for k in d1Dict:
 			# We don't need tf since tf = d1Dict[k]
 			d1Dict[k] = d1Dict[k]*idf(k)
+
 	# Now we generate the vector for d1
 	global vocabList
+	global d1Vector
+	d1Vector = []
 	for v in vocabList:
 		if v in d1Dict:
 			d1Vector.append(d1Dict[v])
@@ -219,11 +226,13 @@ def maxsim(d1lines, d2lines):
 	# Let's compute the results
 	global interactiveResults
 	global resultsDict
+	interactiveResults = []
 	resultsDict = {}
 	scores = []
 	fragmentsCount = len(d2FragmentsToTest)
 	for i in range(fragmentsCount):
-		result = sim(None, d2FragmentsToTest[i], fragmentsCount, lineRanges[i])
+		result = sim(d1Dict, d2FragmentsToTest[i], fragmentsCount, lineRanges[i])	
+		# result = sim(None, d2FragmentsToTest[i], fragmentsCount, lineRanges[i])
 		interactiveResults.append(result)
 		resultsDict[result] = i
 		scores.append(result)
@@ -234,6 +243,7 @@ def maxsim(d1lines, d2lines):
 	print "Fragment Scores (Top 10 Only):"
 
 	global top
+	top = []
 	top = heapq.nlargest(10,scores)
 	for i in range(len(top)):
 		print "Fragment " + str(resultsDict[top[i]]) + "\t" + str(top[i])
@@ -259,30 +269,36 @@ def sim(d1,fragment,fragmentsCount,lineRange):
 	# fragment is fragment in lines, aka the "d2"
 	# fragmentsCount is no. of fragments
 
-	d1dict = {}
-	d1vector = []
+	# d1dict = {}
+	# d1vector = []
+	# fragmentdict = {}
+	# fragmentvector = []
+	
+	# if d1:
+	# 	for l in d1:
+	# 		tokens = l.split()
+	# 		for t in tokens:
+	# 			toadd = ""
+	# 			if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
+	# 				toadd = t
+	# 			elif (myUtils.removepunctuation(t)).isalnum():
+	# 				toadd = myUtils.removepunctuation(t)
+
+	# 			if len(toadd) != 0:
+	# 				if toadd not in d1dict:
+	# 					d1dict[toadd] = 0
+	# 				d1dict[toadd] += 1
+	# else:
+	# 	global d1Dict
+	# 	global d1Vector
+	# 	d1dict = d1Dict
+	# 	d1vector = d1Vector
+
+	global d1Vector
+	d1dict = d1
+	d1vector = d1Vector
 	fragmentdict = {}
 	fragmentvector = []
-	
-	if d1:
-		for l in d1:
-			tokens = l.split()
-			for t in tokens:
-				toadd = ""
-				if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
-					toadd = t
-				elif (myUtils.removepunctuation(t)).isalnum():
-					toadd = myUtils.removepunctuation(t)
-
-				if len(toadd) != 0:
-					if toadd not in d1dict:
-						d1dict[toadd] = 0
-					d1dict[toadd] += 1
-	else:
-		global d1Dict
-		global d1Vector
-		d1dict = d1Dict
-		d1vector = d1Vector
 
 	for l in fragment:
 		tokens = l.split()
@@ -299,10 +315,10 @@ def sim(d1,fragment,fragmentsCount,lineRange):
 				fragmentdict[toadd] += 1
 
 	if weightSwitch:
-		if d1:
-			for k in d1dict:
-				# We don't need tf since tf = d1dict[k]
-				d1dict[k] = d1dict[k]*idf(k)
+		# if d1:
+		# 	for k in d1dict:
+		# 		# We don't need tf since tf = d1dict[k]
+		# 		d1dict[k] = d1dict[k]*idf(k)
 		for k in fragmentdict:
 			if k in d2TFDict:
 				locations = d2TFDict[k]
@@ -317,11 +333,11 @@ def sim(d1,fragment,fragmentsCount,lineRange):
 	# d1dict and fragmentdict ready to be put into vectors
 	global vocabList
 	for v in vocabList:
-		if d1:
-			if v in d1dict:
-				d1vector.append(d1dict[v])
-			else:
-				d1vector.append(0)
+		# if d1:
+		# 	if v in d1dict:
+		# 		d1vector.append(d1dict[v])
+		# 	else:
+		# 		d1vector.append(0)
 
 		if v in fragmentdict:
 			fragmentvector.append(fragmentdict[v])
@@ -362,11 +378,10 @@ def main(argv):
 
 import cmd
 class interactive(cmd.Cmd):
-	"""Simple command processor example."""
+	global interactive
+	interactive = True
 
 	def do_df(self, term):
-		"""USAGE:\tdf [term]
-OUTPUT:\tRetrieve document frequency for [term]"""
 		if term:
 			global dfDict
 			if term in dfDict:
@@ -375,10 +390,10 @@ OUTPUT:\tRetrieve document frequency for [term]"""
 				print "Record not found!"
 		else:
 			print "USAGE: df [term]"
+	def help_df(self):
+		print "\n".join(["USAGE:\tdf [term]","OUTPUT:\tRetrieve document frequency for [term]"])
 
 	def do_idf(self, term):
-		"""USAGE:\tidf [term]
-OUTPUT:\tRetrieve inverse document frequency for [term]"""
 		if term:
 			global dfDict
 			if term in dfDict:
@@ -387,10 +402,10 @@ OUTPUT:\tRetrieve inverse document frequency for [term]"""
 				print "Record not found!"
 		else:
 			print "USAGE: idf [term]"
+	def help_idf(self):
+		print "\n".join(["USAGE:\tidf [term]","OUTPUT:\tRetrieve inverse document frequency for [term]"])
 
 	def do_tf(self, term):
-		"""USAGE:\ttf [term]
-OUTPUT:\tRetrieve term frequency for [term] in domain file"""	
 		if term:
 			if weightSwitch:
 				global d2TFDict
@@ -401,10 +416,12 @@ OUTPUT:\tRetrieve term frequency for [term] in domain file"""
 					print "Record not found!"
 			else:
 				print "TF file not loaded!"
+		else:
+			print "USAGE:\ttf [term]"
+	def help_tf(self):
+		print "\n".join(["USAGE:\ttf [term]","OUTPUT:\tRetrieve term frequency for [term] in domain file"])
 
 	def do_score(self, term):
-		"""USAGE:\tscore [|<fragment id>|max]
-OUTPUT:\tPrints out the scores of the fragments"""
 		global interactiveResults
 		global resultsDict
 		global top
@@ -412,18 +429,18 @@ OUTPUT:\tPrints out the scores of the fragments"""
 			if term.isdigit() and (int(term) in range(0, len(interactiveResults))):
 				print "Fragment " + str(term) + ": " + str(interactiveResults[int(term)]) 
 			elif term == "max":
-				print "Fragment " + str(resultsDict[top[0]]) + " has the max score of " + str(top[0])
+				print "Fragment " + str(resultsDict[top[0]]) + ":\t" + str(top[0])
 		else:
 			for i in range(len(interactiveResults)):
 				print "Fragment " + str(i) + ": " + str(interactiveResults[i])
+	def help_score(self):
+		print "\n".join(["USAGE:\tscore [ | <fragment id> | max]","OUTPUT:\tPrints out the scores of the fragments"])
 
 	def do_print(self, line):
-		"""USAGE:\tprint [-q |-f <fragment id> | -l <line no.>]
-OUTPUT:\tPrints out the contents of query, fragment or line."""
 		if line:
 			tokens = line.split()
 			if len(tokens)>2:
-				print "USAGE:\tprint [-q |-f <fragment id> | -l <line no.>]"
+				print "USAGE:\tprint [-q | -f <fragment id> | -l <[<line no.>|<line range>]>]"
 			else:
 				try:
 					opts, args = getopt.getopt(tokens, "qf:l:")
@@ -441,18 +458,106 @@ OUTPUT:\tPrints out the contents of query, fragment or line."""
 								print "Fragment ID range: 0-" + str(len(d2FragmentsToTest))
 						elif opt == "-l":
 							global d2Lines
-							index = int(args)
-							if index>0 and index<len(d2Lines):
-								print d2Lines[index-1]
+							if "-" in args:
+								tokens = args.split("-")
+								start = int(tokens[0])
+								end = int(tokens[1])
+								if (start>0 and start<len(d2Lines)) and (end>0 and end<len(d2Lines)):
+									for i in range(start, end+1):
+										print d2Lines[i-1]
+								else:
+									print "Line no. range: 1-" + str(len(d2Lines))
 							else:
-								print "Line no. range: 1-" + str(len(d2Lines))
+								index = int(args)
+								if index>0 and index<len(d2Lines):
+									print d2Lines[index-1]
+								else:
+									print "Line no. range: 1-" + str(len(d2Lines))
 				except getopt.GetoptError:
-					print "USAGE:\tprint [-q |-f <fragment id> | -l <line no.>]"
+					print "USAGE:\tprint [-q | -f <fragment id> | -l <[<line no.>|<line range>]>]"
 		else:
-			print "USAGE:\tprint [-q |-f <fragment id> | -l <line no.>]"
+			print "USAGE:\tprint [-q | -f <fragment id> | -l <[<line no.>|<line range>]>]"
+	def help_print(self):
+		print "\n".join(["USAGE:\tprint [-q | -f <fragment id> | -l <[<line no.>|<line range>]>]","OUTPUT:\tPrints out the contents of query, fragment or line."])
+
+	# def do_fragmentsize(self, line):
+	# 	global fragmentSize
+	# 	if line:
+	# 		if len(line.split()) == 2:
+	# 			try:
+	# 				opts,args = getopt.getopt(line.split(), "m:")
+	# 				for opt, args in opts:
+	# 					if opt == "-m":
+	# 						newsize = int(args)
+	# 						if newsize>0 and newsize<=len(d2Lines):
+	# 							fragmentSize = newsize
+	# 							print "Fragment size is now " + str(fragmentSize) + " lines."
+	# 						else:
+	# 							print "Invalid fragment size. Document has " + str(len(d2Lines)) + " lines."
+	# 			except getopt.GetoptError:
+	# 				print "USAGE:\tfragmentsize [-m <new fragment size>]"
+	# 		else:
+	# 			print "USAGE:\tfragmentsize [-m <new fragment size>]"
+	# 	else:
+	# 		print str(fragmentSize) + " lines."
+	# def help_fragmentsize(self):
+	# 	print "\n".join(["USAGE:\tfragmentsize [-m <new fragment size>]","OUTPUT:\tPrints current fragment size. Add -m tag to modify."])
+
+	# def do_weightswitch(self,line):
+	# 	global weightSwitch
+	# 	if line:
+	# 		weightSwitch = not weightSwitch
+	# 		print "TF-IDF weight usage is now "+ ("ON" if weightSwitch else "OFF")
+	# 	else:
+	# 		print "TF-IDF weight usage is " + ("ON" if weightSwitch else "OFF")
+	# def help_weightswitch(self):
+	# 	print "\n".join(["USAGE:\tweightswitch [-t]","OUTPUT:\tPrints out current setting for TD-IDF weight usage. Add -t tag to toggle."])
+
+	def do_settings(self,line):
+		global fragmentSize
+		global weightSwitch
+		global d2Lines
+		if line:
+			try:
+				opts,args = getopt.getopt(line.split(), "wn:")
+				for opt, args in opts:
+					if opt == "-w":
+						weightSwitch = not weightSwitch
+						print "TF-IDF weight usage is now "+ ("ON" if weightSwitch else "OFF")
+					elif opt == "-n":
+						newsize = int(args)
+						if newsize>0 and newsize<=len(d2Lines):
+							fragmentSize = newsize
+							print "Fragment size is now " + str(fragmentSize) + " lines."
+						else:
+							print "Invalid fragment size. Document has " + str(len(d2Lines)) + " lines."
+			except getopt.GetoptError:
+				print "USAGE:\settings [-w] [-n <fragment size>]"
+		else:
+			print "TF-IDF weight usage is now "+ ("ON" if weightSwitch else "OFF")
+			print "Fragment size is now " + str(fragmentSize) + " lines."
+	def help_settings(self):
+		print "\n".join(["USAGE:\tsettings [-w] [-n <fragment size>]","OUTPUT:\tPrints current settings. Add respective tag to modify settings."])
+
+	def do_query(self, line):
+		if line:
+			global fragmentSize
+			global weightSwitch
+			print "Current settings:"
+			print "Weight Switch:\t" + ("On" if weightSwitch else "Off")
+			print "Fragment Size:\t" + str(fragmentSize) + " lines."
+			global d1Lines
+			d1Lines = []
+			d1Lines.append(line)
+			maxsim(d1Lines,d2Lines)
+		else:
+			print "USAGE:\tquery <your search query>"
+			print "INFO:\tUse commands 'fragmentsize' and 'weightswitch' to modify settings."
+	def help_query(self):
+		print "\n".join(["USAGE:\tquery <your search query>","OUTPUT:\tComputes the cosine similarity between your query and the document.","INFO:\tUse commands 'fragmentsize' and 'weightswitch' to modify settings."])
 
 	def do_quit(self, line):
-		"""Exit the program"""
+		"""INFO:\tExits the program"""
 		print "Good Bye!"
 		sys.exit()
 
