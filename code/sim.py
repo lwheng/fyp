@@ -48,11 +48,14 @@ resultsDict = {}
 # To check interactive mode
 interactive = False
 
-# To check TF file loaded
+# To check TF/DF file loaded
 tfLoaded = False
+dfLoaded = False
 
 def loadVocab():
+	print "-----\tLoading Vocab\t-----"
 	global vocabList
+	vocabList = []
 	global vocabPath
 	openvocab = open(vocabPath,"r")
 	for l in  openvocab:
@@ -61,8 +64,10 @@ def loadVocab():
 	openvocab.close()
 
 def loadD1():
+	print "-----\tLoading D1\t-----"
 	global d1Filename
 	global d1Lines
+	d1Lines = []
 	opend1 = open(d1Filename,"r")
 	for l in opend1:
 		line = myUtils.removespecialcharacters(l)
@@ -72,8 +77,10 @@ def loadD1():
 	opend1.close()
 
 def loadD2():
+	print "-----\tLoading D2\t-----"
 	global d2Filename
 	global d2Lines
+	d2Lines = []
 	opend2 = open(d2Filename,"r")
 	for l in opend2:
 		line = myUtils.removespecialcharacters(l)
@@ -82,17 +89,24 @@ def loadD2():
 	opend2.close()
 
 def loadDFTable():
+	print "-----\tLoading DFTable\t-----"
 	global dfPath
 	global dfDict
-	opendf = open(dfPath,"r")
-	for l in opendf:
-		tokens = l.split()
-		dfDict[tokens[0]] = myUtils.removespecialcharacters(tokens[1])
-	opendf.close()
+	dfDict = {}
+	global dfLoaded
+	if not dfLoaded:
+		opendf = open(dfPath,"r")
+		for l in opendf:
+			tokens = l.split()
+			dfDict[tokens[0]] = myUtils.removespecialcharacters(tokens[1])
+		opendf.close()
+		dfLoaded = True
 
 def loadTFTable():
+	print "-----\tLoading TFTable\t-----"
 	global d2Filename
 	global d2TFDict
+	d2TFDict = {}
 	global tfLoaded
 	if not tfLoaded:
 		tokens = d2Filename.split("/")
@@ -486,12 +500,17 @@ class interactive(cmd.Cmd):
 		if line:
 			global fragmentSize
 			global weightSwitch
+			global tfLoaded
+			global dfLoaded
 			print "Current settings:"
-			print "Weight Switch:\t" + ("On" if weightSwitch else "Off") + "."
+			print "Weight Switch:\t" + ("ON" if weightSwitch else "OFF") + "."
 			print "Fragment Size:\t" + str(fragmentSize) + " lines."
 			global d1Lines
 			d1Lines = []
 			d1Lines.append(line)
+			if weightSwitch and (not tfLoaded) and (not dfLoaded):
+				loadDFTable()
+				loadTFTable()
 			maxsim(d1Lines,d2Lines)
 		else:
 			print "USAGE:\tquery <your search query>"
