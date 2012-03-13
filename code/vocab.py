@@ -12,7 +12,7 @@ date = str(datetime.now().date())
 time = str(datetime.now().time())
 
 fileDirectory = ""
-vocabFile = "/Users/lwheng/Desktop/vocab-(" + date + "-" + time + ").txt"
+vocabFile = "/Users/lwheng/Download/vocab-(" + date + "-" + time + ").txt"
 
 def vocab():
     global fileDirectory

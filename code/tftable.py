@@ -13,7 +13,7 @@ import getopt
 import myUtils
 
 fileDirectory = ""
-tfDirectory = "/Users/lwheng/Desktop/tf"
+tfDirectory = "/Users/lwheng/Download/tf"
 if not os.path.isdir(tfDirectory):
 	os.makedirs(tfDirectory)
 

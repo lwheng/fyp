@@ -9,7 +9,7 @@ import heapq
 # No. of documents in corpora
 N = 500
 
-mainDirectory = "/Users/lwheng/Desktop"
+mainDirectory = "/Users/lwheng/Download/fyp"
 
 # For vocab
 vocabList = []
