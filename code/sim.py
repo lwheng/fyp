@@ -5,14 +5,48 @@ import string
 import getopt
 import myUtils
 import heapq
-# from heapq import nlargest
 
 # No. of documents in corpora
 N = 500
 
 mainDirectory = "/Users/lwheng/Desktop"
-dfFile = "dftable-(2012-03-07-20:25:49.094468).txt"
+
+# For vocab
+vocabList = []
 vocabFile = "vocab-(2012-03-07-20:17:59.878950).txt"
+
+# For DF
+dfDict = {}
+dfFile = "dftable-(2012-03-07-20:25:49.094468).txt"
+
+# For fragmenting
+fragmentSize = 5
+lineRanges = []
+
+# For d1
+d1Filename = ""
+d1Lines = []	# In display mode
+d1Dict = {}
+d1Vector = []
+
+# For d2
+d2Filename = ""
+d2Lines = []	# In display mode
+d2DFDict = {}
+d2TFDict = {}
+d2Fragments = []
+d2FragmentsToTest = []
+
+# Booleans
+weightSwitch = False
+interactive = False
+tfLoaded = False
+dfLoaded = False
+
+# For results
+top = []
+interactiveResults = []
+resultsDict = {}
 
 # Where all TF files are found
 tfDirectory = str(os.path.join(mainDirectory, "tf"))
@@ -21,44 +55,13 @@ dfPath = str(os.path.join(mainDirectory, dfFile))
 # Where the vocab file is found
 vocabPath = str(os.path.join(mainDirectory,vocabFile))
 
-vocabList = []          # Vocab
-dfDict = {}             # DFTable
-weightSwitch = False    # Weight switch, to use TF-IDF or not
-fragmentSize = 5        # Default fragment size
-d1Filename = ""         # Query file
-d2Filename = ""         # Search domain file
-d1Lines = []            # Lines of d1, for printing only
-d2Lines = []            # Lines of d2, for printing only
-d2DFTable = {}          # DFTable specifically for d2
-d2TFDict = {}           # TFTable specifically for d2
-
-# To capture info about d1
-d1Dict = {}
-d1Vector = []
-
-# To capture fragments of d2
-d2Fragments = []
-d2FragmentsToTest = []
-
-# To capture the results
-top = []
-interactiveResults = []
-resultsDict = {}
-
-# To check interactive mode
-interactive = False
-
-# To check TF/DF file loaded
-tfLoaded = False
-dfLoaded = False
-
 def loadVocab():
 	print "-----\tLoading Vocab\t-----"
 	global vocabList
-	vocabList = []
 	global vocabPath
+	vocabList = []
 	openvocab = open(vocabPath,"r")
-	for l in  openvocab:
+	for l in openvocab:
 		line = myUtils.removespecialcharacters(l)
 		vocabList.append(line)
 	openvocab.close()
@@ -71,7 +74,6 @@ def loadD1():
 	opend1 = open(d1Filename,"r")
 	for l in opend1:
 		line = myUtils.removespecialcharacters(l)
-		line = line.lower()
 		if len(line) != 0:
 			d1Lines.append(line)
 	opend1.close()
@@ -80,10 +82,12 @@ def loadD2():
 	print "-----\tLoading D2\t-----"
 	global d2Filename
 	global d2Lines
+	global d2lines
 	d2Lines = []
 	opend2 = open(d2Filename,"r")
 	for l in opend2:
 		line = myUtils.removespecialcharacters(l)
+		line = line.lower()
 		if len(line) != 0:
 			d2Lines.append(line)
 	opend2.close()
@@ -92,8 +96,8 @@ def loadDFTable():
 	print "-----\tLoading DFTable\t-----"
 	global dfPath
 	global dfDict
-	dfDict = {}
 	global dfLoaded
+	dfDict = {}
 	if not dfLoaded:
 		opendf = open(dfPath,"r")
 		for l in opendf:
@@ -106,8 +110,10 @@ def loadTFTable():
 	print "-----\tLoading TFTable\t-----"
 	global d2Filename
 	global d2TFDict
-	d2TFDict = {}
+	global tfDirectory
 	global tfLoaded
+	global weightSwitch
+	d2TFDict = {}
 	if not tfLoaded:
 		tokens = d2Filename.split("/")
 		tfFilename = tokens[-1].replace(".txt", ".tf")
@@ -124,7 +130,6 @@ def loadTFTable():
 		else:
 			print "TF file " + tfFilename + " not found."
 			print "Reverting back to weightless mode."
-			global weightSwitch
 			weightSwitch = False
 			tfLoaded = False
 
@@ -162,17 +167,8 @@ def cosinesim(v1,v2):
 		sumofsquares2 = sumofsquares2 + (v2[i])**2
 	return dot/((math.sqrt(sumofsquares1))*(math.sqrt(sumofsquares2)))
 
-def maxsim(d1lines, d2lines):
-	# Remember: d1lines and d2lines are only for printing
+def maxsim(d1, d2):
 	print "-----\tComputing Max Sim()\t-----"
-
-	# Lowercase all lines, for computation use
-	d1 = []
-	d2 = []
-	for i in range(len(d1lines)):
-		d1.append(d1lines[i].lower())
-	for i in range(len(d2lines)):
-		d2.append(d2lines[i].lower())
 
 	# Divide D2 into fragments using fragmentSize
 	# Note that d2Fragments has no overlapping
@@ -189,14 +185,15 @@ def maxsim(d1lines, d2lines):
 		fragmentSizeHalf = fragmentSize/2
 		d2FragmentsOverlap = []
 		for i in range(len(d2Fragments)-1):
-			d2FragmentsOverlap.append(d2Fragments[i])
-			d2FragmentsOverlap.append(d2Fragments[i][fragmentSizeHalf:] + d2Fragments[i+1][0:fragmentSizeHalf])
-		d2FragmentsOverlap.append(d2Fragments[-1])
+			d2FragmentsOverlap.append(map(lambda x:x.lower(), d2Fragments[i]))
+			d2FragmentsOverlap.append(map(lambda x:x.lower(),d2Fragments[i][fragmentSizeHalf:] + d2Fragments[i+1][0:fragmentSizeHalf]))
+		d2FragmentsOverlap.append(map(lambda x:x.lower(),d2Fragments[-1]))
 		d2FragmentsToTest = d2FragmentsOverlap
 	else:
-		d2FragmentsToTest = d2Fragments
+		d2FragmentsToTest = map(lambda x:map(lambda y:y.lower(), x),d2Fragments)
 
 	# Preparing the lineRanges using fragmentSize
+	global lineRanges
 	lineRanges = []
 	if fragmentSize > 1:
 		fragmentSizeHalf = fragmentSize/2
@@ -336,16 +333,17 @@ def sim(d1,fragment,fragmentsCount,lineRange):
 	return cossim
 
 def usage():
-	print "USAGE: python " + sys.argv[0] + " [-w] [-n <fragment size>] -1 <d1file> -2 <d2file>"
-	print "-n: To specify size of fragments (by no. of lines). Default is 5"
+	print "USAGE: python " + sys.argv[0] + " [-i] [-w] [-n <fragment size>] -1 <d1file> -2 <d2file>"
+	print "-i: To switch on interactive mode."
 	print "-w: To switch on with TF-IDF-weight mode. Default is False"
+	print "-n: To specify size of fragments (by no. of lines). Default is 5"
 	print "<d1file> is the query file"
 	print "<d2file> is the domain file"
-	print "E.g. python " + sys.argv[0] + " -w -n 20 -1 search.txt -2 A00-1001.txt"
+	print "E.g. python " + sys.argv[0] + " -i -w -n 20 -1 search.txt -2 A00-1001.txt"
 
 def main(argv):
 	try:
-		opts, args = getopt.getopt(argv, "wn:1:2:")
+		opts, args = getopt.getopt(argv, "iwn:1:2:")
 		for opt, args in opts:
 			if opt == "-1":
 				global d1Filename
@@ -359,15 +357,15 @@ def main(argv):
 			elif opt == "-n":
 				global fragmentSize
 				fragmentSize = int(args)
+			elif opt == "-i":
+				global interactive
+				interactive = True
 	except getopt.GetoptError:
 		usage()
 		sys.exit(2)
 
 import cmd
 class interactive(cmd.Cmd):
-	global interactive
-	interactive = True
-
 	def do_df(self, term):
 		if term:
 			global dfDict
@@ -540,8 +538,9 @@ if __name__ == '__main__':
 	main(sys.argv[1:])
 	loadFiles()
 	maxsim(d1Lines,d2Lines)
-	print "-----\tEntering interactive mode\t-----"
-	interactive().cmdloop()
+	if interactive:
+		print "-----\tEntering interactive mode\t-----"
+		interactive().cmdloop()
 	sys.exit()
 
 
