@@ -13,13 +13,14 @@ import getopt
 import myUtils
 
 fileDirectory = ""
-tfDirectory = "/Users/lwheng/Downloads/tf"
-if not os.path.isdir(tfDirectory):
-	os.makedirs(tfDirectory)
+tfDirectory = ""
 
 def tftable():
 	global fileDirectory
 	global tfDirectory
+
+	if not os.path.isdir(tfDirectory):
+		os.makedirs(tfDirectory)
 
 	for dirname, dirnames, filenames in os.walk(fileDirectory):
 		for filename in filenames:
@@ -58,21 +59,24 @@ def tftable():
 			openoutput.close()
 
 def usage():
-	print "USAGE: python " + sys.argv[0] +" -d <fileDirectory>"
+	print "USAGE: python " + sys.argv[0] +" -d <fileDirectory> -o <outDirectory>"
 
 def main(argv):
 	try:
-		opts, args = getopt.getopt(argv, "d:")
+		opts, args = getopt.getopt(argv, "d:o:")
 		for opt, args in opts:
 			if opt == "-d":
 				global fileDirectory
 				fileDirectory = args
+			elif opt == "-o":
+				global tfDirectory
+				tfDirectory = args
 	except getopt.GetoptError:
 		usage()
 		sys.exit(2)
 
 if __name__ == '__main__':
-	if len(sys.argv) < 3:
+	if len(sys.argv) < 5:
 		usage()
 		sys.exit()
 	main(sys.argv[1:])

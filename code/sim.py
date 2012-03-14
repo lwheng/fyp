@@ -5,19 +5,25 @@ import string
 import getopt
 import myUtils
 import heapq
+from nltk.stem.wordnet import WordNetLemmatizer
+
+# Lemmatizer
+lm = WordNetLemmatizer()
 
 # No. of documents in corpora
-N = 500
+N = 8889
 
 mainDirectory = "/Users/lwheng/Downloads/fyp"
 
 # For vocab
 vocabList = []
-vocabFile = "vocab-(2012-03-07-20:17:59.878950).txt"
+# vocabFile = "vocab-(2012-03-07-20:17:59.878950).txt"
+vocabFile = "vocab-(2012-03-14-20:38:16.917714).txt"
 
 # For DF
 dfDict = {}
-dfFile = "dftable-(2012-03-07-20:25:49.094468).txt"
+# dfFile = "dftable-(2012-03-07-20:25:49.094468).txt"
+dfFile = "dftable-(2012-03-14-20:42:32.464767).txt"
 
 # For fragmenting
 fragmentSize = 5
@@ -49,9 +55,11 @@ dfLoaded = False
 top = []
 interactiveResults = []
 resultsDict = {}
+rangeOfTop = []
 
 # Where all TF files are found
-tfDirectory = str(os.path.join(mainDirectory, "tf"))
+tfLocation = "tfLemmatized"
+tfDirectory = str(os.path.join(mainDirectory, tfLocation))
 # Where the DFTable (general) is found
 dfPath = str(os.path.join(mainDirectory, dfFile))
 # Where the vocab file is found
@@ -148,6 +156,7 @@ def prepD1(d1LinesInput):
 				toadd = myUtils.removepunctuation(t)
 
 			if len(toadd) != 0:
+				toadd = lm.lemmatize(toadd)
 				if toadd not in d1Dict:
 					d1Dict[toadd] = 0
 				d1Dict[toadd] += 1
@@ -301,8 +310,10 @@ def maxsim(d1, d2):
 	# print "Fragment Scores (Top 10 Only):"
 
 	global top
+	global rangeOfTop
 	top = []
 	top = heapq.nlargest(10,scores)
+	rangeOfTop = [lineRanges[resultsDict[top[0]]][0],lineRanges[resultsDict[top[0]]][-1]]
 	# for i in range(len(top)):
 	# 	print "Fragment " + str(resultsDict[top[i]]) + "\t" + str(top[i])
 
@@ -536,7 +547,7 @@ if __name__ == '__main__':
 	loadFiles()
 	maxsim(d1Lines,d2Lines)
 	generalResult = sim(d1Dict, map(lambda x:x.lower(),d2Lines),range(1,len(d2Lines)))
-	print str(top[0]) + "!" + str(generalResult)
+	print str(top[0]) + "!" + str(rangeOfTop[0]) + "-" + str(rangeOfTop[-1]) + "!" + str(generalResult)
 	if interactive:
 		print "-----\tEntering interactive mode\t-----"
 		interactiveMode().cmdloop()
