@@ -10,7 +10,7 @@ import myUtils
 fileDirectory = ""
 
 def stemmer():
-	print "hello"
+	print "hello world"
 
 def usage():
 	print "USAGE: python " + sys.argv[0] +" -d <fileDirectory>"
