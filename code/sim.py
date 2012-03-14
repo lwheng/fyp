@@ -138,31 +138,33 @@ def prepD1(d1LinesInput):
 	global d1Dict
 	global weightSwitch
 	d1Dict = {}
-    for l in d1LinesInput:
-        toadd = ""
-        if t.isalnum()  or myUtils.hyphenated(t) or myUtils.apos(t):
-            toadd = t
-        elif (myUtils.removepunctuation(t)).isalnum():
-            toadd = myUtils.removepunctuation(t)
+	for l in d1LinesInput:
+		tokens = l.split()
+		for t in tokens:
+			toadd = ""
+			if t.isalnum()  or myUtils.hyphenated(t) or myUtils.apos(t):
+				toadd = t
+			elif (myUtils.removepunctuation(t)).isalnum():
+				toadd = myUtils.removepunctuation(t)
 
-        if len(toadd) != 0:
-            if toadd not in d1Dict:
-                d1Dict[toadd] = 0
-            d1Dict[toadd] += 1
-    if weightSwitch:
-        for k in d1Dict:
-            d1Dict[k] = d1Dict[k]*idf(k)
+			if len(toadd) != 0:
+				if toadd not in d1Dict:
+					d1Dict[toadd] = 0
+				d1Dict[toadd] += 1
+	if weightSwitch:
+		for k in d1Dict:
+			d1Dict[k] = d1Dict[k]*idf(k)
 
-    global d1Vector
-    global vocabList
-    d1Vector = []
-    for v in vocabList:
+	global d1Vector
+	global vocabList
+	d1Vector = []
+	for v in vocabList:
 		if v in d1Dict:
 			d1Vector.append(d1Dict[v])
 		else:
 			d1Vector.append(0)
 
-def prepFragmentDict(fragmentLinesInput):
+def prepFragment(fragmentLinesInput,lineRangeInput):
 	global fragmentDict
 	global weightSwitch
 
@@ -187,7 +189,7 @@ def prepFragmentDict(fragmentLinesInput):
 				locations = d2TFDict[k]
 				tf = 0
 				for location in locations:
-					if int(location) in lineRange:
+					if int(location) in lineRangeInput:
 						tf += 1
 			fragmentDict[k] = fragmentDict[k]*tf*idf(k)
 			if fragmentDict[k] == 0:
@@ -195,11 +197,48 @@ def prepFragmentDict(fragmentLinesInput):
 
 	global vocabList
 	global fragmentVector
+	fragmentVector = []
 	for v in vocabList:
 		if v in fragmentDict:
 			fragmentVector.append(fragmentDict[v])
 		else:
 			fragmentVector.append(0)
+
+def prepd2Fragments(d2LinesInput):
+	global fragmentSize
+	global d2Fragments
+	d2Fragments = []
+	for i in xrange(0, len(d2LinesInput), fragmentSize):
+		d2Fragments.append(d2LinesInput[i:i+fragmentSize])
+
+	# Overlap the fragments
+	global d2FragmentsToTest
+	d2FragmentsToTest = []
+	if fragmentSize > 1:
+		fragmentSizeHalf = fragmentSize/2
+		d2FragmentsOverlap = []
+		for i in range(len(d2Fragments)-1):
+			d2FragmentsOverlap.append(map(lambda x:x.lower(), d2Fragments[i]))
+			d2FragmentsOverlap.append(map(lambda x:x.lower(),d2Fragments[i][fragmentSizeHalf:] + d2Fragments[i+1][0:fragmentSizeHalf]))
+		d2FragmentsOverlap.append(map(lambda x:x.lower(),d2Fragments[-1]))
+		d2FragmentsToTest = d2FragmentsOverlap
+	else:
+		d2FragmentsToTest = map(lambda x:map(lambda y:y.lower(), x),d2Fragments)
+
+	# Preparing the lineRanges using fragmentSize
+	global lineRanges
+	lineRanges = []
+	if fragmentSize > 1:
+		fragmentSizeHalf = fragmentSize/2
+		for i in range(len(d2Fragments)-1):
+			lower = (i*fragmentSize)+1
+			upper = (i+1)*fragmentSize
+			lineRanges.append(range(lower,upper+1))
+			lineRanges.append(range(lower+fragmentSizeHalf,upper+1+fragmentSizeHalf))
+		lineRanges.append(range((len(d2Fragments)-1)*fragmentSize + 1, len(d2Fragments)*fragmentSize + 1))
+	else:
+		for i in range(len(d2LinesInput)):
+			lineRanges.append([i])
 
 
 def loadFiles():
@@ -237,163 +276,57 @@ def cosinesim(v1,v2):
 
 def maxsim(d1, d2):
 	print "-----\tComputing Max Sim()\t-----"
-
-	# Divide D2 into fragments using fragmentSize
-	# Note that d2Fragments has no overlapping
-	global fragmentSize
-	global d2Fragments
-	d2Fragments = []
-	for i in xrange(0, len(d2), fragmentSize):
-		d2Fragments.append(d2[i:i+fragmentSize])
-
-	# Overlap the fragments
-	global d2FragmentsToTest
-	d2FragmentsToTest = []
-	if fragmentSize > 1:
-		fragmentSizeHalf = fragmentSize/2
-		d2FragmentsOverlap = []
-		for i in range(len(d2Fragments)-1):
-			d2FragmentsOverlap.append(map(lambda x:x.lower(), d2Fragments[i]))
-			d2FragmentsOverlap.append(map(lambda x:x.lower(),d2Fragments[i][fragmentSizeHalf:] + d2Fragments[i+1][0:fragmentSizeHalf]))
-		d2FragmentsOverlap.append(map(lambda x:x.lower(),d2Fragments[-1]))
-		d2FragmentsToTest = d2FragmentsOverlap
-	else:
-		d2FragmentsToTest = map(lambda x:map(lambda y:y.lower(), x),d2Fragments)
-
-	# Preparing the lineRanges using fragmentSize
-	global lineRanges
-	lineRanges = []
-	if fragmentSize > 1:
-		fragmentSizeHalf = fragmentSize/2
-		for i in range(len(d2Fragments)-1):
-			lower = (i*fragmentSize)+1
-			upper = (i+1)*fragmentSize
-			lineRanges.append(range(lower,upper+1))
-			lineRanges.append(range(lower+fragmentSizeHalf,upper+1+fragmentSizeHalf))
-		lineRanges.append(range((len(d2Fragments)-1)*fragmentSize + 1, len(d2Fragments)*fragmentSize + 1))
-	else:
-		for i in range(len(d2Lines)):
-			lineRanges.append([i])
-
-	# In this version, V and DF is "general"
-	# So we use this V to generate the vectors, and DF
-	# to compute the TD.IDF value
-
-	# We compute the d1Dict, since it is only to be computed one
-	global d1Dict
-	d1Dict = {}
-	for l in d1:
-		tokens = l.split()
-		for t in tokens:
-			toadd = ""
-			if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
-				toadd = t
-			elif (myUtils.removepunctuation(t)).isalnum():
-				toadd = myUtils.removepunctuation(t)
-
-			if len(toadd) != 0:
-				if toadd not in d1Dict:
-					d1Dict[toadd] = 0
-				d1Dict[toadd] += 1
-	if weightSwitch:
-		for k in d1Dict:
-			# We don't need tf since tf = d1Dict[k]
-			d1Dict[k] = d1Dict[k]*idf(k)
-
-	# Now we generate the vector for d1
-	global vocabList
-	global d1Vector
-	d1Vector = []
-	for v in vocabList:
-		if v in d1Dict:
-			d1Vector.append(d1Dict[v])
-		else:
-			d1Vector.append(0)
+	prepD1(map(lambda x:x.lower(),d1))
+	prepd2Fragments(map(lambda x:x.lower(),d2))
 
 	# Let's compute the results
 	global interactiveResults
 	global resultsDict
+	global d2FragmentsToTest
+	global lineRanges
+	global d1Dict
 	interactiveResults = []
 	resultsDict = {}
 	scores = []
 	fragmentsCount = len(d2FragmentsToTest)
 	for i in range(fragmentsCount):
-		result = sim(d1Dict, d2FragmentsToTest[i], lineRanges[i])	
-		# result = sim(None, d2FragmentsToTest[i], lineRanges[i])
+		result = sim(d1Dict, d2FragmentsToTest[i], lineRanges[i])
 		interactiveResults.append(result)
 		resultsDict[result] = i
 		scores.append(result)
 	print "-----\tMax Sim() Computed!\t-----"
 
 	print "-----\tResults\t-----"
-	print "Total no. of fragments:\t" + str(fragmentsCount)
-	print "Fragment Scores (Top 10 Only):"
+	# print "Total no. of fragments:\t" + str(fragmentsCount)
+	# print "Fragment Scores (Top 10 Only):"
 
 	global top
 	top = []
 	top = heapq.nlargest(10,scores)
-	for i in range(len(top)):
-		print "Fragment " + str(resultsDict[top[i]]) + "\t" + str(top[i])
+	# for i in range(len(top)):
+	# 	print "Fragment " + str(resultsDict[top[i]]) + "\t" + str(top[i])
 
-	if top[0] == 0:
-		print "No fragments match!!"
-		print "------------------------------"
-		print "The search query did not match any of the fragments. Score is 0.0"
-	else:
-		print "------------------------------"
-		print "Fragment " + str(resultsDict[top[0]]) + " has the highest score of " + str(top[0])
-		print "------------------------------"
-		print "Contents of fragment " + str(resultsDict[top[0]]) + ":"
-		print d2FragmentsToTest[resultsDict[top[0]]]
-		print "------------------------------"
-		print "Location of fragment in domain document:"
-		print "This fragment is found from line " + str(lineRanges[resultsDict[top[0]]][0]) + "-" + str(lineRanges[resultsDict[top[0]]][-1]) + " of the domain document"
-		print "------------------------------"
+	# if top[0] == 0:
+	# 	print "No fragments match!!"
+	# 	print "------------------------------"
+	# 	print "The search query did not match any of the fragments. Score is 0.0"
+	# else:
+	# 	print "------------------------------"
+	# 	print "Fragment " + str(resultsDict[top[0]]) + " has the highest score of " + str(top[0])
+	# 	print "------------------------------"
+	# 	print "Contents of fragment " + str(resultsDict[top[0]]) + ":"
+	# 	print d2FragmentsToTest[resultsDict[top[0]]]
+	# 	print "------------------------------"
+	# 	print "Location of fragment in domain document:"
+	# 	print "This fragment is found from line " + str(lineRanges[resultsDict[top[0]]][0]) + "-" + str(lineRanges[resultsDict[top[0]]][-1]) + " of the domain document"
+	# 	print "------------------------------"
 
 
 def sim(d1,fragment,lineRange):
+	prepFragment(fragment,lineRange)
 	global d1Vector
-	d1dict = d1
-	d1vector = d1Vector
-	fragmentdict = {}
-	fragmentvector = []
-
-	for l in fragment:
-		tokens = l.split()
-		for t in tokens:
-			toadd = ""
-			if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
-				toadd = t
-			elif (myUtils.removepunctuation(t)).isalnum():
-				toadd = myUtils.removepunctuation(t)
-
-			if len(toadd) != 0:
-				if toadd not in fragmentdict:
-					fragmentdict[toadd] = 0
-				fragmentdict[toadd] += 1
-
-	if weightSwitch:
-		for k in fragmentdict:
-			if k in d2TFDict:
-				locations = d2TFDict[k]
-				tf = 0
-				for location in locations:
-					if int(location) in lineRange:
-						tf += 1
-			fragmentdict[k] = fragmentdict[k]*tf*idf(k)
-			if fragmentdict[k] == 0:
-				fragmentdict[k] = 0.0
-
-	# d1dict and fragmentdict ready to be put into vectors
-	global vocabList
-	for v in vocabList:
-		if v in fragmentdict:
-			fragmentvector.append(fragmentdict[v])
-		else:
-			fragmentvector.append(0)
-
-	# Vectors ready
-	cossim = cosinesim(d1vector,fragmentvector)
+	global fragmentVector
+	cossim = cosinesim(d1Vector,fragmentVector)
 	return cossim
 
 def usage():
@@ -603,7 +536,7 @@ if __name__ == '__main__':
 	loadFiles()
 	maxsim(d1Lines,d2Lines)
 	generalResult = sim(d1Dict, map(lambda x:x.lower(),d2Lines),range(1,len(d2Lines)))
-	print "general result is ", generalResult
+	print str(top[0]) + "!" + str(generalResult)
 	if interactive:
 		print "-----\tEntering interactive mode\t-----"
 		interactiveMode().cmdloop()
