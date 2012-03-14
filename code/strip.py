@@ -1,3 +1,28 @@
+import sys
+
+inDirectory = ""
+outDirectory = ""
+
+inputname = sys.argv[1]
+outputname = sys.argv[2]
+
+output = open(outputname, "w")
+
+for line in open(inputname, "r"):
+	newline = line[:-1]
+	tokens = newline.split()
+	for i in range(len(tokens)):
+		tokens[i] = strip_control_characters(tokens[i])
+	# newline = strip_control_characters(line)
+	# newline = newline + "\n"
+	towrite = ""
+	for t in tokens:
+		towrite += t + " "
+	towrite = towrite[:-1] + "\n"
+	output.write(towrite)
+	
+output.close()
+
 def strip_control_characters(input):
 	if input:
 		import re
@@ -14,29 +39,29 @@ def strip_control_characters(input):
 
 		# ascii control characters
 		input = re.sub(r"[\x01-\x1F\x7F]", "", input)
-
 	return input
-	
-import sys
 
-inputname = sys.argv[1]
-outputname = sys.argv[2]
+def strip():
+	global inDirectory
+	global outDirectory
 
-output = open(outputname, "w")
+def main(argv):
+	try:
+		opts, args = getopt.getopt(argv, "d:o:")
+		for opt, args in opts:
+			if opt == "-d":
+				global inDirectory
+				inDirectory = args
+			elif opt == "-o":
+				global outDirectory
+				outDirectory = 
+	except getopt.GetoptError:
+		usage()
+		sys.exit(2)
 
-wc = 0
-for line in open(inputname, "r"):
-	# print line
-	newline = line[:-1]
-	tokens = newline.split("\t")
-	for i in range(len(tokens)):
-		tokens[i] = strip_control_characters(tokens[i])
-	# newline = strip_control_characters(line)
-	# newline = newline + "\n"
-	if len(tokens) == 3:
-		towrite = tokens[0] + "\t" + tokens[1] + "\t" + tokens[2] + "\n"
-		output.write(towrite)
-		wc = wc + 1
-		print str(wc) + " of 12928923"
-	
-outputname.close()
+if __name__ == '__main__':
+	if len(sys.argv) < 5:
+		usage()
+		sys.exit()
+	main(sys.argv[1:])
+	strip()

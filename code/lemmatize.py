@@ -55,7 +55,7 @@ def lemma():
 	# openfile.close()
 
 def usage():
-	print "USAGE: python " + sys.argv[0] +" -d <fileDirectory>"
+	print "USAGE: python " + sys.argv[0] +" -d <fileDirectory> -o <outDirectory"
 
 def main(argv):
 	try:
@@ -72,7 +72,7 @@ def main(argv):
 		sys.exit(2)
 
 if __name__ == '__main__':
-	if len(sys.argv) < 3:
+	if len(sys.argv) < 5:
 		usage()
 		sys.exit()
 	main(sys.argv[1:])

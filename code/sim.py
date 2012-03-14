@@ -26,7 +26,7 @@ dfDict = {}
 dfFile = "dftable-(2012-03-14-20:42:32.464767).txt"
 
 # For fragmenting
-fragmentSize = 5
+fragmentSize = 10
 lineRanges = []
 
 # For d1
