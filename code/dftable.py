@@ -17,7 +17,7 @@ date = str(datetime.now().date())
 time = str(datetime.now().time())
 
 fileDirectory = ""
-dftableFile = "/Users/lwheng/Download/fyp/dftable-(" + date + "-" + time + ").txt"
+dftableFile = "/Users/lwheng/Downloads/fyp/dftable-(" + date + "-" + time + ").txt"
 
 dftableDict = {}
 

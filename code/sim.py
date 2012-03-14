@@ -9,7 +9,7 @@ import heapq
 # No. of documents in corpora
 N = 500
 
-mainDirectory = "/Users/lwheng/Download/fyp"
+mainDirectory = "/Users/lwheng/Downloads/fyp"
 
 # For vocab
 vocabList = []
@@ -36,6 +36,8 @@ d2DFDict = {}
 d2TFDict = {}
 d2Fragments = []
 d2FragmentsToTest = []
+fragmentDict = {}
+fragmentVector = []
 
 # Booleans
 weightSwitch = False
@@ -82,7 +84,6 @@ def loadD2():
 	print "-----\tLoading D2\t-----"
 	global d2Filename
 	global d2Lines
-	global d2lines
 	d2Lines = []
 	opend2 = open(d2Filename,"r")
 	for l in opend2:
@@ -132,6 +133,73 @@ def loadTFTable():
 			print "Reverting back to weightless mode."
 			weightSwitch = False
 			tfLoaded = False
+
+def prepD1(d1LinesInput):
+	global d1Dict
+	global weightSwitch
+	d1Dict = {}
+    for l in d1LinesInput:
+        toadd = ""
+        if t.isalnum()  or myUtils.hyphenated(t) or myUtils.apos(t):
+            toadd = t
+        elif (myUtils.removepunctuation(t)).isalnum():
+            toadd = myUtils.removepunctuation(t)
+
+        if len(toadd) != 0:
+            if toadd not in d1Dict:
+                d1Dict[toadd] = 0
+            d1Dict[toadd] += 1
+    if weightSwitch:
+        for k in d1Dict:
+            d1Dict[k] = d1Dict[k]*idf(k)
+
+    global d1Vector
+    global vocabList
+    d1Vector = []
+    for v in vocabList:
+		if v in d1Dict:
+			d1Vector.append(d1Dict[v])
+		else:
+			d1Vector.append(0)
+
+def prepFragmentDict(fragmentLinesInput):
+	global fragmentDict
+	global weightSwitch
+
+	fragmentDict = {}
+	for l in fragmentLinesInput:
+		tokens = l.split()
+		for t in tokens:
+			toadd = ""
+			if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
+				toadd = t
+			elif (myUtils.removepunctuation(t)).isalnum():
+				toadd = myUtils.removepunctuation(t)
+
+			if len(toadd) != 0:
+				if toadd not in fragmentDict:
+					fragmentDict[toadd] = 0
+				fragmentDict[toadd] += 1
+
+	if weightSwitch:
+		for k in fragmentDict:
+			if k in d2TFDict:
+				locations = d2TFDict[k]
+				tf = 0
+				for location in locations:
+					if int(location) in lineRange:
+						tf += 1
+			fragmentDict[k] = fragmentDict[k]*tf*idf(k)
+			if fragmentDict[k] == 0:
+				fragmentDict[k] = 0.0
+
+	global vocabList
+	global fragmentVector
+	for v in vocabList:
+		if v in fragmentDict:
+			fragmentVector.append(fragmentDict[v])
+		else:
+			fragmentVector.append(0)
 
 
 def loadFiles():
@@ -250,8 +318,8 @@ def maxsim(d1, d2):
 	scores = []
 	fragmentsCount = len(d2FragmentsToTest)
 	for i in range(fragmentsCount):
-		result = sim(d1Dict, d2FragmentsToTest[i], fragmentsCount, lineRanges[i])	
-		# result = sim(None, d2FragmentsToTest[i], fragmentsCount, lineRanges[i])
+		result = sim(d1Dict, d2FragmentsToTest[i], lineRanges[i])	
+		# result = sim(None, d2FragmentsToTest[i], lineRanges[i])
 		interactiveResults.append(result)
 		resultsDict[result] = i
 		scores.append(result)
@@ -283,11 +351,7 @@ def maxsim(d1, d2):
 		print "------------------------------"
 
 
-def sim(d1,fragment,fragmentsCount,lineRange):
-	# d1 is query in lines
-	# fragment is fragment in lines, aka the "d2"
-	# fragmentsCount is no. of fragments
-
+def sim(d1,fragment,lineRange):
 	global d1Vector
 	d1dict = d1
 	d1vector = d1Vector
@@ -365,7 +429,7 @@ def main(argv):
 		sys.exit(2)
 
 import cmd
-class interactive(cmd.Cmd):
+class interactiveMode(cmd.Cmd):
 	def do_df(self, term):
 		if term:
 			global dfDict
@@ -538,9 +602,11 @@ if __name__ == '__main__':
 	main(sys.argv[1:])
 	loadFiles()
 	maxsim(d1Lines,d2Lines)
+	generalResult = sim(d1Dict, map(lambda x:x.lower(),d2Lines),range(1,len(d2Lines)))
+	print "general result is ", generalResult
 	if interactive:
 		print "-----\tEntering interactive mode\t-----"
-		interactive().cmdloop()
+		interactiveMode().cmdloop()
 	sys.exit()
 
 
