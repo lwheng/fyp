@@ -66,7 +66,7 @@ def dftable():
 
 def usage():
 	print "USAGE: python " + sys.argv[0] +" -v <vocab file> -d <fileDirectory>"
-	print "Default output location is Desktop, dftable-(timestamp).txt"
+	print "Default output location is Downloads, dftable-(timestamp).txt"
 	print "To specify output, add this: -o <output filename>"
 
 def main(argv):

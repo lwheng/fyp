@@ -47,7 +47,7 @@ def vocab():
 
 def usage():
 	print "USAGE: python " + sys.argv[0] +" -d <fileDirectory>"
-	print "Default output location is Desktop, vocab-(timestamp).txt"
+	print "Default output location is Downloads, vocab-(timestamp).txt"
 	print "To specify output, add this: -o <output filename>"
 
 def main(argv):
