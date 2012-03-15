@@ -1,32 +1,15 @@
+import os
 import sys
+import string   
+import getopt
+import re
+import myUtils
 
 inDirectory = ""
 outDirectory = ""
 
-inputname = sys.argv[1]
-outputname = sys.argv[2]
-
-output = open(outputname, "w")
-
-for line in open(inputname, "r"):
-	newline = line[:-1]
-	tokens = newline.split()
-	for i in range(len(tokens)):
-		tokens[i] = strip_control_characters(tokens[i])
-	# newline = strip_control_characters(line)
-	# newline = newline + "\n"
-	towrite = ""
-	for t in tokens:
-		towrite += t + " "
-	towrite = towrite[:-1] + "\n"
-	output.write(towrite)
-	
-output.close()
-
 def strip_control_characters(input):
 	if input:
-		import re
-
 		# unicode invalid characters
 		RE_XML_ILLEGAL = u'([\u0000-\u0008\u000b-\u000c\u000e-\u001f\ufffe-\uffff])' + \
 						u'|' + \
@@ -45,6 +28,30 @@ def strip():
 	global inDirectory
 	global outDirectory
 
+	if not os.path.isdir(outDirectory):
+		os.makedirs(outDirectory)
+
+	for dirname, dirnames, filenames in os.walk(inDirectory):
+		for f in filenames:
+			inputName = str(os.path.join(inDirectory, f))
+			outputName = str(os.path.join(outDirectory, f))
+
+			readinput = open(inputName,"r")
+			writeoutput = open(outputName,"w")
+			for l in readinput:
+				tokens = l.split()
+				towrite = ""
+				for t in tokens:
+					towrite += strip_control_characters(t) + " "
+				towrite = towrite[:-1] + "\n"
+				writeoutput.write(towrite)
+			readinput.close()
+			writeoutput.close()
+
+
+def usage():
+	print "USAGE: python " + sys.argv[0] +" -d <inDirectory> -o <outDirectory>"
+
 def main(argv):
 	try:
 		opts, args = getopt.getopt(argv, "d:o:")
@@ -54,7 +61,7 @@ def main(argv):
 				inDirectory = args
 			elif opt == "-o":
 				global outDirectory
-				outDirectory = 
+				outDirectory = args
 	except getopt.GetoptError:
 		usage()
 		sys.exit(2)

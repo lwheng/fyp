@@ -17,13 +17,11 @@ mainDirectory = "/Users/lwheng/Downloads/fyp"
 
 # For vocab
 vocabList = []
-# vocabFile = "vocab-(2012-03-07-20:17:59.878950).txt"
-vocabFile = "vocab-(2012-03-14-20:38:16.917714).txt"
+vocabFile = "vocab-(2012-03-15-11:44:27.805232).txt"
 
 # For DF
 dfDict = {}
-# dfFile = "dftable-(2012-03-07-20:25:49.094468).txt"
-dfFile = "dftable-(2012-03-14-20:42:32.464767).txt"
+dfFile = "dftable-(2012-03-15-11:47:16.581332).txt"
 
 # For fragmenting
 fragmentSize = 10
@@ -96,9 +94,9 @@ def loadD2():
 	opend2 = open(d2Filename,"r")
 	for l in opend2:
 		line = myUtils.removespecialcharacters(l)
-		line = line.lower()
-		if len(line) != 0:
-			d2Lines.append(line)
+		# if len(line) != 0:
+		# 	d2Lines.append(line)
+		d2Lines.append(line)
 	opend2.close()
 
 def loadDFTable():
@@ -217,37 +215,47 @@ def prepd2Fragments(d2LinesInput):
 	global fragmentSize
 	global d2Fragments
 	d2Fragments = []
+	lineRangeTemp = []
 	for i in xrange(0, len(d2LinesInput), fragmentSize):
 		d2Fragments.append(d2LinesInput[i:i+fragmentSize])
+		lineRangeTemp.append(range(i+1,i+1+fragmentSize))
 
 	# Overlap the fragments
 	global d2FragmentsToTest
-	d2FragmentsToTest = []
-	if fragmentSize > 1:
-		fragmentSizeHalf = fragmentSize/2
-		d2FragmentsOverlap = []
-		for i in range(len(d2Fragments)-1):
-			d2FragmentsOverlap.append(map(lambda x:x.lower(), d2Fragments[i]))
-			d2FragmentsOverlap.append(map(lambda x:x.lower(),d2Fragments[i][fragmentSizeHalf:] + d2Fragments[i+1][0:fragmentSizeHalf]))
-		d2FragmentsOverlap.append(map(lambda x:x.lower(),d2Fragments[-1]))
-		d2FragmentsToTest = d2FragmentsOverlap
-	else:
-		d2FragmentsToTest = map(lambda x:map(lambda y:y.lower(), x),d2Fragments)
-
-	# Preparing the lineRanges using fragmentSize
 	global lineRanges
+	d2FragmentsToTest = []
 	lineRanges = []
 	if fragmentSize > 1:
 		fragmentSizeHalf = fragmentSize/2
+		d2FragmentsOverlap = []
+		lineRangesOverlap = []
 		for i in range(len(d2Fragments)-1):
-			lower = (i*fragmentSize)+1
-			upper = (i+1)*fragmentSize
-			lineRanges.append(range(lower,upper+1))
-			lineRanges.append(range(lower+fragmentSizeHalf,upper+1+fragmentSizeHalf))
-		lineRanges.append(range((len(d2Fragments)-1)*fragmentSize + 1, len(d2Fragments)*fragmentSize + 1))
+			d2FragmentsOverlap.append(map(lambda x:x.lower(), d2Fragments[i]))
+			d2FragmentsOverlap.append(map(lambda x:x.lower(),d2Fragments[i][fragmentSizeHalf:] + d2Fragments[i+1][0:fragmentSizeHalf]))
+			lineRangesOverlap.append(lineRangeTemp[i])
+			lineRangesOverlap.append(lineRangeTemp[i][fragmentSizeHalf:] + lineRangeTemp[i+1][0:fragmentSizeHalf])
+		d2FragmentsOverlap.append(map(lambda x:x.lower(),d2Fragments[-1]))
+		lineRangesOverlap.append(lineRangeTemp[-1])
+		d2FragmentsToTest = d2FragmentsOverlap
+		lineRanges = lineRangesOverlap
 	else:
-		for i in range(len(d2LinesInput)):
-			lineRanges.append([i])
+		d2FragmentsToTest = map(lambda x:map(lambda y:y.lower(), x),d2Lines)
+		lineRanges = range(1, len(d2Lines)+1)
+
+	# # Preparing the lineRanges using fragmentSize
+	# global lineRanges
+	# lineRanges = []
+	# if fragmentSize > 1:
+	# 	fragmentSizeHalf = fragmentSize/2
+	# 	for i in range(len(d2Fragments)-1):
+	# 		lower = (i*fragmentSize)+1
+	# 		upper = (i+1)*fragmentSize
+	# 		lineRanges.append(range(lower,upper+1))
+	# 		lineRanges.append(range(lower+fragmentSizeHalf,upper+1+fragmentSizeHalf))
+	# 	lineRanges.append(range((len(d2Fragments)-1)*fragmentSize + 1, len(d2Fragments)*fragmentSize + 1))
+	# else:
+	# 	for i in range(len(d2LinesInput)):
+	# 		lineRanges.append([i])
 
 
 def loadFiles():
@@ -281,6 +289,8 @@ def cosinesim(v1,v2):
 		dot = dot + (v1[i]*v2[i])
 		sumofsquares1 = sumofsquares1 + (v1[i])**2
 		sumofsquares2 = sumofsquares2 + (v2[i])**2
+	# if sumofsquares2 == 0:
+	# 	return False
 	return dot/((math.sqrt(sumofsquares1))*(math.sqrt(sumofsquares2)))
 
 def maxsim(d1, d2):
@@ -334,6 +344,10 @@ def maxsim(d1, d2):
 
 
 def sim(d1,fragment,lineRange):
+	# print d1
+	# print fragment
+	# print lineRange
+	# print "#################################################################"
 	prepFragment(fragment,lineRange)
 	global d1Vector
 	global fragmentVector
@@ -546,7 +560,7 @@ if __name__ == '__main__':
 	main(sys.argv[1:])
 	loadFiles()
 	maxsim(d1Lines,d2Lines)
-	generalResult = sim(d1Dict, map(lambda x:x.lower(),d2Lines),range(1,len(d2Lines)))
+	generalResult = sim(d1Dict, map(lambda x:x.lower(),d2Lines),range(1,len(d2Lines)+1))
 	print str(top[0]) + "!" + str(rangeOfTop[0]) + "-" + str(rangeOfTop[-1]) + "!" + str(generalResult)
 	if interactive:
 		print "-----\tEntering interactive mode\t-----"
