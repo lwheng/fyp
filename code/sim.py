@@ -16,6 +16,8 @@ N = 8889
 mainDirectory = "/Users/lwheng/Downloads/fyp"
 
 # For vocab
+# Why bother loading vocab file when it is
+# already captured in df
 vocabList = []
 vocabFile = "vocab-(2012-03-15-11:44:27.805232).txt"
 
@@ -24,7 +26,7 @@ dfDict = {}
 dfFile = "dftable-(2012-03-15-11:47:16.581332).txt"
 
 # For fragmenting
-fragmentSize = 10
+fragmentSize = 15
 lineRanges = []
 
 # For d1
@@ -122,8 +124,7 @@ def loadTFTable():
 	global weightSwitch
 	d2TFDict = {}
 	if not tfLoaded:
-		tokens = d2Filename.split("/")
-		tfFilename = tokens[-1].replace(".txt", ".tf")
+		tfFilename = ((d2Filename.split("/"))[-1]).replace(".txt", ".tf")
 		tfPath = os.path.join(tfDirectory,tfFilename)
 		if os.path.exists(tfPath):
 			opentf = open(tfPath,"r")
@@ -148,7 +149,7 @@ def prepD1(d1LinesInput):
 		tokens = l.split()
 		for t in tokens:
 			toadd = ""
-			if t.isalnum()  or myUtils.hyphenated(t) or myUtils.apos(t):
+			if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
 				toadd = t
 			elif (myUtils.removepunctuation(t)).isalnum():
 				toadd = myUtils.removepunctuation(t)
@@ -198,7 +199,8 @@ def prepFragment(fragmentLinesInput,lineRangeInput):
 				for location in locations:
 					if int(location) in lineRangeInput:
 						tf += 1
-			fragmentDict[k] = fragmentDict[k]*tf*idf(k)
+			# fragmentDict[k] = fragmentDict[k]*tf*idf(k)
+			fragmentDict[k] = tf*idf(k)
 			if fragmentDict[k] == 0:
 				fragmentDict[k] = 0.0
 
