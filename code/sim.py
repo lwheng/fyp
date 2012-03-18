@@ -18,8 +18,8 @@ mainDirectory = "/Users/lwheng/Downloads/fyp"
 # For vocab
 # Why bother loading vocab file when it is
 # already captured in df
-vocabList = []
-vocabFile = "vocab-(2012-03-15-11:44:27.805232).txt"
+# vocabList = []
+# vocabFile = "vocab-(2012-03-15-11:44:27.805232).txt"
 
 # For DF
 dfDict = {}
@@ -63,7 +63,7 @@ tfDirectory = str(os.path.join(mainDirectory, tfLocation))
 # Where the DFTable (general) is found
 dfPath = str(os.path.join(mainDirectory, dfFile))
 # Where the vocab file is found
-vocabPath = str(os.path.join(mainDirectory,vocabFile))
+# vocabPath = str(os.path.join(mainDirectory,vocabFile))
 
 def loadVocab():
 	print "-----\tLoading Vocab\t-----"
@@ -262,11 +262,12 @@ def prepd2Fragments(d2LinesInput):
 
 def loadFiles():
 	print "-----\tLoading Files\t-----"
-	loadVocab()
+	# loadVocab()
+	loadDFTable()
 	loadD1()
 	loadD2()
 	if weightSwitch:
-		loadDFTable()
+		# loadDFTable()
 		loadTFTable()
 	print "-----\tLoading Done!\t-----"
 
