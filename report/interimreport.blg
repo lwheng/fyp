@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2011)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: interimreport.aux
+The style file: acm.bst
+Database file #1: bibsource.bib
+Warning--I didn't find a database entry for "itmakesense"
+You've used 1 entry,
+            2253 wiz_defined-function locations,
+            537 strings with 4148 characters,
+and the built_in function-call counts, 436 in all, are:
+= -- 43
+> -- 12
+< -- 0
++ -- 5
+- -- 4
+* -- 31
+:= -- 67
+add.period$ -- 3
+call.type$ -- 1
+change.case$ -- 5
+chr.to.int$ -- 0
+cite$ -- 1
+duplicate$ -- 22
+empty$ -- 40
+format.name$ -- 4
+if$ -- 97
+int.to.chr$ -- 0
+int.to.str$ -- 1
+missing$ -- 1
+newline$ -- 8
+num.names$ -- 2
+pop$ -- 6
+preamble$ -- 1
+purify$ -- 4
+quote$ -- 0
+skip$ -- 16
+stack$ -- 0
+substring$ -- 29
+swap$ -- 8
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 4
+warning$ -- 0
+while$ -- 5
+width$ -- 2
+write$ -- 14
+(There was 1 warning)
