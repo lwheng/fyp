@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2012.1.26)  26 MAR 2012 19:26
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2012.1.26)  26 MAR 2012 20:10
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -745,7 +745,7 @@ Here is how much of TeX's memory you used:
  7695 multiletter control sequences out of 15000+200000
  8090 words of font info for 31 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
- 38i,6n,32p,467b,203s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,6n,32p,277b,203s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmbx12.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmcsc10.pfb></usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/
