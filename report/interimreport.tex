@@ -1,5 +1,5 @@
 \documentclass[12 pt]{article}
-\usepackage{amssymb,amsmath,amstext,amsgen,amsbsy,amsopn,amsfonts,graphicx,theorem, anysize,multicol,algorithm, algorithmic, CJKutf8}
+\usepackage{amssymb,amsmath,amstext,amsgen,amsbsy,amsopn,amsfonts,graphicx,theorem, anysize,multicol,algorithm, algorithmic, CJKutf8, url}
 %\marginsize{0.5in}{0.5in}{0.5in}{0.5in}
 %\marginsize{left}{right}{top}{bottom}
 %\usepackage[lmargin=2cm,,rmargin=2cm,tmargin=2cm,bmargin=2cm]{geometry}
@@ -7,14 +7,49 @@
 
 \begin{document}
 \bibliographystyle{acm}
-\title{HYP (CP4101) Interim Report \\ Citation Provenance}
+\title{CP4101 HYP Interim Report \\ Citation Provenance\footnote{Project Code: H079820}}
 \author{Heng Low Wee \\ U096901R}
 \maketitle
 
 \section{Introduction}
-Just setting up the skeleton\cite{itmakessense}
+\paragraph{}
+To cite previously published scientific papers is a necessary and common practice among researchers. It gives credit and acknowledgement to original ideas, and to those researchers who did significant amount of work in that particular field of research, and more importantly, to uphold intellectual property. A reader of such research papers often encounter these citations made by the authors in various sentences throughout the paper. Often enough, if a reader wishes to gain a better understanding of the current context, it is necessary to follow through these citations and read up on these cited papers.
+
+\subsection{The Problem}
+\paragraph{}
+Readers would read up on the cited papers to gain a better insight on the current topic of discussion. However, as frequent readers might find, most citations are only \textit{mentions}. They do not directly refer to some particular section of the cited paper, for example, to make reference to the evaluation results made by the authors of the cited paper. Instead, they are general citations. These citations are important. However since it is not immediately clear where the cited information is from, a reader has to invest additional time to read through the entire cited paper before being able to find out what the critical information is. The difficulty is increased when the cited document is a research journal, when the amount of content is comparably huge. The author might cite specifically using the journal's volume number, issue and page number, yet the problem remains. This makes little contribution to a reader's understanding of the current topic, and it is also time-consuming.
+
+\subsection{Our Goal}
+\paragraph{}
+In general, we wish to improve the reading experience of scientific \& research documents, from the various fields of research. We want to provide information about the provenance of a citation made in a paper. Readers will be informed of where exactly the cited information is from in the cited paper. For instance, if a citation is made to refer to the evaluation results computed by the authors of the referenced paper, the reader would be \textit{guided} to the particular section of that paper. By \textit{guiding}, we refer to having the section with the critical information highlighted, and so the reader can quickly read up on it, before resuming on the current paper. If the citation was a general citation, the reader will possibly be referred to the Abstract section of the paper.
+
+\paragraph{}
+With the above in mind, we investigate these related works.
+
 \section{Literature Review}
+\subsection{Helping Users Make Relevance Judgements About Cited Documents}
+
+
 \section{Progress So Far}
+\subsection{Analysing The Problem}
+\paragraph{}
+All citations could be classified into 2 categories: General, and Specific citations. A general citation is essentially a \textit{mention}, and the author is making reference to a paper as a whole, usually because the cited paper is of the same field of study. A specific citation is more direct. It refers to a particular section, paragraph, or even line of the cited paper. For example, this often happens in the case where the author wishes to refer to some development by the cited authors, or to make reference to the evaluation results in order to compare performance. In the field of Computer Science, it is often authors make reference to some particular computer system, or some computing algorithms, and to compare performance on speed \& accuracy on solving problems. Our problem can be reduced to determining whether a citation is General or Specific. If a citation is general, the reader can be directed to the Abstract section of the cited paper. If a citation is specific, the reader can be directed to that specific paragraph respectively.
+
+\subsection{Modelling The Problem}
+\paragraph{}
+The main question in this problem is \textit{Where does this information come from in that cited paper?}
+We can say that we already know the list of references cited by a paper. We have this information from a paper's References or Bibliography section. Conveniently, we also know that any sentence that contains a citation must refer to one in the list of references. For this project, we work on based on the fact that we are already made known of the list of references.
+
+\paragraph{}
+In web search engines, an user enters a search query, and a search engine would use this query to search within its search domain -- millions of web pages -- and then display the best matching web pages as compared to the search query. That would be equivalent to having a search query for an entire corpus of research papers. Our problem can also be modeled as a searching problem, but a reduced version as compared to web search engines.
+
+\paragraph{}
+Consider reading a paper, \url{A}. We know the citations made by \url{A}, and the cited papers are listed in the References section of \url{A}. From this our search domain for this paper would be the contents of the list of cited papers. We reduce the search domain further when we are investigating a particular citation in \url{A}, say \url{A} cite the paper \url{B}. Now, for this citation, the scope of search would be a sub-domain -- contents of paper \url{B}. So instead of searching for the best matching document in the corpus, we are searching for the best matching \textit{fragment} in \url{B}. For now we define our search accuracy to the level of a \textit{fragment}, where a \textit{fragment} consists of $N$ sentences of the paper. The search query comes from \url{A}, the sentence in which the citation is located. The surrounding words to the citation would serve as the list of words in the search query.
+
+\subsection{Our Approach}
+\subsubsection{Training Corpus}
+\paragraph{}
+At this initial stage, we picked the ACL Anthology Reference Corpus\footnote{http://acl-arc.comp.nus.edu.sg/} (ACL-ARC). The ACL-ARC consists of publications of the Computational Linguistics field. Note that in general, we wish to perform this citation provenance tasks on all publications from all fields of research. This corpus is chosen as a start, because it provides the interlink data that conveniently informs us of the citation-links between the papers in the corpus. For instance, a link like \url{X98-103 ==> X96-1049} says that the paper \url{X98-103} cites the other.
 \section{What's Next}
 \bibliography{bibsource}
 \end{document}
