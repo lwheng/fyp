@@ -29,6 +29,13 @@
 \newblock Keyword extraction from a single document using word co-occurrence
   statistical information.
 
+\bibitem{paraphrase2}
+{\sc Shinyama, Y., Sekine, S., and Sudo, K.}
+\newblock Automatic paraphrase acquisition from news articles.
+\newblock In {\em Proceedings of the second international conference on Human
+  Language Technology Research\/} (San Francisco, CA, USA, 2002), HLT '02,
+  Morgan Kaufmann Publishers Inc., pp.~313--318.
+
 \bibitem{csibs}
 {\sc Wan, S., Paris, C., and Dale, R.}
 \newblock Supporting browsing-specific information needs: Introducing the

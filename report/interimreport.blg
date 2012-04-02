@@ -8,45 +8,45 @@ Warning--can't use both volume and number fields in parscit
 Warning--empty year in parscit
 Warning--empty journal in keywordextraction_mlnlp
 Warning--empty journal in keywordextraction_corpusfree
-You've used 8 entries,
+You've used 9 entries,
             2253 wiz_defined-function locations,
-            578 strings with 5873 characters,
-and the built_in function-call counts, 2664 in all, are:
-= -- 257
-> -- 106
+            587 strings with 6149 characters,
+and the built_in function-call counts, 3149 in all, are:
+= -- 307
+> -- 123
 < -- 0
-+ -- 44
-- -- 36
-* -- 194
-:= -- 422
-add.period$ -- 22
-call.type$ -- 8
-change.case$ -- 40
++ -- 51
+- -- 42
+* -- 229
+:= -- 489
+add.period$ -- 25
+call.type$ -- 9
+change.case$ -- 46
 chr.to.int$ -- 0
-cite$ -- 13
-duplicate$ -- 114
-empty$ -- 220
-format.name$ -- 36
-if$ -- 567
+cite$ -- 14
+duplicate$ -- 138
+empty$ -- 262
+format.name$ -- 42
+if$ -- 678
 int.to.chr$ -- 0
-int.to.str$ -- 8
-missing$ -- 10
-newline$ -- 41
-num.names$ -- 16
-pop$ -- 49
+int.to.str$ -- 9
+missing$ -- 11
+newline$ -- 46
+num.names$ -- 18
+pop$ -- 56
 preamble$ -- 1
-purify$ -- 34
+purify$ -- 39
 quote$ -- 0
-skip$ -- 79
+skip$ -- 98
 stack$ -- 0
-substring$ -- 161
-swap$ -- 38
+substring$ -- 198
+swap$ -- 48
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 28
+type$ -- 32
 warning$ -- 5
-while$ -- 26
-width$ -- 9
-write$ -- 80
+while$ -- 31
+width$ -- 10
+write$ -- 92
 (There were 5 warnings)

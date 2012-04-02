@@ -4,9 +4,9 @@
 %\marginsize{left}{right}{top}{bottom}
 %\usepackage[lmargin=2cm,,rmargin=2cm,tmargin=2cm,bmargin=2cm]{geometry}
 \usepackage[margin=1.2in]{geometry}
-\doublespacing
-%\singlespacing
-%\onehalfspacing
+%\doublespacing
+\singlespacing
+\onehalfspacing
 
 \begin{document}
 \bibliographystyle{acm}
@@ -102,7 +102,7 @@ We begin with assigning term frequencies to $v_q$ and $v_f$. Initial tests revea
 By using this weighting scheme, the terms that appear rarely -- with high \url{tf-idf} value -- are \textit{important}, whereas common terms that occur often, like \textit{the} and \textit{to}, are not. This is feasible, since in general, terms that appear often are less important, and we do not want non-important terms to affect our results.
 
 \paragraph{}
-We implemented the algorithms for computing \url{tf-idf} and cosine similarity ourselves instead of using the NLTK package. Partly because of performance. We are able to pre-prepare information such as $V$, our vocabulary set, \url{tf} for each term with respect to each document, and \url{df} for each term in $V$. In addition, we performed word stemming on the entire corpus. So instead of having the NLTK tool computing these information each time a query is ran, we speed up the computation process by removing this repetition, since these information remains constant for the same corpus.
+We implemented the algorithms for computing \url{tf-idf} and cosine similarity ourselves instead of using the NLTK\footnote{http://www.nltk.org/} package. Partly because of performance. We are able to pre-prepare information such as $V$, our vocabulary set, \url{tf} for each term with respect to each document, and \url{df} for each term in $V$. In addition, we performed word stemming on the entire corpus. So instead of having the NLTK tool computing these information each time a query is ran, we speed up the computation process by removing this repetition, since these information remains constant for the same corpus.
 
 \section{What's Next}
 \label{whatsnext}
@@ -113,9 +113,9 @@ Using the same corpus, we plan to gather gold standard annotations for the resea
 \paragraph{}
 Collecting gold standard annotations is essential for the project. First, it is for evaluating the performance of our proposed solution. The current state of the corpus do not provide such information. Second, in order to introduce a machine learner component, we would require gold standard annotations to \textit{train} on.
 
-\subsection{Paraphrasing}
+\subsection{NLP Component}
 \paragraph{}
-It is a common practice for authors, when citing another paper, to paraphrase the original sentences, often to achieve greater clarity for the current context. Sure enough, the terms in the paraphrase would be significantly different from the original sentence written in the cited paper. The baseline we used would simply treat that as a mis-match. Therefore, we have to explore introducing NLP techniques and mechanisms in order to handle paraphrasing.
+It is a common practice for authors, when citing another paper, to paraphrase the original sentences, often to achieve greater clarity for the current context. Sure enough, the terms in the paraphrase would be different from the original sentence written in the cited paper. The baseline we used is still a frequency-based technique to determine the importance of terms in the document. Queries are not context-sensitive, and so the result might not be able to retain similar context. Furthermore, the baseline would simply treat paraphrased queries as a mis-match. Therefore, we have to explore NLP techniques and mechanisms in order to handle paraphrasing. Shinyama et al.\cite{paraphrase2} described an approach to perform automated paraphrase acquisition from news articles, based on the scenario that these news articles are reporting on the same event. In our context, the citing and the cited papers generally belong to the same topic. We may explore such similar approaches to tackle the paraphrasing problem.
 
 \singlespacing
 \bibliography{bibsource}
