@@ -1,3 +1,54 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{1}
+
+\bibitem{parscit}
+{\sc Councill, I.~G., Giles, C.~L., and Kan, M.-Y.}
+\newblock {\em ParsCit: An open-source CRF Reference String Parsing Package},
+  vol.~2008.
+\newblock European Language Resources Association (ELRA), pp.~661--667.
+
+\bibitem{keywordextraction_ml}
+{\sc Hulth, A.}
+\newblock Improved automatic keyword extraction given more linguistic
+  knowledge.
+\newblock In {\em Proceedings of the 2003 conference on Empirical methods in
+  natural language processing\/} (Stroudsburg, PA, USA, 2003), EMNLP '03,
+  Association for Computational Linguistics, pp.~216--223.
+
+\bibitem{keywordextraction_mlnlp}
+{\sc Hulth, A.}
+\newblock Combining machine learning and natural language processing for
+  automatic keyword extraction /.
+
+\bibitem{irtextbook}
+{\sc Manning, C.~D., Raghavan, P., and Schütze, H.}
+\newblock {\em Introduction to Information Retrieval}.
+\newblock Cambridge University Press, 2008.
+
+\bibitem{keywordextraction_corpusfree}
+{\sc Matsuo, Y., and Ishizuka, M.}
+\newblock Keyword extraction from a single document using word co-occurrence
+  statistical information.
+
+\bibitem{csibs}
+{\sc Wan, S., Paris, C., and Dale, R.}
+\newblock Supporting browsing-specific information needs: Introducing the
+  citation-sensitive in-browser summariser.
+\newblock {\em Web Semantics: Science, Services and Agents on the World Wide
+  Web 8}, 2-3 (2010).
+
+\bibitem{citation-sensitive}
+{\sc Wan, S., Paris, C., Muthukrishna, M., and Dale, R.}
+\newblock Designing a citation-sensitive research tool: an initial study of
+  browsing-specific information needs.
+\newblock In {\em Proceedings of the 2009 Workshop on Text and Citation
+  Analysis for Scholarly Digital Libraries\/} (Stroudsburg, PA, USA, 2009),
+  NLPIR4DL '09, Association for Computational Linguistics, pp.~45--53.
+
+\bibitem{keywordextraction_crf}
+{\sc Zhang, C.}
+\newblock Automatic keyword extraction from documents using conditional random
+  fields.
+\newblock {\em Journal of Computational Information Systems 4}, 3 (2008), 1169
+  -- 1180.
 
 \end{thebibliography}
