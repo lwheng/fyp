@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{parscit}
 {\sc Councill, I.~G., Giles, C.~L., and Kan, M.-Y.}
@@ -28,6 +28,13 @@
 {\sc Matsuo, Y., and Ishizuka, M.}
 \newblock Keyword extraction from a single document using word co-occurrence
   statistical information.
+
+\bibitem{keyphrase}
+{\sc Nguyen, T.~D., and Kan, M.-Y.}
+\newblock Keyphrase extraction in scientific publications.
+\newblock In {\em Proceedings of the 10th international conference on Asian
+  digital libraries: looking back 10 years and forging new frontiers\/}
+  (Berlin, Heidelberg, 2007), ICADL'07, Springer-Verlag, pp.~317--326.
 
 \bibitem{paraphrase2}
 {\sc Shinyama, Y., Sekine, S., and Sudo, K.}
