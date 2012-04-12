@@ -111,6 +111,17 @@ Using the same corpus, we plan to recruit human participants to gather gold-stan
 \paragraph{}
 The current state of the corpus do not provide such detailed annotations, and hence it is necessary we conduct such data gathering process. Also, in order to introduce a machine learner component to the application, we would require gold-standard annotations to \textit{train} on.
 
+\paragraph{}
+To collect the annotations, we consider two approaches. The first approach is to conduct data gathering sessions in campus and the target participants are students. In each session, each participant would be provided the following:
+\begin{enumerate}
+\item An annotation file. This file contains the citation-link, and participants will have to annotate whether the citation is General or Specific.
+\item The respective research text files. These research text files will be those listed in the annotation file. Participants will have to read through these files to determine the annotation.
+\end{enumerate}
+To aid the participants on understanding the task, an instructional document, together with some sample annotations and research papers would also be provided to them.
+
+\paragraph{}
+The other approach is to use the Amazon Mechanical Turk (MTurk\footnote{https://www.mturk.com/mturk/welcome}). Online participants will also be provided the same set of documents to allow them perform the task. One reason for opting to use MTurk is it provides tools and guidelines that conveniently helps us manage our data collection on this online platform. Another reason is its outreach to large number of participants and would allow us to collect large amount of data. Our principal consideration, however, is we have to filter our target participants as we do require them to be able to understand the contents on the research papers.
+
 \subsection{NLP Component}
 \paragraph{}
 It is a common practice for authors, when citing another paper, to paraphrase the original sentences, often to achieve greater clarity for the current context. Naturally, the terms in the paraphrase would be different from the original sentence written in the cited paper. The baseline we used is still a frequency-based technique to determine the importance of terms in the document. Queries are not context-sensitive, and so the result might not be able to retain similar context. Furthermore, the baseline would simply treat paraphrased queries as a mis-match. Therefore, we have to explore NLP techniques and mechanisms in order to handle paraphrasing. Shinyama et al.\cite{paraphrase2} described an approach to perform automated paraphrase acquisition from news articles, based on the scenario that these news articles are reporting on the same event. In our context, the citing and the cited papers generally belong to the same topic. We may explore such similar approaches to tackle the paraphrasing problem.
@@ -118,31 +129,3 @@ It is a common practice for authors, when citing another paper, to paraphrase th
 \singlespacing
 \bibliography{bibsource}
 \end{document}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
