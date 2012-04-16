@@ -100,7 +100,7 @@ We begin with assigning term frequencies to $v_q$ and $v_f$. Initial tests revea
 By using this weighting scheme, the terms that appear rarely -- with high \url{tf-idf} value -- are \textit{important}, whereas common terms that occur often, like \textit{the} and \textit{to}, are not. This is feasible, since in general, terms that appear often are less important, and we do not want non-important terms to affect our results.
 
 \paragraph{}
-We implemented the algorithms for computing \url{tf-idf} and cosine similarity. We pre-prepare information such as $V$, our vocabulary set, \url{tf} for each term with respect to each document, and \url{df} for each term in $V$. In addition, we performed word stemming on the entire corpus. We aimed to speed up computation by pre-prepare these information, since they remain constant for the same corpus.
+We implemented the algorithms for computing \url{tf-idf} and cosine similarity. We pre-prepare information such as $V$, our vocabulary set, \url{tf} for each term with respect to each document, and \url{df} for each term in $V$. In addition, we performed word stemming on the entire corpus. We aimed to speed up computation by pre-preparing these information, since they remain constant for the same corpus.
 
 \section{What's Next}
 \label{whatsnext}
