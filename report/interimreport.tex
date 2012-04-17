@@ -126,6 +126,9 @@ The other approach is to use the Amazon Mechanical Turk (MTurk\footnote{https://
 \paragraph{}
 It is a common practice for authors, when citing another paper, to paraphrase the original sentences, often to achieve greater clarity for the current context. Naturally, the terms in the paraphrase would be different from the original sentence written in the cited paper. The baseline we used is still a frequency-based technique to determine the importance of terms in the document. Queries are not context-sensitive, and so the result might not be able to retain similar context. Furthermore, the baseline would simply treat paraphrased queries as a mis-match. Therefore, we have to explore NLP techniques and mechanisms in order to handle paraphrasing. Shinyama et al.\cite{paraphrase2} described an approach to perform automated paraphrase acquisition from news articles, based on the scenario that these news articles are reporting on the same event. In our context, the citing and the cited papers generally belong to the same topic. We may explore such similar approaches to tackle the paraphrasing problem.
 
+\paragraph{}
+Another idea is to perform analysis on the citing sentence. By looking at the citing sentence for some keywords, it could give us a clue to what the author was referring to . For instance, if the author used words like ``demonstrated'', he/she might be referring to the System section of the cited paper. If the author used words like ``showed'', the reference could be made for the Evaluation section.
+
 \singlespacing
 \bibliography{bibsource}
 \end{document}
