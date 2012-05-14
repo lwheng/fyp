@@ -1,0 +1,70 @@
+\chapter{Evaluation}
+\label{evaluation}
+\paragraph{}
+In our evaluation, we tested against \textsc{SensEval} all-words and \textsc{SemEval2007} coarse grained all-words tasks. We used WordNet 1.7.1 as our sense inventory.
+
+\section{Pre-Processing}
+\paragraph{}
+Our method makes use of an entire sentence to predict the word sense of each word. The test files of \textsc{SensEval} and \textsc{SemEval} are in the XML format, so before can run through the all-words test files through our system, we had to pre-process the test files such that we were able to test sentence by sentence. For all the sentences, we removed all quotations and punctuations, retaining only the English words as we only consider the actual words for word sense predictions.
+
+\section{Experiment}
+\paragraph{}
+We conducted our experiments such that we were using \textsc{SemCor1.7.1} as the training corpus for all the test corpus we were testing against. We pre-processed the \textsc{SensEval} and \textsc{SemEval} test corpus into sentences, then we ran the prediction process for all testable words in the test corpus. The results of the WSD accuracies are as shown in Table \ref{tab:resultsSum}.
+%%Aobo: again, you have a table without any descriptions. Give discussions on the table
+
+\begin{table}
+	\begin{tabular}[c]{| l | c | c | c |}
+		\hline
+		& \textsc{SensEval-2} (\%) & \textsc{SensEval-3} (\%) & \textsc{SemEval-2007} Coarse-Grained (\%) \\
+		\hline
+		Baseline & 62.4 & 58.9 & 73.0 \\
+		\hline
+		DT v0.1 & 51.3 & 48.8 & 78.9 \\
+		\hline
+		DT v0.2 & 55.1 & 49.4 & 79.3 \\
+		%\hline
+		%DT v0.1 + confidence & 54.8 & 50.1 & 79.3 \\
+		\hline
+		DT v0.3 & & & \\
+		\hline
+		IMS & 68.2 & 67.6 & 82.6 \\
+		\hline
+	\end{tabular}
+	\caption{WSD accuracies on \textsc{SensEval} and \textsc{SemEval} all-words tasks}
+	\label{tab:resultsSum}
+\end{table}
+
+\section{Problems Faced}
+\paragraph{}
+Our post-experiment analysis helped us identified some problems that might had contributed to the results. Also, in this section, we review on whether our performance indicators were satisfied.
+
+\subsection{Amount of Corpus Overlap}
+\begin{table}[h]
+	\center
+	\begin{tabular}{| c | c | c |}
+		\hline
+		\textsc{SensEval-2} (\%) & \textsc{SensEval-3} (\%) & \textsc{SemEval-2007} Coarse-Grained (\%) \\
+		\hline
+		67.6 & 65.6 & 84.7 \\
+		\hline
+	\end{tabular}
+	\caption{Corpus overlap with \textsc{SemCor1.7.1} (with respective test corpus)}
+	\label{tab:overlapPercentage}
+\end{table}
+\paragraph{}
+In the \textsc{SensEval} and \textsc{SemEval} test files, there exists some lemmas that are not found in our training data set which is generated from \textsc{SemCor}. Table \ref{tab:overlapPercentage} summarizes the percentage of overlap with \textsc{SemCor1.7.1}, with respect to each test corpus.
+
+\paragraph{}
+As you can see, the amount of overlap is consistent with the results shown in Table \ref{tab:resultsSum}. When the amount of overlap is lower, 67.6\% and 65.6\% for \textsc{SensEval-2} and \textsc{SensEval-3} in Table \ref{tab:overlapPercentage}, the performance is also lower, at 55.1\% and 49.4\% for \textsc{SensEval-2} and \textsc{SensEval-3} in Table \ref{tab:resultsSum}. When the amount of overlap is higher, at 84.7\% for \textsc{SemEval}, the performance is also higher, at 79.3\%. This shows that the amount of overlap in the corpus also affects the accuracy in WSD, the higher the amount of overlap, the more accurate the performance.
+
+\subsection{Space \& Time Taken}
+\paragraph{}
+As mentioned earlier, our performance indicators are Accuracy, Speed and Size of Model.
+\paragraph{}
+A quick check on the size of our model files before Iteration 3 in Section \ref{it:3}, we found it to be twice as large when compared to IMS's model files (refer to Table \ref{tab:modelSize}). We concluded that in our model files, there are too much redundant information that is not necessary during the prediction process. In fact, during the prediction process, we only require the actual decision tree itself in order to predict word senses. Hence we extracted only the tree structure necessary for word sense prediction.
+
+\paragraph{}
+Using only the tree to predict word senses, and after further compression, we were able to reduce the model size to approximately \textbf{1 MB}.
+
+\paragraph{}
+Before we switch to the tree-only model files, the time taken to process each sentence easily took about \textbf{10-40 seconds}. The main reason for this is the length of the sentence, and the number of test-able words in that sentence. The longer the sentence, the longer it takes to process the entire sentence. After switching over to using the tree-only model files, the time taken was reduced significantly. We were able to process each sentence at an average of \textbf{0.15 seconds} 
