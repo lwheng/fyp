@@ -38,7 +38,7 @@
 <span class="icon-bar"></span>
 <span class="icon-bar"></span>
 </a>
-<a class="brand" href="./index.html">Home</a>
+<!-- <a class="brand" href="./index.html">Home</a> -->
 <div class="nav-collapse collapse">
 <ul class="nav">
 <li class="active">
@@ -91,16 +91,16 @@
 <p>There are various styles to display in-line citations. The most common styles are:</p>
 <ul>
 <li>
-	<div class="alert alert-info"><strong><i>< author names > [< number >]</i></strong></div>
-	<p>
-		To display authors' name, followed by an identifying number for the <strong>References</strong> section. This is the style used in our example.<p>Example:</p><i>...in the system described by <strong>John Doe [22]</strong>, it clearly states that...</i>
-	</p>
+<div class="alert alert-info"><strong><i>< author names > [< number >]</i></strong></div>
+<p>
+To display authors' name, followed by an identifying number for the <strong>References</strong> section. This is the style used in our example.<p>Example:</p><i>...in the system described by <strong>John Doe [22]</strong>, it clearly states that...</i>
+</p>
 </li>
 
 <li>
-	<div class="alert alert-info"><strong><i>(< author names >, < year of publication >)</i></strong></div>
-	<p>To display authors' name, followed by the year of publication.<p>Example:</p><i>...in the system described by <strong>(J. Doe, 2011)</strong>, it clearly states that...</i>
-	</p>
+<div class="alert alert-info"><strong><i>(< author names >, < year of publication >)</i></strong></div>
+<p>To display authors' name, followed by the year of publication.<p>Example:</p><i>...in the system described by <strong>(J. Doe, 2011)</strong>, it clearly states that...</i>
+</p>
 </li>
 </ul>
 </div><!-- /.span -->
@@ -125,22 +125,22 @@
 <h2>What is a citing sentence?</h2>
 <p>
 You might already have a clue what is a citing sentence, we have already seen one in the examples. The <strong>citing sentence</strong> is/are the line(s) of words that contain the citation. For example in a part of a paper:
-	<div class="alert alert-info">
-		<p align="center">
-			<i>...In this paper, we describe a system that will aid us in taking over the world. Previous works have all identified the key components needed for this task. In the system described by <strong>(J. Doe, 2011)</strong>, it clearly states that...</i>
-		</p>
-	</div>
+<div class="alert alert-info">
+<p align="center">
+<i>...In this paper, we describe a system that will aid us in taking over the world. Previous works have all identified the key components needed for this task. In the system described by <strong>(J. Doe, 2011)</strong>, it clearly states that...</i>
+</p>
+</div>
 </p>
 
 <h2>What is cited information?</h2>
 <p>
 When an author cites another paper, his/her purpose must be to either refer to the cited paper as a whole, or refer to a particular piece of information in the cited paper. For example in the paper written by John Doe:
-	<div class="alert alert-info">
-		<p align="center">
-			<i>...in order for a system to be successful in taking over the world, there are many components the system must have. <strong>Fundamentally, the system must have the ability to</strong>...</i>
-		</p>
-	</div>
-	As you can see, the <strong>cited information</strong> is/are the line(s) of words that contain the most relevant information in relation to the citation made by the citing sentence.
+<div class="alert alert-info">
+<p align="center">
+<i>...in order for a system to be successful in taking over the world, there are many components the system must have. <strong>Fundamentally, the system must have the ability to.........This enables us to...</strong></i>
+</p>
+</div>
+As you can see, the <strong>cited information</strong> is/are the line(s) of words that contain the most relevant information in relation to the citation made by the citing sentence.
 </p>
 </section>
 
@@ -151,7 +151,7 @@ When an author cites another paper, his/her purpose must be to either refer to t
 <h1>Dataset <small>The dataset we use for this project</small></h1>
 </div>
 <div class="row">
-<div class="span6">
+<div class="span8">
 <p>The dataset we are using for this task is the ACL Anthology Reference Corpus (<a href="http://acl-arc.comp.nus.edu.sg/" target="_blank">ACL ARC</a>). ACL ARC is a corpus for scholarly publications in the field of Computational Linguistics. For now, all you need to know about this dataset is that it contains an <strong>interlink</strong> file.
 </p>
 
@@ -166,7 +166,7 @@ Let's look at the first record in the example, <strong>A00-1003 ==> P99-1029</st
 That's about all you need to know about the <strong>interlink</strong> file for now. Do keep this in mind, as it will be mentioned again in the later part of this page.
 </p>
 </div>
-<div class="span6">
+<div class="span4">
 <p>Part of the <strong>Interlink</strong> file</p>
 <pre class="prettyprint linenums">
 A00-1003 ==> P99-1029
@@ -195,30 +195,30 @@ A00-1006 ==> P98-2185
 <h1>Objective <small>What is the objective of this task?</small></h1>
 </div>
 <p>
-The objective of this task is to gather manual annotations for our research. We wish to annotate whether a citation is <strong>GENERAL</strong>, <strong>SPECIFIC</strong> or <strong>UNDETERMINED</strong>.
+The objective of this task is to gather manual annotations for our research. We wish to annotate whether a citation is <strong>General</strong>, <strong>Specific</strong> or <strong>Undetermined</strong>.
 </p>
 
 <div class="row">
-	<div class="span4">
-		<div class="alert alert-success">
-			<h3>General</h3>
-			<p>A <strong>GENERAL</strong> citation simply means Paper A is citing Paper B in general. Paper A is making reference to Paper B as a whole, or simply giving credit for the work done by authors of Paper B.</p>
-		</div>
-	</div>
-	
-	<div class="span4">
-		<div class="alert alert-success">
-			<h3>Specific</h3>
-			<p>A <strong>SPECIFIC</strong> citation means Paper A is making reference to a <strong>specific</strong> section of Paper B. For instance, Paper A makes reference to a particular system, System ABC, created/described by Paper B in Paper B's second section (e.g. Our System). Since Paper A is specifically referring to this section of the paper, we say this cite is specific.</p>
-		</div>
-	</div>
-	
-	<div class="span4">
-		<div class="alert alert-success">
-			<h3>Undetermined</h3>
-			<p>In cases where it is not possible to determine the type of the citation.</p>
-		</div>
-	</div>
+<div class="span4">
+<div class="alert alert-success">
+<h3>General</h3>
+<p>A <strong>General</strong> citation simply means Paper A is citing Paper B in general. Paper A is making reference to Paper B as a whole, or simply giving credit for the work done by authors of Paper B.</p>
+</div>
+</div>
+
+<div class="span4">
+<div class="alert alert-success">
+<h3>Specific</h3>
+<p>A <strong>Specific</strong> citation means Paper A is making reference to a <strong>specific</strong> section of Paper B. For instance, Paper A makes reference to a particular system, System ABC, created/described by Paper B in Paper B's second section (e.g. Our System). Since Paper A is specifically referring to this section of the paper, we say this cite is specific.</p>
+</div>
+</div>
+
+<div class="span4">
+<div class="alert alert-success">
+<h3>Undetermined</h3>
+<p>In cases where it is not possible to determine the type of the citation.</p>
+</div>
+</div>
 </div>
 
 <h2>What is required of this task?</h2>
@@ -234,7 +234,202 @@ A participant, provided with a set of scientific papers, need to determine the t
 <div class="page-header">
 <h1>How To Annotate? <small>Let's get started!</small></h1>
 </div>
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<div class="row">
+<div class="span8">
+<p>
+Recall that the objective of this task to determine the type of the citation, and then to annotate with details about the citation. The challenge of this task to be able to differentiate between <strong>General</strong> and <strong>Specific</strong>. Annotating begins with a <strong>working file</strong> that will be provided to you. Notice that the working file looks really similar to the interlink file. Your task, is to annotate by entering information into this working file. See that the <strong>first 3 lines</strong> has already been filled with the details. Don't worry about that dash / numbers / question mark means for now, we'll explain it shortly.
+</p>
+<p>The general approach to annotating is as follow:</p>
+<pre>
+if determinable
+	if specific <span class="muted"># Able to find a specific location for cited information</span>
+		if single-location <span class="muted"># Cited info resides within 30 lines</span>
+			if multi-line <span class="muted"># Cited info resides in a range of lines</span>
+				Annotate with range, e.g. 65-80
+			else if single-line <span class="muted"># Cited info resides in a line</span>
+				Annotate with number, e.g. 65
+		else if multi-locations <span class="muted"># Cited info resides at different locations in cited paper</span>
+			if multi-line
+				Annotate with range + '!', e.g. 65-80!143-160<span class="muted">!...</span>
+			else if single-line
+				Annotate with number + '!', e.g. 65!150<span class="muted">!...</span>
+	else
+		Annotate with '-'
+else
+	Annotate with '?'
+</pre>
+<p># Note: For multi-locations, it can be a combination of single-line and multi-line i.e. <code>46!153-188</code> or <code>153-188!200</code></p>
+</div>
+
+<div class="span4">
+<strong>Working File</strong>
+<pre class="prettyprint linenums">
+A00-1003==>P99-1029,-
+A00-1004==>A00-1019,46!153-188
+A00-1004==>J93-1006,?
+A00-1004==>J93-2003,
+A00-1004==>P91-1022,
+A00-1004==>P91-1023,
+</pre>
+</div>
+</div>
+
+<h2>Here's how</h2>
+In the working file, we capture annotations in "2 columns" separated by the comma.
+<div class="row">
+<div class="span12">
+<div class="alert alert-info">
+<h3 align="center"><i>< cite >,< details ></i></h3>
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="span6">
+<div class="alert alert-success">
+<h3>General <small>A single dash (or minus sign)</small></h3>
+<p>A <strong>General</strong> citation is annotated with a single "dash". For example:</p>
+<code>A00-1003==>P99-1029,<strong>-</strong></code>
+<p>
+<p>We annotate a cite as General when we cannot find a specific location for a cited information.</p>
+</div>
+</div>
+
+<!-- <div class="span4">
+<div class="alert alert-success">
+<h3>Specific <small>Numbers/Range/Exclamation</small></h3>
+<p>A <strong>Specific</strong> citation is annotated numbers, ranges and/or exclamation marks. For example:</p>
+<p>Single-line: <code>A00-1003==>P99-1029,<strong>85</strong></code></p>
+<p>Multi-line: <code>A00-1004==>J93-2003,<strong>64-138</strong></code></p>
+<p>Multi-locations: <code>A00-1004==>P91-1022,<strong>16!204-205</strong></code></p>
+<p>
+Examples:
+<div class="tabbable" style="margin-bottom: 18px;">
+<ul class="nav nav-tabs">
+<li class="active"><a href="#tab1" data-toggle="tab">Single-line</a></li>
+<li><a href="#tab2" data-toggle="tab">Multi-lines</a></li>
+<li><a href="#tab3" data-toggle="tab">Multi-locations</a></li>
+</ul>
+<div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
+<div class="tab-pane active" id="tab1">
+<p>I'm in Section 1.</p>
+</div>
+<div class="tab-pane" id="tab2">
+<p>Howdy, I'm in Section 2.</p>
+</div>
+<div class="tab-pane" id="tab3">
+<p>What up girl, this is Section 3.</p>
+</div>
+</div>
+</div>		
+</div>
+</div> -->
+
+<div class="span6">
+<div class="alert alert-success">
+<h3>Undetermined <small>A single question mark</small></h3>
+<p>A <strong>Undetermined</strong> citation is annotated with a single "question mark". For example:</p>
+<p><code>A00-1004==>J93-1006,<strong>?</strong></code></p>
+<p>Example (in the cited paper):</p>
+<pre class="prettyprint linenums">
+189
+190
+191
+based tagger by inferring rules...
+</pre>
+<p>The numbers you can see in this examples are actually page numbers in the original paper. So instead of having the actual content, you only have the page number, which is definitely not enough information for you to determine the type of citation.
+</div>
+</div>
+
+</div>
+
+<div class="row">
+<div class="span12">
+<div class="alert alert-success">
+<h3>Specific <small>Numbers/Range/Exclamation</small></h3>
+<p>A <strong>Specific</strong> citation is annotated numbers, ranges and/or exclamation marks. For example:</p>
+<p>Single-line: <code>A00-1003==>P99-1029,<strong>85</strong></code></p>
+<p>Multi-line: <code>A00-1004==>J93-2003,<strong>64-138</strong></code></p>
+<p>Multi-locations: <code>A00-1004==>P91-1022,<strong>16!204-205</strong></code></p>
+<p>
+Examples:
+<div class="tabbable" style="margin-bottom: 18px;">
+<ul class="nav nav-tabs">
+<li class="active"><a href="#tab1" data-toggle="tab">Single-line</a></li>
+<li><a href="#tab2" data-toggle="tab">Multi-lines</a></li>
+<li><a href="#tab3" data-toggle="tab">Multi-locations</a></li>
+</ul>
+<div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
+<div class="tab-pane active" id="tab1">
+<pre class="prettyprint linenums">
+<u>This is the line I am interested because it contains the information referenced by the Paper A.</u> Then this line, also not so related, so I am not
+really interested in this...
+</pre>
+<p>Annotate as <strong>1</strong>.</p>
+<pre class="prettyprint linenums">
+this part is not really related to what I am looking for. <u>This is the line I am interested because it contains the information referenced by the 
+Paper A.</u> Then this line, also not so related, so I am not really interested in this
+</pre>
+<p>Annotate as <strong>1-2</strong>.</p>
+</div>
+<div class="tab-pane" id="tab2">
+<pre class="prettyprint linenums">
+this part of this paper, Paper B is not important. <u>This is the line I am interested because it contains the information referenced by the
+Paper A.</u> Then this line, also not important to me, so I am not really interested in this line. Then this line, also not important to
+me, so I am not really interested in this line. Then this line, also not important to me, so I am not really interested in this line.
+Then this line, also not important to me, so I am not really interested in this line. Then this line, also not important to me,
+so I am not really interested in this line. Then this line, also not important to me, so I am not really interested in this line. Then
+this line, also not important to me, so I am not really interested in this line. <u>Unfortunately I’m also interested in this line!</u> I’m
+not interested in this one
+</pre>
+<p>Annotate as <strong>1-6</strong>.</p>
+</div>
+<div class="tab-pane" id="tab3">
+<pre class="prettyprint linenums">
+...this part of this paper, Paper B is not really related. <u>This is the line I am interested because it contains the information referenced
+by the Paper A.</u> Then this line, also not so related, so I am not really interested in this...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+...this part not related...
+<u>This is the line I am interested because it contains the information referenced by the Paper A.</u> Then this line, also not so
+related, so I am not really interested in this...
+</pre>
+<p>Annotate as <strong>1-35</strong>.</p>
+</div>
+</div>
+</div>		
+</div>
+</div>
+</div>
 </section>
 
 <!-- Footer
