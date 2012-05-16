@@ -6,7 +6,7 @@ INDIR=$1
 OUTDIR=$2
 ls $INDIR | while read LINE
 do
-INFILE=$DIR$LINE
+INFILE=$INDIR$LINE
 TEMP=${LINE/\.txt/\.xml}
 OUTFILE=$OUTDIR$TEMP
 /home/wing.nus/services/parscit/tools/bin/citeExtract.pl -m extract_all $INFILE $OUTFILE
