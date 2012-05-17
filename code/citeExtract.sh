@@ -9,5 +9,6 @@ do
 INFILE=$INDIR$LINE
 TEMP=${LINE/\.txt/\.xml}
 OUTFILE=$OUTDIR$TEMP
+echo $OUTFILE
 /home/wing.nus/services/parscit/tools/bin/citeExtract.pl -m extract_all $INFILE $OUTFILE
 done
