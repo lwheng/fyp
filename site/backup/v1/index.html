@@ -42,7 +42,6 @@
 <div class="nav-collapse collapse">
 <ul class="nav">
 <li class="active"><a href="./index.html">Instructions</a></li>
-<li class=""><a href="./citation.html">Citation</a></li>
 <li class=""><a href="./about.html">About</a></li>
 <li class=""><a href="./contact.html">Contact</a></li>
 </ul>
@@ -61,6 +60,8 @@
 <div class="subnav">
 <ul class="nav nav-pills">
 <li><a href="#TaskDesc">Task Description</a></li>
+<li><a href="#Citation">What is a Citation</a></li>
+<li><a href="#Dataset">Dataset</a></li>
 <li><a href="#Annotate">How To Annotate</a></li>
 </ul>
 </div>
@@ -70,7 +71,7 @@
 ================================================== -->
 <section id="TaskDesc">
 <div class="page-header">
-<h1>Task Description <small>What is this task all about?</small></h1>
+<h1>Task Description <small>What is the task all about?</small></h1>
 </div>
 This data collection task is part of our research project that aims to determine Citation Provenance (read more on the <a href="./about.html">purpose</a> of the project). The task, is to annotate scientific papers, capturing information leading to the information referred to by the citation (i.e. cited information).
 <p>
@@ -103,10 +104,124 @@ The objective of this task is to gather manual annotations for our research. We 
 
 <h2>Task Requirements</h2>
 <p>
-A participant, provided with a set of scientific papers, need to determine the type of citation, and to annotate with details about the citation. To do so, the participant needs to refer to the <strong>citing sentence</strong> in the citing paper, and attempt to locate the <strong>cited information</strong> in the cited paper. If you're ready, go on to <a href="./index.html#Annotate">How To Annotate</a>.
+A participant, provided with a set of scientific papers, need to determine the type of citation, and to annotate with details about the citation. To do so, the participant needs to refer to the <strong>citing sentence</strong> in the citing paper, and attempt to locate the <strong>cited information</strong> in the cited paper.
 </p>
-<a href="./citation.html"><p class="muted">What is citation, citing sentence or cited information?</p></a>
 
+</section>
+
+<!-- Citation -->
+<section id="Citation">
+<div class="page-header">
+<h1>Citation <small>What is a citation?</small></h1>
+</div>
+<div class="row">
+<div class="span4">
+<h2>What is a citation?</h2>
+<p>A citation is a quotation from or reference to a book, paper, or author. We cite when we want to:</p>
+<ul>
+<li>Make reference to a particular work by another author</li>
+<li>Give credit / Acknowledge contributions made by another author</li>
+</ul>
+<h3>Example</h3>
+<p>Let's look at the example on the right. The first thumbnail is a preview of <strong>In-line Citations</strong> made by an author. The citations appear in the body of a paper, and make reference to other papers. More details about the cited papers would appear in a paper's <strong>References</strong> section.</p>
+<p>There are various styles to display in-line citations. The most common styles are:</p>
+<ul>
+<li>
+<div class="alert alert-info"><strong><i>< author names > [< number >]</i></strong></div>
+<p>
+To display authors' name, followed by an identifying number for the <strong>References</strong> section. This is the style used in our example.<p>Example:</p><i>...in the system described by <strong>John Doe [22]</strong>, it clearly states that...</i>
+</p>
+</li>
+
+<li>
+<div class="alert alert-info"><strong><i>(< author names >, < year of publication >)</i></strong></div>
+<p>To display authors' name, followed by the year of publication.<p>Example:</p><i>...in the system described by <strong>(J. Doe, 2011)</strong>, it clearly states that...</i>
+</p>
+</li>
+</ul>
+</div><!-- /.span -->
+<div class="span4">
+<p><strong>In-line citations</strong></p>
+<a href="./img/citation.png" class="thumbnail" target="_blank">
+<img src="./img/citation.png">
+</a>
+<p>
+<p>See original paper <a href="http://scholar.google.com.sg/citations?view_op=view_citation&hl=en&citation_for_view=aNVcd3EAAAAJ:u9iWguZQMMsC" target="_blank">here</a></p>
+</div><!-- /.span -->
+<div class="span4">
+<p><strong>References section</strong></p>
+<a href="./img/citation2.png" class="thumbnail" target="_blank">
+<img src="./img/citation2.png">
+</a>
+<p>
+<p>See original paper <a href="http://scholar.google.com.sg/citations?view_op=view_citation&hl=en&citation_for_view=aNVcd3EAAAAJ:u9iWguZQMMsC" target="_blank">here</a></p>
+</div><!-- /.span -->
+</div><!-- /.row -->
+
+<h2>What is a citing sentence?</h2>
+<p>
+You might already have a clue what is a citing sentence, we have already seen one in the examples. The <strong>citing sentence</strong> is/are the line(s) of words that contain the citation. For example in a part of a paper:
+<div class="alert alert-info">
+<p align="center">
+<i>...In this paper, we describe a system that will aid us in taking over the world. Previous works have all identified the key components needed for this task. In the system described by <strong>(J. Doe, 2011)</strong>, it clearly states that...</i>
+</p>
+</div>
+</p>
+
+<h2>What is cited information?</h2>
+<p>
+When an author cites another paper, his/her purpose must be to either refer to the cited paper as a whole, or refer to a particular piece of information in the cited paper. For example in the paper written by John Doe:
+<div class="alert alert-info">
+<p align="center">
+<i>...in order for a system to be successful in taking over the world, there are many components the system must have. <strong>Fundamentally, the system must have the ability to.........This enables us to...</strong></i>
+</p>
+</div>
+As you can see, the <strong>cited information</strong> is/are the line(s) of words that contain the most relevant information in relation to the citation made by the citing sentence.
+</p>
+</section>
+
+<!-- Dataset
+================================================== -->
+<section id="Dataset">
+<div class="page-header">
+<h1>Dataset <small>The dataset we use for this project</small></h1>
+</div>
+<div class="row">
+<div class="span8">
+<p>The dataset we are using for this task is the ACL Anthology Reference Corpus (<a href="http://acl-arc.comp.nus.edu.sg/" target="_blank">ACL ARC</a>). ACL ARC is a corpus for scholarly publications in the field of Computational Linguistics. For now, all you need to know about this dataset is that it contains an <strong>interlink</strong> file.
+</p>
+
+<p>In the ACL ARC, each scientific paper has an unique ID to identify itself. The example on the right shows a few records in the <strong>interlink</strong> file.
+</p>
+
+<p>
+Let's look at the first record in the example, <strong>A00-1003 ==> P99-1029</strong>. This shows the citation relationship between 2 papers. It tells us that the scientific paper with the ID <strong>A00-1003</strong>, is <i>pointing</i> to another paper with the ID <strong>P99-1029</strong>, that is, the first paper is <strong>citing</strong> the second paper.
+</p>
+
+<p>
+That's about all you need to know about the <strong>interlink</strong> file for now. Do keep this in mind, as it will be mentioned again in the later part of this page.
+</p>
+</div>
+<div class="span4">
+<p>Part of the <strong>Interlink</strong> file</p>
+<pre class="prettyprint linenums">
+A00-1003 ==> P99-1029
+A00-1004 ==> A00-1019
+A00-1004 ==> J93-1006
+A00-1004 ==> J93-2003
+A00-1004 ==> P91-1022
+A00-1004 ==> P91-1023
+A00-1004 ==> P93-1002
+A00-1004 ==> P94-1012
+A00-1005 ==> J86-3001
+A00-1005 ==> J99-3003
+A00-1005 ==> P96-1009
+A00-1006 ==> C96-1070
+A00-1006 ==> P98-2131
+A00-1006 ==> P98-2185
+</pre>
+</div>
+</div>
 </section>
 
 <!-- How to Annotate
@@ -115,19 +230,31 @@ A participant, provided with a set of scientific papers, need to determine the t
 <div class="page-header">
 <h1>How To Annotate? <small>Let's get started!</small></h1>
 </div>
-
 <div class="row">
 <div class="span8">
 <p>
-Recall that the objective of this task to determine the type of the citation, and then to annotate with details about the citation. The challenge of this task to be able to differentiate between <strong>General</strong> and <strong>Specific</strong>. Annotating begins with a <strong>working file</strong> that will be provided to you. Your task, is to annotate by entering information into this working file. See that the <strong>first 3 lines</strong> has already been filled with the details. Don't worry about that dash / numbers / question mark means for now, we'll explain it shortly.
+Recall that the objective of this task to determine the type of the citation, and then to annotate with details about the citation. The challenge of this task to be able to differentiate between <strong>General</strong> and <strong>Specific</strong>. Annotating begins with a <strong>working file</strong> that will be provided to you. Notice that the working file looks really similar to the interlink file. Your task, is to annotate by entering information into this working file. See that the <strong>first 3 lines</strong> has already been filled with the details. Don't worry about that dash / numbers / question mark means for now, we'll explain it shortly.
 </p>
-<h2>What do I need?</h2>
-<p>To perform this task you would need:</p>
-<ul>
-	<li>The <strong>working file</strong>, which tells you the citation relationship between papers. E.g. <code>A00-1003==>P99-1029</code> means <strong>A00-1003</strong> cites <strong>P99-1029</strong>.</li>
-	<li>A set of scientific papers (as referred to in the working file). Each file is named with its ID. E.g. <strong>A00-1001.txt</strong></li>
-</ul>
-<p>You would also need to use your favourite text editor that has <strong>line number display</strong>. <span class="muted">(I recommended <a href="http://www.sublimetext.com/2" target="_blank">Sublime Text 2</a>)</span></p>
+<p>The general approach to annotating is as follow:</p>
+<pre>
+if determinable
+	if specific <span class="muted"># Able to find a specific location for cited information</span>
+		if single-location <span class="muted"># Cited info resides within 30 lines</span>
+			if multi-line <span class="muted"># Cited info resides in a range of lines</span>
+				Annotate with range, e.g. 65-80
+			else if single-line <span class="muted"># Cited info resides in a line</span>
+				Annotate with number, e.g. 65
+		else if multi-locations <span class="muted"># Cited info resides at different locations in cited paper</span>
+			if multi-line
+				Annotate with range + '!', e.g. 65-80!143-160<span class="muted">!...</span>
+			else if single-line
+				Annotate with number + '!', e.g. 65!150<span class="muted">!...</span>
+	else
+		Annotate with '-'
+else
+	Annotate with '?'
+</pre>
+<p># Note: For multi-locations, it can be a combination of single-line and multi-line i.e. <code>46!153-188</code> or <code>153-188!200</code></p>
 </div>
 
 <div class="span4">
@@ -143,21 +270,14 @@ A00-1004==>P91-1023,
 </div>
 </div>
 
-<h2>How do I <small>actually</small> annotate?</h2>
+<h2>Here's how</h2>
 In the working file, we capture annotations in "2 columns" separated by the comma.
 <div class="row">
-
-<div class="span6">
+<div class="span12">
 <div class="alert alert-info">
 <h3 align="center"><i>< cite >,< details ></i></h3>
 </div>
 </div>
-
-<div class="span6">
-	<p><strong>< cite ></strong> would be provided for you already. E.g. <code>A00-1003==>P99-1029</code></p>
-	<p><strong>< details ></strong> is defined as below, respectively to the type of citation:</p>
-</div>
-
 </div>
 
 <div class="row">
@@ -170,6 +290,36 @@ In the working file, we capture annotations in "2 columns" separated by the comm
 <p>We annotate a cite as General when we cannot find a specific location for a cited information.</p>
 </div>
 </div>
+
+<!-- <div class="span4">
+<div class="alert alert-success">
+<h3>Specific <small>Numbers/Range/Exclamation</small></h3>
+<p>A <strong>Specific</strong> citation is annotated numbers, ranges and/or exclamation marks. For example:</p>
+<p>Single-line: <code>A00-1003==>P99-1029,<strong>85</strong></code></p>
+<p>Multi-line: <code>A00-1004==>J93-2003,<strong>64-138</strong></code></p>
+<p>Multi-locations: <code>A00-1004==>P91-1022,<strong>16!204-205</strong></code></p>
+<p>
+Examples:
+<div class="tabbable" style="margin-bottom: 18px;">
+<ul class="nav nav-tabs">
+<li class="active"><a href="#tab1" data-toggle="tab">Single-line</a></li>
+<li><a href="#tab2" data-toggle="tab">Multi-lines</a></li>
+<li><a href="#tab3" data-toggle="tab">Multi-locations</a></li>
+</ul>
+<div class="tab-content" style="padding-bottom: 9px; border-bottom: 1px solid #ddd;">
+<div class="tab-pane active" id="tab1">
+<p>I'm in Section 1.</p>
+</div>
+<div class="tab-pane" id="tab2">
+<p>Howdy, I'm in Section 2.</p>
+</div>
+<div class="tab-pane" id="tab3">
+<p>What up girl, this is Section 3.</p>
+</div>
+</div>
+</div>		
+</div>
+</div> -->
 
 <div class="span6">
 <div class="alert alert-success">
@@ -194,7 +344,7 @@ based tagger by inferring rules...
 <div class="alert alert-success">
 <h3>Specific <small>Numbers/Range/Exclamation</small></h3>
 <p>A <strong>Specific</strong> citation is annotated numbers, ranges and/or exclamation marks. For example:</p>
-<p>Single-line: <code>A00-1003==>P99-1029,<strong>85</strong></code> OR <code>A00-1003==>P99-1029,<strong>85-86</strong></code>. Note that we are capturing the entire sentence.</p>
+<p>Single-line: <code>A00-1003==>P99-1029,<strong>85</strong></code></p>
 <p>Multi-line: <code>A00-1004==>J93-2003,<strong>64-138</strong></code></p>
 <p>Multi-locations: <code>A00-1004==>P91-1022,<strong>16!204-205</strong></code></p>
 <p>
@@ -277,34 +427,18 @@ related, so I am not really interested in this...
 </div>
 </div>
 
-<h2>Approach</h2>
-<p>The general approach to annotating one citation is as follow:</p>
-<pre>
-<ol>
-<li>Can the type of citation determined? Yes (Go to step 3) / No (Go to step 2).
-<li>Annotate as Undetermined. Go to step 6.
-<li>Is the citation Specific? Yes (Go to step 5) / No (Go to step 4).
-<li>Annotate as General. Go to step 6.
-<li>Annotate as Specific. Go to step 6.
-<li>End.
-</ol>
-<p># Note: Recall the variations for Specific citations.
-<p># Note: For multi-locations, it can be a combination of single-line and multi-line i.e. <code>46!153-188</code> or <code>153-188!200</code></p>
-</pre>
 <h2>Getting Started</h2>
 <p>The following is the general steps you need to take to complete this task:</p>
-<pre>
-<ol>
-<li>Use your favourite text editor that has line number display. I recommend <a href="http://www.sublimetext.com/2" target="_blank">Sublime Text 2</a>.
-<li>Open up the <strong>working file</strong>.
-<li>Start from the first un-annotated entry you find.
-<li>Open up the papers as identified by the IDs.
-<li>In the cited paper, look for Author Names, Title, and Year of Publication. This gives you a clue how the citation would look like. With this info, look at the <strong>References</strong> section in the citing paper. Look for the citing sentence that contains the citation in the citing paper.
-<li>Once you found the citing sentence, read briefly to find out that citation is for, and what cited information it is referring to.
-<li>Now you know what the citation is for, look for the cited information in the cited paper. Then determine the type of the citation.
-<li>Annotate according to the <strong>Approach</strong>.
-<li>Repeat step 3 till you are done.
-</ol>
+<pre class="prettyprint linenums">
+Use your favourite text editor that has line number display. I recommend <a href="http://www.sublimetext.com/2" target="_blank">Sublime Text 2</a>.
+Open up the <strong>working file</strong>.
+Start from the first un-annotated entry you find.
+Open up the papers as identified by the IDs.
+In the cited paper, look for Author Names, Title, and Year of Publication. This gives you a clue how the citation would look like. With this info, look at the <strong>References</strong> section in the citing paper. Look for the citing sentence that contains the citation in the citing paper.
+Once you found the citing sentence, read briefly to find out that citation is for, and what cited information it is referring to.
+Now you know what the citation is for, look for the cited information in the cited paper. Then determine the type of the citation.
+Annotate accordingly.
+Repeat step 3 till you are done.
 </pre>
 </section>
 
