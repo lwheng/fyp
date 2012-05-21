@@ -503,7 +503,10 @@ class interactiveMode(cmd.Cmd):
         for opt, args in opts:
           if opt == "-w":
             weightSwitch = not weightSwitch
-            print "TF-IDF weight usage is now "+ ("ON" if weightSwitch else "OFF") + "."
+            if weightSwitch:
+              print "TF-IDF weight usage is now ON."
+            else:
+              print "TF-IDF weight usage is now OFF."
           elif opt == "-n":
             newsize = int(args)
             if newsize>0 and newsize<=len(d2Lines):
