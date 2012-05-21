@@ -395,7 +395,7 @@ class interactiveMode(cmd.Cmd):
         for opt, args in opts:
           if opt == "-w":
             weightOn = not weightOn
-            if weightSwitch:
+            if weightOn:
               print "TF-IDF weight usage is now ON."
             else:
               print "TF-IDF weight usage is now OFF."
@@ -409,7 +409,10 @@ class interactiveMode(cmd.Cmd):
       except getopt.GetoptError:
         print "USAGE:\tsettings [-w] [-n <fragment size>]"
     else:
-      print "TF-IDF weight usage is now " + ("ON" if weightOn else "OFF") + "."
+      if weigthOn:
+        print "TF-IDF weight usage is now ON."
+      else:
+        print "TF-IDF weight usage is now OFF."
       print "Fragment size is now " + str(FragmentSize) + " lines."
       print "D2Path is now " + D2Path
   def help_settings(self):

@@ -517,7 +517,10 @@ class interactiveMode(cmd.Cmd):
       except getopt.GetoptError:
         print "USAGE:\tsettings [-w] [-n <fragment size>]"
     else:
-      print "TF-IDF weight usage is now " + ("ON" if weightSwitch else "OFF") + "."
+      if weightSwitch:
+        print "TF-IDF weight usage is now ON."
+      else:
+        print "TF-IDF weight usage is now OFF."
       print "Fragment size is now " + str(fragmentSize) + " lines."
   def help_settings(self):
     print "\n".join(["USAGE:\tsettings [-w] [-n <fragment size>]","OUTPUT:\tPrints current settings. Add respective tag to modify settings."])
@@ -529,7 +532,10 @@ class interactiveMode(cmd.Cmd):
       global tfLoaded
       global dfLoaded
       print "Current settings:"
-      print "Weight Switch:\t" + ("ON" if weightSwitch else "OFF") + "."
+      if weightSwitch:
+        print "TF-IDF weight usage is now ON."
+      else:
+        print "TF-IDF weight usage is now OFF."
       print "Fragment Size:\t" + str(fragmentSize) + " lines."
       global d1Lines
       d1Lines = []
