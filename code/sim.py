@@ -31,6 +31,9 @@ FragmentDict = {}
 FragmentLines = []
 FragmentVector = []
 
+interlinkPath = "/Users/lwheng/Dropbox/fyp/interlink/aan/acl.20080325.net"
+interlinkDict = {}
+
 VocabList = []
 Results = []
 ResultsLineRange = []
@@ -49,6 +52,7 @@ def loadDF():
   global DFPath
   global DFDict
   global VocabList
+  global version
   DFDict = {}
   VocabList = []
   opendf = open(DFPath,"r")
@@ -205,6 +209,22 @@ def loadFragment(lineRange):
     else:
       FragmentVector.append(0)
 
+def loadInterlink():
+  global interlinkPath
+  global interlinkDict
+  openthefile = open(interlinkPath,"r")
+  for l in openthefile:
+    tokens = l.replace(" ", "").replace("\n","").split("==>")
+    if tokens[0] in interlinkDict:
+      temp = interlinkDict[tokens[0]]
+      temp.append(tokens[1])
+      interlinkDict[tokens[0]] = temp
+    else:
+      temp = []
+      temp.append(tokens[1])
+      interlinkDict[tokens[0]] = temp
+  openthefile.close()
+
 def loadFiles():
   print "Loading files..."
   loadDF()
@@ -274,12 +294,21 @@ def checkRelation():
   # To check in interlink file whether citing relationship exists
   global D1Path
   global D2Path
+  global interlinkDict
   tokens = D1Path.split("/")
   citing = tokens[-1].replace(".txt", "")
   tokens = D2Path.split("/")
   cited = tokens[-1].replace(".txt", "")
-  print citing
-  print cited
+  # citing and cited are paper IDs, check against the interlink file
+  if citing in interlinkDict:
+    temp = interlinkDict[citing]
+    if cited in temp:
+      return True
+    else:
+      return False
+  else:
+    return False
+
 
 def usage():
   print "USAGE: python " + sys.argv[0] + " [-v <version>] [-i] [-w] [-n <fragment size>] -1 <d1file> -2 <d2file>"
@@ -319,8 +348,10 @@ def main(argv):
         sys.exit()
 
     if version > 1:
-      checkRelation()
-      sys.exit() # To be removed
+      loadInterlink()
+      if not checkRelation():
+        print "Citation relationship not found. D1 probably does not cite D2."
+        sys.exit(2)
     loadFiles()
     computeMaxSim()
     printResults()
