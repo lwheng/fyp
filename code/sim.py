@@ -49,7 +49,8 @@ version = versions[-1] # set default version to latest
 # Versions (Each point describes the version)
 # 1. Target file is broken down to fragments, search query in single text file. All TF & IDF generated from same vocab file
 # 2. Check whether citing relationship exists
-# 3. To properly use citing sentences for search query (modify loadD1). need to use *-parscit.xml
+# 3. To properly use citing sentences for search query (modify loadD1). need to use *-parscit.xml. Exists cases with context -> confirm General?
+# 4. To have tf-idf for citing sentence
 
 def loadDF():
   global DFPath
@@ -124,7 +125,14 @@ def loadD1():
         bestIndex = 0
       for i in range(len(citations)):
         citation = citations[i]
-        title = citation.getElementsByTagName("title")[0].firstChild.data
+        tags = ["note", "booktitle", "journal"]
+        titleTag = citation.getElementsByTagName("title")
+        index = 0
+        while titleTag == []:
+          titleTag = citation.getElementsByTagName(tags[index])
+          index += 1
+
+        title = titleTag[0].firstChild.data
         ratio = Levenshtein.ratio(D2Title, title)
         if ratio > maxRatio:
           maxRatio = ratio
@@ -133,34 +141,38 @@ def loadD1():
 
       # As of now, assume 1 context
       contextTag = citation.getElementsByTagName("context")
-      citStr = contextTag[0].getAttribute("citStr")
-      contextOriginal = contextTag[0].firstChild.data
-      context = contextOriginal.replace("("+citStr+")", "")
-      line = context.lower()
-      line = myUtils.removespecialcharacters(line)
-      D1Lines.append(line)
-      tokens = line.split()
-      for t in tokens:
-        toadd = ""
-        if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
-          toadd = t
-        elif (myUtils.removepunctuation(t)).isalnum():
-          toadd = myUtils.removepunctuation(t)
+      if contextTag == []:
+        print "No context -> no citation in body of paper"
+        sys.exit()
+      else:
+        citStr = contextTag[0].getAttribute("citStr")
+        contextOriginal = contextTag[0].firstChild.data
+        context = contextOriginal.replace("("+citStr+")", "")
+        line = context.lower()
+        line = myUtils.removespecialcharacters(line)
+        D1Lines.append(line)
+        tokens = line.split()
+        for t in tokens:
+          toadd = ""
+          if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
+            toadd = t
+          elif (myUtils.removepunctuation(t)).isalnum():
+            toadd = myUtils.removepunctuation(t)
 
-        if len(toadd) != 0:
-          toadd = lm.lemmatize(toadd)
-          if toadd not in D1Dict:
-            D1Dict[toadd] = 0
-          D1Dict[toadd] += 1
+          if len(toadd) != 0:
+            toadd = lm.lemmatize(toadd)
+            if toadd not in D1Dict:
+              D1Dict[toadd] = 0
+            D1Dict[toadd] += 1
 
-      if weightOn:
-        for k in D1Dict:
-          D1Dict[k] = D1Dict[k] * idf(k)
-      for v in VocabList:
-        if v in D1Dict:
-          D1Vector.append(D1Dict[v])
-        else:
-          D1Vector.append(0)
+        if weightOn:
+          for k in D1Dict:
+            D1Dict[k] = D1Dict[k] * idf(k)
+        for v in VocabList:
+          if v in D1Dict:
+            D1Vector.append(D1Dict[v])
+          else:
+            D1Vector.append(0)
     except IOError as e:
       print "Error!"
       sys.exit()
@@ -378,7 +390,10 @@ def printResults():
   global ResultsLineRange
   top = list(Results)
   toprange = list(ResultsLineRange)
-  for i in range(0,10):
+  length = 10 # to print only the top 10 results
+  if len(top) < length:
+    length = len(top)
+  for i in range(length):
     maxIndex = top.index(max(top))
     result = top.pop(maxIndex)
     resultrange = toprange.pop(maxIndex)
