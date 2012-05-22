@@ -42,17 +42,17 @@ LineRanges = []
 interactive = False
 weightOn = False
 
-versions = [1,2]
-version = versions[-1]
+versions = [1,2,3]
+version = versions[-1] # set default version to latest
 # Versions (Each point describes the version)
 # 1. Target file is broken down to fragments, search query in single text file. All TF & IDF generated from same vocab file
-# 2. D1 is now the citing paper's citing sentences. Input is a set of citing sentences. First checks whether citation relationship exists
+# 2. Check whether citing relationship exists
+# 3. To properly use citing sentences for search query (modify loadD1). need to use *-parscit.xml
 
 def loadDF():
   global DFPath
   global DFDict
   global VocabList
-  global version
   DFDict = {}
   VocabList = []
   opendf = open(DFPath,"r")
@@ -69,9 +69,28 @@ def loadD1():
   global D1Vector
   global D1Lines
   global weightOn
+  global version
   D1Dict = {}
   D1Vector = []
   D1Lines = []
+
+  if version >= 3:
+    # To use Parscit's output
+    D1xmlPath = D1Path.replace("txt", "xml")
+    D1xmlPath = D1xmlPath.replace(".xml", "-parscit.xml")
+    try:
+      from xml.dom.minidom import parseString
+      xmlfile = open(D1xmlPath,"r")
+      data = xmlfile.read()
+      xmlfile.close()
+      dom = parseString(data)
+      xmlTag = dom.getElementsByTagName("citationList")
+      print xmlTag[0].getElementsByTagName("authors")[0].toxml()
+      sys.exit()
+    except IOError as e:
+      print "Oh dear"
+    sys.exit()
+
   opend1 = open(D1Path,"r")
   for l in opend1:
     line = myUtils.removespecialcharacters(l)
@@ -347,7 +366,7 @@ def main(argv):
         print "Versions: " + str(versions)
         sys.exit()
 
-    if version > 1:
+    if version >= 2:
       loadInterlink()
       if not checkRelation():
         print "Citation relationship not found. D1 probably does not cite D2."
