@@ -103,6 +103,7 @@ def loadD1():
           break
     except IOError as e:
       print "Error!"
+      sys.exit(2)
 
     try:
       xmlfile = open(D1xmlPath,"r")
@@ -130,43 +131,67 @@ def loadD1():
           bestIndex = i
       citation = citations[bestIndex] # predicted citation
 
+      # As of now, assume 1 context
       contextTag = citation.getElementsByTagName("context")
       citStr = contextTag[0].getAttribute("citStr")
       contextOriginal = contextTag[0].firstChild.data
       context = contextOriginal.replace("("+citStr+")", "")
-      print context
+      line = context.lower()
+      line = myUtils.removespecialcharacters(line)
+      D1Lines.append(line)
+      tokens = line.split()
+      for t in tokens:
+        toadd = ""
+        if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
+          toadd = t
+        elif (myUtils.removepunctuation(t)).isalnum():
+          toadd = myUtils.removepunctuation(t)
 
-      sys.exit()
+        if len(toadd) != 0:
+          toadd = lm.lemmatize(toadd)
+          if toadd not in D1Dict:
+            D1Dict[toadd] = 0
+          D1Dict[toadd] += 1
+
+      if weightOn:
+        for k in D1Dict:
+          D1Dict[k] = D1Dict[k] * idf(k)
+      for v in VocabList:
+        if v in D1Dict:
+          D1Vector.append(D1Dict[v])
+        else:
+          D1Vector.append(0)
     except IOError as e:
       print "Error!"
-    sys.exit()
+      sys.exit()
 
-  opend1 = open(D1Path,"r")
-  for l in opend1:
-    line = myUtils.removespecialcharacters(l)
-    D1Lines.append(line)
-    tokens = line.split()
-    for t in tokens:
-      toadd = ""
-      if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
-        toadd = t
-      elif (myUtils.removepunctuation(t)).isalnum():
-        toadd = myUtils.removepunctuation(t)
+  else:
+    opend1 = open(D1Path,"r")
+    for l in opend1:
+      line = myUtils.removespecialcharacters(l)
+      D1Lines.append(line)
+      tokens = line.split()
+      for t in tokens:
+        toadd = ""
+        if t.isalnum() or myUtils.hyphenated(t) or myUtils.apos(t):
+          toadd = t
+        elif (myUtils.removepunctuation(t)).isalnum():
+          toadd = myUtils.removepunctuation(t)
 
-      if len(toadd) != 0:
-        toadd = lm.lemmatize(toadd)
-        if toadd not in D1Dict:
-          D1Dict[toadd] = 0
-        D1Dict[toadd] += 1
-  opend1.close()
-  if weightOn:
-    for k in D1Dict:
-      D1Dict[k] = D1Dict[k] * idf(k)
-  for v in VocabList:
-    if v in D1Dict:
-      D1Vector.append(D1Dict[v])
-    else:
-      D1Vector.append(0)
+        if len(toadd) != 0:
+          toadd = lm.lemmatize(toadd)
+          if toadd not in D1Dict:
+            D1Dict[toadd] = 0
+          D1Dict[toadd] += 1
+    opend1.close()
+    if weightOn:
+      for k in D1Dict:
+        D1Dict[k] = D1Dict[k] * idf(k)
+    for v in VocabList:
+      if v in D1Dict:
+        D1Vector.append(D1Dict[v])
+      else:
+        D1Vector.append(0)
 
 def prepD1(line):
   global lm
