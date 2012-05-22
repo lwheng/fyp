@@ -31,6 +31,8 @@ FragmentDict = {}
 FragmentLines = []
 FragmentVector = []
 
+metadataPath = "/Users/lwheng/Downloads/fyp/metadata/"
+
 interlinkPath = "/Users/lwheng/Dropbox/fyp/interlink/aan/acl.20080325.net"
 interlinkDict = {}
 
@@ -75,20 +77,68 @@ def loadD1():
   D1Lines = []
 
   if version >= 3:
+    from xml.dom.minidom import parseString
+    import Levenshtein
+    global citations
+    global D2Path
+    global metadataPath
     # To use Parscit's output
     D1xmlPath = D1Path.replace("txt", "xml")
     D1xmlPath = D1xmlPath.replace(".xml", "-parscit.xml")
+
+    # Get title of D2
+    tokens = D2Path.split("/")
+    D2id = tokens[-1].replace(".txt", "")
+    metadataFile = metadataPath + D2id[0:3] + ".xml"
+    D2Title = ""
     try:
-      from xml.dom.minidom import parseString
+      openmetadata = open(metadataFile,"r")
+      metadata = openmetadata.read()
+      openmetadata.close()
+      dom = parseString(metadata)
+      for item in dom.getElementsByTagName("paper"):
+        idAttr = item.getAttribute("id")
+        if idAttr == D2id.split("-")[1]:
+          D2Title = item.getElementsByTagName("title")[0].firstChild.data
+          break
+    except IOError as e:
+      print "Error!"
+
+    try:
       xmlfile = open(D1xmlPath,"r")
       data = xmlfile.read()
       xmlfile.close()
       dom = parseString(data)
-      xmlTag = dom.getElementsByTagName("citationList")
-      print xmlTag[0].getElementsByTagName("authors")[0].toxml()
+      citationList = dom.getElementsByTagName("citationList")
+      citations = citationList[0].getElementsByTagName("citation")
+
+      # Using Levenshtein to predict which paper its citing
+      bestIndex = 0
+      maxRatio = 0
+      citation = citations[0]
+      title = citation.getElementsByTagName("title")[0].firstChild.data
+      ratio = Levenshtein.ratio(D2Title, title)
+      if ratio > maxRatio:
+        maxRatio = ratio
+        bestIndex = 0
+      for i in range(len(citations)):
+        citation = citations[i]
+        title = citation.getElementsByTagName("title")[0].firstChild.data
+        ratio = Levenshtein.ratio(D2Title, title)
+        if ratio > maxRatio:
+          maxRatio = ratio
+          bestIndex = i
+      citation = citations[bestIndex] # predicted citation
+
+      contextTag = citation.getElementsByTagName("context")
+      citStr = contextTag[0].getAttribute("citStr")
+      contextOriginal = contextTag[0].firstChild.data
+      context = contextOriginal.replace("("+citStr+")", "")
+      print context
+
       sys.exit()
     except IOError as e:
-      print "Oh dear"
+      print "Error!"
     sys.exit()
 
   opend1 = open(D1Path,"r")
