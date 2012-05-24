@@ -11,6 +11,16 @@ def loadDF():
     VocabList.append(tokens[0])
   opendf.close()
 
+def loadDFCitStr():
+  global DFCitStrPath
+  global DFCitStrDict
+  DFDictStrDict = {}
+  opendfcitstr = open(DFCitStrPath,"r")
+  for l in opendfcitstr:
+    tokens = l.split()
+    DFCitStrDict[tokens[0]] = myUtils.removespecialcharacters(tokens[1])
+  opendfcitstr.close()
+
 def loadD1():
   global lm
   global D1Path
@@ -60,7 +70,7 @@ def loadD1():
       citationList = dom.getElementsByTagName("citationList")
       citations = citationList[0].getElementsByTagName("citation")
 
-      # Using Levenshtein to predict which paper its citing
+      # Using Levenshtein to predict which paper it is citing
       bestIndex = 0
       maxRatio = 0
       citation = citations[0]
@@ -113,7 +123,11 @@ def loadD1():
 
         if weightOn:
           for k in D1Dict:
-            D1Dict[k] = D1Dict[k] * idf(k)
+            if version >= 4:
+              #print k + "\t" + str(idfD1(k)) + "\t" + str(idf(k))
+              D1Dict[k] = D1Dict[k] * idfD1(k)
+            else:
+              D1Dict[k] = D1Dict[k] * idf(k)
         for v in VocabList:
           if v in D1Dict:
             D1Vector.append(D1Dict[v])
@@ -282,12 +296,23 @@ def loadFiles():
   print "Loading files..."
   loadDF()
   if version >= 4:
-    print "Version 4"
-    sys.exit()
+    # This version use tf-idf for citing sentences
+    loadDFCitStr()
   loadD1()
   loadD2()
   loadTF()
   print "Loading done!"
+
+def idfD1(term):
+  global N
+  global DFDict
+  global DFCitStrDict
+  global version
+
+  if version >= 4:
+    return (math.log(N) - math.log(int(DFCitStrDict[term])))
+  else:
+    return (math.log(N) - math.log(int(DFDict[term])))
 
 def idf(term):
   global N
@@ -405,6 +430,8 @@ def main(argv):
         global versions
         print "Versions: " + str(versions)
         sys.exit()
+
+    print "Running on version: " + str(version)
 
     if version >= 2:
       loadInterlink()
@@ -613,11 +640,15 @@ if __name__ == '__main__':
   D2Lines = []
   D2TFDict = {}
 
+  DFDict = {}
+  DFCitStrDict = {}
+
   DFPath = "/Users/lwheng/Downloads/fyp/dftable-(2012-03-15-11:47:16.581332).txt"
+  DFCitStrPath = "/Users/lwheng/Downloads/fyp/parscit-to-df-(2012-05-24-11:10:08.917366).txt" # For Version 4
   TFDirectory = "/Users/lwheng/Downloads/fyp/tfLemmatized"
   FileDirectory = "/Users/lwheng/Downloads/fyp/FileLemmatizedCleaned/"
 
-  FragmentSize = 10
+  FragmentSize = 15 # Default size of fragments
   FragmentDict = {}
   FragmentLines = []
   FragmentVector = []
