@@ -124,7 +124,6 @@ def loadD1():
         if weightOn:
           for k in D1Dict:
             if version >= 4:
-              #print k + "\t" + str(idfD1(k)) + "\t" + str(idf(k))
               D1Dict[k] = D1Dict[k] * idfD1(k)
             else:
               D1Dict[k] = D1Dict[k] * idf(k)
@@ -425,7 +424,7 @@ def main(argv):
         interactive = True
       elif opt == "-v":
         global version
-        version = args
+        version = int(args)
       elif opt == "-V":
         global versions
         print "Versions: " + str(versions)
