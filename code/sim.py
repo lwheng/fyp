@@ -219,7 +219,7 @@ def loadD2():
         toadd = myUtils.removepunctuation(t)
 
       if len(toadd) != 0:
-        toadd = lm.lemmatize(toadd)
+        #toadd = lm.lemmatize(toadd)
         if toadd not in D2Dict:
           D2Dict[toadd] = 0
         D2Dict[toadd] += 1
