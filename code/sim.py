@@ -1,57 +1,3 @@
-import sys
-import os
-import math
-import string
-import getopt
-import myUtils
-import heapq
-from nltk.stem.wordnet import WordNetLemmatizer
-
-lm = WordNetLemmatizer()
-
-N = 8889
-
-D1Path = ""
-D1Dict = {}
-D1Vector = []
-D1Lines = []
-
-D2Path = ""
-D2Dict = {}
-D2Vector = []
-D2Lines = []
-D2TFDict = {}
-
-DFPath = "/Users/lwheng/Downloads/fyp/dftable-(2012-03-15-11:47:16.581332).txt"
-TFDirectory = "/Users/lwheng/Downloads/fyp/tfLemmatized"
-FileDirectory = "/Users/lwheng/Downloads/fyp/FileLemmatizedCleaned/"
-
-FragmentSize = 10
-FragmentDict = {}
-FragmentLines = []
-FragmentVector = []
-
-metadataPath = "/Users/lwheng/Downloads/fyp/metadata/"
-
-interlinkPath = "/Users/lwheng/Dropbox/fyp/interlink/aan/acl.20080325.net"
-interlinkDict = {}
-
-VocabList = []
-Results = []
-ResultsLineRange = []
-LineRanges = []
-
-interactive = False
-weightOn = False
-
-versions = [1,2,3]
-version = versions[-1] # set default version to latest
-# Versions (Each point describes the version)
-# 1. Target file is broken down to fragments, search query in single text file. All TF & IDF generated from same vocab file
-# 2. Check whether citing relationship exists
-# 3. To properly use citing sentences for search query (modify loadD1). need to use *-parscit.xml. Exists cases with context -> confirm General?
-# 4. To have tf-idf for citing sentence
-
 def loadDF():
   global DFPath
   global DFDict
@@ -332,8 +278,12 @@ def loadInterlink():
   openthefile.close()
 
 def loadFiles():
+  global version
   print "Loading files..."
   loadDF()
+  if version >= 4:
+    print "Version 4"
+    sys.exit()
   loadD1()
   loadD2()
   loadTF()
@@ -636,8 +586,61 @@ class interactiveMode(cmd.Cmd):
     print
 
 if __name__ == '__main__':
+  import sys
   if len(sys.argv) == 1:
     usage()
     sys.exit()
+  import os
+  import math
+  import string
+  import getopt
+  import myUtils
+  import heapq
+  from nltk.stem.wordnet import WordNetLemmatizer
+
+  lm = WordNetLemmatizer()
+
+  N = 8889
+
+  D1Path = ""
+  D1Dict = {}
+  D1Vector = []
+  D1Lines = []
+
+  D2Path = ""
+  D2Dict = {}
+  D2Vector = []
+  D2Lines = []
+  D2TFDict = {}
+
+  DFPath = "/Users/lwheng/Downloads/fyp/dftable-(2012-03-15-11:47:16.581332).txt"
+  TFDirectory = "/Users/lwheng/Downloads/fyp/tfLemmatized"
+  FileDirectory = "/Users/lwheng/Downloads/fyp/FileLemmatizedCleaned/"
+
+  FragmentSize = 10
+  FragmentDict = {}
+  FragmentLines = []
+  FragmentVector = []
+
+  metadataPath = "/Users/lwheng/Downloads/fyp/metadata/"
+
+  interlinkPath = "/Users/lwheng/Dropbox/fyp/interlink/aan/acl.20080325.net"
+  interlinkDict = {}
+
+  VocabList = []
+  Results = []
+  ResultsLineRange = []
+  LineRanges = []
+
+  interactive = False
+  weightOn = False
+
+  versions = [1,2,3,4]
+  version = versions[-1] # set default version to latest
+  # Versions (Each point describes the version)
+  # 1. Target file is broken down to fragments, search query in single text file. All TF & IDF generated from same vocab file
+  # 2. Check whether citing relationship exists
+  # 3. To properly use citing sentences for search query (modify loadD1). need to use *-parscit.xml. Exists cases with context -> confirm General?
+  # 4. To have tf-idf for citing sentence
   main(sys.argv[1:])
   sys.exit()
