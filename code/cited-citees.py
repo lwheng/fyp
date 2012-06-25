@@ -28,7 +28,10 @@ def cited_citees():
 
   writefile = open(outputFile, "w")
   for k in interlinkHash:
-    towrite = k + "==>" + str(interlinkHash[k]) + "\n"
+    towrite = k + "="
+    for v in interlinkHash[k]:
+      towrite = towrite + v + "!"
+    towrite = towrite + "\n"
     writefile.write(towrite)
   writefile.close()
 

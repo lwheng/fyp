@@ -46,9 +46,9 @@ def vocab():
         openvocabfile.write(towrite)
 
 def usage():
-	print "USAGE: python " + sys.argv[0] +" -d <fileDirectory>"
-	print "Default output location is Downloads, vocab-(timestamp).txt"
-	print "To specify output, add this: -o <output filename>"
+    print "USAGE: python " + sys.argv[0] +" -d <fileDirectory>"
+    print "Default output location is Downloads, vocab-(timestamp).txt"
+    print "To specify output, add this: -o <output filename>"
 
 def main(argv):
     try:
@@ -61,8 +61,8 @@ def main(argv):
                 global vocabFile
                 vocabFile = args
     except getopt.GetoptError:
-    	usage()
-    	sys.exit(2)
+        usage()
+        sys.exit(2)
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
