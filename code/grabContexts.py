@@ -10,6 +10,7 @@ import getopt
 import myUtils
 from xml.dom.minidom import parseString
 import urllib2
+import Levenshtein
 from datetime import datetime
 
 date = str(datetime.now().date())
@@ -40,29 +41,67 @@ def grabContext():
           titleCited = matchObj.group(2)
       openfile.close()
     except urllib2.HTTPError, e:
-      # bib file not file
+      # bib file not file, now try parscit-section.xml
       try:
-        # now try -final.xml
-        openfile = urllib2.urlopen(citedFile + "-final.xml", "r")
+        openfile = urllib2.urlopen(citedFile + "-parscit.xml", "r")
         data = openfile.read()
         openfile.close()
         dom = parseString(data)
-        print dom.toxml()
+        title = dom.getElementsByTagName('title')[0]
+        titleCited = title.firstChild.nodeValue
       except urllib2.HTTPError, e:
-        # seersuite file not found
-        print "Error"
+        try:
+          # now try -final.xml
+          openfile = urllib2.urlopen(citedFile + "-final.xml", "r")
+          data = openfile.read()
+          openfile.close()
+          dom = parseString(data)
+          title = dom.getElementsByTagName('teiHeader')[0].getElementsByTagName('fileDesc')[0].getElementsByTagName('titleStmt')[0].getElementsByTagName('title')[0]
+          titleCited = title.firstChild.nodeValue
+        except urllib2.HTTPError, e:
+          # file not found
+          print "Error: For " + cite_key + ", cannot get title for cited " + cited
     
     # citing paper
     citingParscitFile = "http://wing.comp.nus.edu.sg/~antho/" + citing[0] + "/" + citing[0:3] + "/" + citing + "-parscit.xml"
-    file = urllib2.urlopen(citingParscitFile, "r")
-    data = file.read()
-    file.close()
-    dom = parseString(data)
-    citationList = dom.getElementsByTagName('citationList')[0].getElementsByTagName('citation')
-    for citation in citationList:
-      title = citation.getElementsByTagName('title')[0]
-      print title.toxml()
-    sys.exit()
+    try:
+      file = urllib2.urlopen(citingParscitFile, "r")
+      data = file.read()
+      file.close()
+      dom = parseString(data)
+
+      if dom.getElementsByTagName('citationList')[0].getElementsByTagName('citation'):
+        citationList = dom.getElementsByTagName('citationList')[0].getElementsByTagName('citation')
+
+        bestIndex = 0
+        maxRatio = 0
+        for i in range(len(citationList)):
+          citation = citationList[i]
+          if citation.attributes['valid'].value == 'true':
+            if citation.getElementsByTagName('title'):
+              title = citation.getElementsByTagName('title')[0].firstChild.nodeValue
+            elif citation.getElementsByTagName('booktitle'):
+              title = citation.getElementsByTagName('booktitle')[0].firstChild.nodeValue
+            elif citation.getElementsByTagName('journal'):
+              title = citation.getElementsByTagName('journal')[0].firstChild.nodeValue
+            elif citation.getElementsByTagName('note'):
+              title = citation.getElementsByTagName('note')[0].firstChild.nodeValue
+            ratio = Levenshtein.ratio(title, titleCited)
+            if ratio > maxRatio:
+              bestIndex = i
+              maxRatio = ratio
+        citation = citationList[bestIndex]
+        if citation.getElementsByTagName('contexts'):
+          contexts = citation.getElementsByTagName('contexts')[0].getElementsByTagName('context')
+          for context in contexts:
+            print cite_key + "!=" + context.toxml()
+        else:
+          print cite_key + "!=" + ""
+      else:
+        print cite_key + "!=" + ""
+    except urllib2.HTTPError, e:
+      print "Error"
+    # sys.exit() # to terminate loop after first line
 
 def usage():
   print "USAGE: python " + sys.argv[0] + " -f <annotationMasterFile>"
