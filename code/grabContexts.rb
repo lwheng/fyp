@@ -65,7 +65,7 @@ def grabContext()
             titleCited = title.text.gsub("\n"," ").strip
           rescue => error3
             # puts "NO TITLE for #{citedFile}!!"
-            puts "#{cite_key}!="
+            puts "#{cite_key}!=<NOFILE>"
             next
           end
         end
@@ -102,24 +102,41 @@ def grabContext()
           elsif v.elements['marker']
             title = v.elements['marker']
           else
-            puts v
-            exit()
+            title = nil
           end
-          check = Levenshtein.distance(titleCited, title.text)
-          if check < distance
-            citationCiting = v
-            distance = check
+          if title
+            check = Levenshtein.distance(titleCited, title.text)
+            if check < distance
+              citationCiting = v
+              distance = check
+            end
+          else
+            # cannot get a title
           end
         else
-          # puts v
-          # exit()
+          # citation not valid. skip?
         end
       end
-      # puts titleCited
-      # puts citationCiting
+      # print output
+      if citationCiting
+        if citationCiting.elements['contexts']
+          if citationCiting.elements['contexts'].elements.size > 0
+            contexts = citationCiting.elements['contexts'].elements
+            contexts.each do |v|
+              puts "#{cite_key}!=#{v}"
+            end
+          else
+            puts "#{cite_key}!=<NOCONTEXTTAG>"
+          end
+        else
+          puts "#{cite_key}!=<NOCONTEXTSTAG>"
+        end
+      else
+        puts "#{cite_key}!=<NOCITATIONCITING>"
+      end
     rescue => error3
       # no parscit-section.xml
-      puts "#{cite_key}!="
+      puts "#{cite_key}!=<NOPARSCITSECTION>"
       next
     end
     # exit()
