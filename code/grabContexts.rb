@@ -154,6 +154,7 @@ def main()
     $annotationMasterFile = opt['f']
   else
     usage
+    exit()
   end
 
   grabContext
