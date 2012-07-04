@@ -6,6 +6,7 @@ import unicodedata
 import nltk
 import HTMLParser
 import sys
+import re
 h = HTMLParser.HTMLParser()
 
 # nltk.corpus.stopwords.words('english')
@@ -13,22 +14,35 @@ h = HTMLParser.HTMLParser()
 # nltk.FreqDist(col).keys()
 
 # citing paper
-context = """<context position="4278" citStr="Caraballo (1999)" startWordPosition="695" endWordPosition="696">ingent relationships are an important part of world-knowledge (and are therefore worth learning), and because in practice we found the distinction difficult to enforce. Another definition is given by Caraballo (1999): “... a word A is said to be a hypernym of a word B if native speakers of English accept the sentence ‘B is a (kind of) A.’ ” linguistic tools such as lemmatization can be used to reliably put the ex</context>"""
+context = """<context position="5645" citStr="Mayfield et al., 2003" startWordPosition="809" endWordPosition="812">ning technique, which has been successfully applied to various natural language processing tasks including chunking tasks such as phrase chunking (Kudo and Matsumoto, 2001) and named entity chunking (Mayfield et al., 2003). In the preliminary experimental evaluation, we focus on 52 expressions that have balanced distribution of their usages in the newspaper text corpus and are among the most difficult ones in terms of [1]</context>"""
 dom = parseString(context)
 linesContext = dom.getElementsByTagName('context')[0].firstChild.data
 linesContext = unicodedata.normalize('NFKD', linesContext).encode('ascii','ignore')
 query = nltk.word_tokenize(linesContext)
+query_display = ""
+for i in query:
+	query_display = query_display + " " + i
 fd_query = nltk.FreqDist(query)
+regex = r"((([A-Z][a-z]+)\s*(et al.?)?|([A-Z][a-z]+ and [A-Z][a-z]+))\s*,\s*(\(?\d{4}\)?)|\[\s*(\d+)\s*\])"
+obj = re.findall(regex, query_display)
+print len(query)
+print len(obj)
+citation_density = float(len(obj)) / float(len(query))
+print citation_density * 100
+print obj
+print
 
 # cited paper
-citedpaper = "/Users/lwheng/Desktop/P99-1016.txt"
+citedpapercode = "W03-0429"
+citedpaper = "/Users/lwheng/Downloads/fyp/pdfbox-0.72/" + citedpapercode[0] + "/" + citedpapercode[0:3] + "/" + citedpapercode + ".txt"
 t = []
-SIZE = 15
+SIZE = 10
 lines = []
 try:
 	openfile = open(citedpaper,"r")
 	for l in openfile:
 		lines.append(nltk.word_tokenize(l.strip()))
+	openfile.close()
 except IOError as e:
 	print e	
 doc = []
@@ -51,34 +65,29 @@ for i in range(0,len(doc)):
 	fd_doc0 = nltk.FreqDist(doc[i])
 	for term in vocab:
 		if term in query:
-			# u.append(fd_query[term])
-			u.append(query_col.tf_idf(term, doc[i]))
+			# u.append(fd_query[term]) # using just frequency
+			u.append(query_col.tf_idf(term, doc[i])) # using tf-idf weighting scheme
 		else:
 			u.append(0)
 		if term in doc[i]:
-			# v.append(fd_doc0[term])
-			v.append(col.tf_idf(term, doc[i]))
+			# v.append(fd_doc0[term]) # using just frequency
+			v.append(col.tf_idf(term, doc[i])) # using tf-idf weighting scheme
 		else:
 			v.append(0)
 	r = nltk.cluster.util.cosine_distance(u,v)
 	results.append(r)
 	
-toprint = ""
-for i in query:
-	toprint = toprint + " " + i
-print toprint
+print "QUERY"
+print query_display
 print
 toprint = ""
 for i in doc[results.index(max(results))]:
 	toprint = toprint + " " + i
+print "GUESS"
 print toprint
+print
 print max(results)
-
-# results = []
-# for i in range(0, len(doc)):
-# 	results.append(col.tf_idf('hierarchy', doc[i]))
-	
-
+print results
 		
 # 
 # contexts = []
