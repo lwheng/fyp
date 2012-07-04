@@ -23,7 +23,7 @@ fd_query = nltk.FreqDist(query)
 # cited paper
 citedpaper = "/Users/lwheng/Desktop/P99-1016.txt"
 t = []
-SIZE = 20
+SIZE = 15
 lines = []
 try:
 	openfile = open(citedpaper,"r")
@@ -39,6 +39,7 @@ for i in xrange(0, len(lines), SIZE):
 		temp.extend(s)
 	doc.append(temp)
 
+query_col = nltk.TextCollection(query)
 col = nltk.TextCollection(doc)
 
 # prep vectors
@@ -50,20 +51,28 @@ for i in range(0,len(doc)):
 	fd_doc0 = nltk.FreqDist(doc[i])
 	for term in vocab:
 		if term in query:
-			u.append(fd_query[term])
+			# u.append(fd_query[term])
+			u.append(query_col.tf_idf(term, doc[i]))
 		else:
-			u.append(i)
+			u.append(0)
 		if term in doc[i]:
-			v.append(fd_doc0[term])
+			# v.append(fd_doc0[term])
+			v.append(col.tf_idf(term, doc[i]))
 		else:
-			v.append(i)
-	r = 1-nltk.cluster.util.cosine_distance(u,v)
+			v.append(0)
+	r = nltk.cluster.util.cosine_distance(u,v)
 	results.append(r)
-
-print query
+	
+toprint = ""
+for i in query:
+	toprint = toprint + " " + i
+print toprint
 print
-print doc[results.index(min(results))]
-print min(results)
+toprint = ""
+for i in doc[results.index(max(results))]:
+	toprint = toprint + " " + i
+print toprint
+print max(results)
 
 # results = []
 # for i in range(0, len(doc)):
