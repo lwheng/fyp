@@ -23,7 +23,9 @@ query_display = ""
 for i in query:
 	query_display = query_display + " " + i
 fd_query = nltk.FreqDist(query)
-regex = r"((([A-Z][a-z]+)\s*(et al.?)?|([A-Z][a-z]+ and [A-Z][a-z]+))\s*,\s*(\(?\d{4}\)?)|\[\s*(\d+)\s*\])"
+
+# for citation density
+regex = r"((([A-Z][a-z]+)\s*(et al.?)?|([A-Z][a-z]+ and [A-Z][a-z]+))\s*,?\s*(\(?\d{4}\)?)|\[\s*(\d+)\s*\])"
 obj = re.findall(regex, query_display)
 print len(query)
 print len(obj)
@@ -55,6 +57,19 @@ for i in xrange(0, len(lines), SIZE):
 
 query_col = nltk.TextCollection(query)
 col = nltk.TextCollection(doc)
+
+# print "CITED"
+# print col.collocations(50,3)
+# print
+# print col.common_contexts(["training"],20) # very similar to collocations
+# print
+# print col.concordance("training")
+# print
+# print col.generate() # Print random text, generated using a trigram language model.
+# print
+# print col.similar('training')
+# print
+# print 'End'
 
 # prep vectors
 vocab = list(set(query) | set(col))
@@ -88,6 +103,10 @@ print toprint
 print
 print max(results)
 print results
+	
+	
+	
+	
 		
 # 
 # contexts = []
