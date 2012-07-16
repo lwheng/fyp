@@ -17,7 +17,7 @@ import math
 import numpy
 from nltk.corpus import stopwords
 
-CHUNK_SIZE = 10
+CHUNK_SIZE = 15
 citationTypes = ['General', 'Specific', 'Undetermined']
 
 cite_key = "W03-0415==>P99-1016"
@@ -138,9 +138,15 @@ def citProv(cite_key, context):
   elif citType == 1:
     # Specific
     resultIndex = cosineSimilarity(cite_key,context1)
+    print "QUERY"
     print display_query
     print
-    print docs[resultIndex]
+    toprint = ""
+    for t in docs[resultIndex].tokens:
+      toprint = toprint + " " + t
+    print "CHUNK"
+    print toprint
+
   else:
     # Undetermined
     print citationTypes[citType]
