@@ -15,6 +15,7 @@ import sys
 import re
 import math
 import numpy
+from nltk.corpus import stopwords
 
 CHUNK_SIZE = 10
 citationTypes = ['General', 'Specific', 'Undetermined']
@@ -72,8 +73,7 @@ def cosineSimilarity(cite_key, context):
 
   # Citing Paper
   fd_query = nltk.FreqDist(query)
-  col_query = nltk.TextCollection(query)
-
+  col_query = nltk.TextCollection([nltk.Text(query)])
 
   # Cited Paper
   info = cite_key.split("==>")
@@ -84,21 +84,21 @@ def cosineSimilarity(cite_key, context):
   try:
     openfile = open(citedpaper,"r")
     for l in openfile:
-      domain.append(nltk.word_tokenize(l.strip()))
+      domain.append(l.strip())
     openfile.close()
   except IOError as e:
     print e
   docs = []
   for i in xrange(0, len(domain), CHUNK_SIZE/2):
     sublist = domain[i:i+CHUNK_SIZE]
-    temp = []
+    temp = ""
     for s in sublist:
-      temp.extend(s)
-    docs.append(temp)
+      temp = temp + " " + s
+    docs.append(nltk.Text(nltk.word_tokenize(temp)))
   col_docs = nltk.TextCollection(docs)
 
   # Vocab
-  vocab = list(set(query) | set(col_docs))
+  vocab = list(set(col_query) | set(col_docs))
 
   # Prep Vectors
   results = []
@@ -119,7 +119,7 @@ def cosineSimilarity(cite_key, context):
       results.append(1000)
     else:
       r = nltk.cluster.util.cosine_distance(u,v)
-    results.append(r)
+      results.append(r)
   return results.index(min(results))
 
 
