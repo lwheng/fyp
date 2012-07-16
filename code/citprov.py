@@ -20,8 +20,8 @@ from nltk.corpus import stopwords
 CHUNK_SIZE = 10
 citationTypes = ['General', 'Specific', 'Undetermined']
 
-cite_key = "P03-2013==>P98-1085"
-context1 = """<context citStr='Breiman et al. 1984' endWordPosition='1944' position='12827' startWordPosition='1941'>ntil the entire file has been processed for that one transformation, then regardless of the order of processing the output will be: ABBBBB, since the triggering environment of a transformation is always checked before that transformation is applied to any surrounding objects in the corpus. If the effect of a transformation is recorded immediately, then processing the string left to right would result in: ABABAB, whereas processing right to left would result in: ABBBBB. 3. A Comparison With Decision Trees The technique employed by the learner is somewhat similar to that used in decision trees (Breiman et al. 1984). A decision tree is trained on a set of preclassified entities and outputs a set of questions that can be asked about an entity to determine its proper classification. Decision trees are built by finding the question whose resulting partition is the purest,2 splitting the training data according to that question, and then recursively reapplying this procedure on each resulting subset. We first show that the set of classifications that can be provided via decision trees is a proper subset of those that can be provided via transformation lists (an ordered</context>"""
+cite_key = "W03-0415==>P99-1016"
+context1 = """<context citStr=\"Caraballo (1999)\" endWordPosition=\"593\" position=\"3648\" startWordPosition=\"592\">. In Section 4, we show how correctly extracted relationships can be used as seed-cases to extract several more relationships, thus improving recall; this work shares some similarities with that of Caraballo (1999). In Section 5 we show that combining the techniques of Section 3 and Section 4 improves both precision and recall. Section 6 demonstrates that 1Another possible view is that hyponymy should only re</context>"""
 
 query = []
 domain = []
@@ -99,6 +99,8 @@ def cosineSimilarity(cite_key, context):
 
   # Vocab
   vocab = list(set(col_query) | set(col_docs))
+  vocab = map(lambda x: x.lower(), vocab)
+  vocab = [w for w in vocab if not w in stopwords.words('english')]
 
   # Prep Vectors
   results = []
@@ -106,13 +108,17 @@ def cosineSimilarity(cite_key, context):
     u = []
     v = []
     fd_doc_current = nltk.FreqDist(docs[i])
+    temp_query = map(lambda x: x.lower(), query)
+    temp_query = [w for w in temp_query if not w in stopwords.words('english')]
+    temp_doc = map(lambda x: x.lower(), docs[i])
+    temp_doc = [w for w in temp_doc if not w in stopwords.words('english')]
     for term in vocab:
-      if term in query:
-        u.append(col_query.tf_idf(term,docs[i]))
+      if term in temp_query:
+        u.append(col_docs.tf_idf(term, temp_doc))
       else:
         u.append(0)
-      if term in docs[i]:
-        v.append(col_docs.tf_idf(term, docs[i]))
+      if term in temp_doc:
+        v.append(col_docs.tf_idf(term, temp_doc))
       else:
         v.append(0)
     if math.sqrt(numpy.dot(u, u)) == 0.0:
@@ -131,13 +137,10 @@ def citProv(cite_key, context):
     print citationTypes[citType]
   elif citType == 1:
     # Specific
-    print citationTypes[citType]
     resultIndex = cosineSimilarity(cite_key,context1)
     print display_query
     print
     print docs[resultIndex]
-    print
-    print list(set(query) & set(docs[3]))
   else:
     # Undetermined
     print citationTypes[citType]
