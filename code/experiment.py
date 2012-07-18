@@ -24,8 +24,21 @@ for i in query:
 	query_display = query_display + " " + i
 fd_query = nltk.FreqDist(query)
 
+reg = []
+reg.append(r"\(\s?(\d{1,3})\s?\)")
+reg.append(r"\(\s?(\d{4})\s?\)")
+reg.append(r"\(\s?(\d{4};?\s?)+\s?")
+reg.append(r"\[\s?(\d{1,3},?\s?)+\s?\]")
+reg.append(r"\[\s?([\w-],?\s?)+\s?\]")
+reg.append(r"([A-Z][a-z-]+\s?,?\s?(\(and|&)\s)?)+\s?,?\s?(et al.)?\s?,?\s?(\(?(\d{4})\)?)")
+
+regex = ""
+for i in range(len(reg)):
+	regex += reg[i] + "|"
+regex = re.compile(regex[:-1])
+
 # for citation density
-regex = r"((([A-Z][a-z]+)\s*(et al.?)?|([A-Z][a-z]+ and [A-Z][a-z]+))\s*,?\s*(\(?\d{4}\)?)|\[\s*(\d+)\s*\])"
+# regex = r"((([A-Z][a-z]+)\s*(et al.?)?|([A-Z][a-z]+ and [A-Z][a-z]+))\s*,?\s*(\(?\d{4}\)?)|\[\s*(\d+)\s*\])"
 obj = re.findall(regex, query_display)
 print len(query)
 print len(obj)

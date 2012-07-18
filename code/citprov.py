@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/opt/local/bin/python
 # -*- coding: utf-8 -*-
 
 # To determine the type of the citation.
@@ -6,74 +6,82 @@
 
 # 1. Using Citation Density 
 # 2. Using Cosine Similarity
+# 3. Using Sentence Tokenizer
 
 from xml.dom.minidom import parseString
 import unicodedata
 import nltk
-import HTMLParser
+# import HTMLParser
 import sys
 import re
 import math
 import numpy
 from nltk.corpus import stopwords
+from nltk.tokenize.punkt import PunktSentenceTokenizer
+
+cite_key = "W03-0415==>P99-1016"
+contextDemo = """<context citStr=\"Caraballo (1999)\" endWordPosition=\"593\" position=\"3648\" startWordPosition=\"592\">. In Section 4, we show how correctly extracted relationships can be used as seed-cases to extract several more relationships, thus improving recall; this work shares some similarities with that of Caraballo (1999). In Section 5 we show that combining the techniques of Section 3 and Section 4 improves both precision and recall. Section 6 demonstrates that 1Another possible view is that hyponymy should only re</context>"""
+citStr = ""
+
+sentenceTokenizer = PunktSentenceTokenizer()
 
 CHUNK_SIZE = 15
 citationTypes = ['General', 'Specific', 'Undetermined']
 
-cite_key = "W03-0415==>P99-1016"
-context1 = """<context citStr=\"Caraballo (1999)\" endWordPosition=\"593\" position=\"3648\" startWordPosition=\"592\">. In Section 4, we show how correctly extracted relationships can be used as seed-cases to extract several more relationships, thus improving recall; this work shares some similarities with that of Caraballo (1999). In Section 5 we show that combining the techniques of Section 3 and Section 4 improves both precision and recall. Section 6 demonstrates that 1Another possible view is that hyponymy should only re</context>"""
+punctuation = "~`!@#$%^&*()-_+={}[]|\\:;\"\'<>,.?/"
 
-query = []
-domain = []
-docs = []
+query_display = ""
+query_tokens = []
+query_lines = []
+query_col = []
+query_fd = []
 
-display_query = ""
+context_dom = ""
+context_citStr = ""
+context_value = ""
 
-col_query = []
-col_docs = []
-
-fd_query = []
+docs_col = []
 
 vocab = []
 
-def citDensity(context):
-  global query
-  global display_query
-  # context is in form of  "<context ... > ... </context>"
-  dom = parseString(context)
-  contextValue = dom.getElementsByTagName('context')[0].firstChild.data
-  contextValue = unicodedata.normalize('NFKD', contextValue).encode('ascii','ignore')
+def citDensity(inputText):
 
-  query = nltk.word_tokenize(contextValue)
-  display_query = ""
-  for i in query:
-    display_query = display_query + " " + i
+  # Regular Expression
+  reg = []
+  reg.append(r"\(\s?(\d{1,3})\s?\)")
+  reg.append(r"\(\s?(\d{4})\s?\)")
+  reg.append(r"\(\s?(\d{4};?\s?)+\s?")
+  reg.append(r"\[\s?(\d{1,3}\s?,?\s?)+\s?\]")
+  reg.append(r"\[\s?([\w-],?\s?)+\s?\]")
+  reg.append(r"([A-Z][A-Za-z-]+\s?,?\s?(\s(and|&)\s)?)+\s?,?\s?(et al\.?)?\s?,?\s?(\(?(\d{4})\)?)")
 
-  regex = r"(((\w+)\s*,?\s*(et al.?)?|(\w+ and \w+))\s*,?\s*(\(?\s?\d{4}\s?\)?)|\[\s*(\w+)\s*\]|\[\s(\w+\d+)\s\]|[\[|\(]\s(\d+\s?,\s?)*(\d+)\s[\]|\)]|\(\s*[A-Z]\w+\s*\)|\[\s(\w+\s,?\s?)+\])"
-  obj = re.findall(regex,display_query)
+  regex = ""
+  for i in range(len(reg)):
+    regex += reg[i] + "|"
+  regex = re.compile(regex[:-1])
 
-  # # Type:
-  # 0: General
-  # 1: Specific
-  # 2: Undetermined
-  if len(obj) == 1:
-    return 1
-  elif len(obj) > 1:
-    return 0
-  else:
-    return 2
+  # regex = r"(((\w+)\s*,?\s*(et al.?)?|(\w+ and \w+))\s*,?\s*(\(?\s?\d{4}\s?\)?)|\[\s*(\w+)\s*\]|\[\s(\w+\d+)\s\]|[\[|\(]\s(\d+\s?,\s?)*(\d+)\s[\]|\)]|\(\s*[A-Z]\w+\s*\)|\[\s(\w+\s,?\s?)+\])"
+
+  numOfCitations = 0
+
+  for l in inputText:
+    obj = re.findall(regex, l)
+    numOfCitations += len(obj)
+
+  return (float(numOfCitations) / float(len(inputText)), numOfCitations)
+
 
 def cosineSimilarity(cite_key, context):
-  global query
-  global display_query
+  global query_tokens
+  global query_display
   global domain
   global docs
   global CHUNK_SIZE
   global vocab
 
   # Citing Paper
-  fd_query = nltk.FreqDist(query)
-  col_query = nltk.TextCollection([nltk.Text(query)])
+  query_fd = nltk.FreqDist(query_tokens)
+  query_col = nltk.TextCollection([nltk.Text(query_tokens)])
 
   # Cited Paper
   info = cite_key.split("==>")
@@ -95,12 +103,13 @@ def cosineSimilarity(cite_key, context):
     for s in sublist:
       temp = temp + " " + s
     docs.append(nltk.Text(nltk.word_tokenize(temp)))
-  col_docs = nltk.TextCollection(docs)
+  docs_col = nltk.TextCollection(docs)
 
   # Vocab
-  vocab = list(set(col_query) | set(col_docs))
+  vocab = list(set(query_col) | set(docs_col))
   vocab = map(lambda x: x.lower(), vocab)
   vocab = [w for w in vocab if not w in stopwords.words('english')]
+  vocab = [w for w in vocab if not w in punctuation]
 
   # Prep Vectors
   results = []
@@ -108,17 +117,19 @@ def cosineSimilarity(cite_key, context):
     u = []
     v = []
     fd_doc_current = nltk.FreqDist(docs[i])
-    temp_query = map(lambda x: x.lower(), query)
+    temp_query = map(lambda x: x.lower(), query_tokens)
     temp_query = [w for w in temp_query if not w in stopwords.words('english')]
+    temp_query = [w for w in temp_query if not w in punctuation]
     temp_doc = map(lambda x: x.lower(), docs[i])
     temp_doc = [w for w in temp_doc if not w in stopwords.words('english')]
+    temp_doc = [w for w in temp_doc if not w in punctuation]
     for term in vocab:
       if term in temp_query:
-        u.append(col_docs.tf_idf(term, temp_doc))
+        u.append(docs_col.tf_idf(term, temp_doc))
       else:
         u.append(0)
       if term in temp_doc:
-        v.append(col_docs.tf_idf(term, temp_doc))
+        v.append(docs_col.tf_idf(term, temp_doc))
       else:
         v.append(0)
     if math.sqrt(numpy.dot(u, u)) == 0.0:
@@ -129,29 +140,49 @@ def cosineSimilarity(cite_key, context):
   return results.index(min(results))
 
 
-def citProv(cite_key, context):
-  # Use Citdensity to guess type
-  citType = citDensity(context)
-  if citType == 0:
-    # General
-    print citationTypes[citType]
-  elif citType == 1:
-    # Specific
-    resultIndex = cosineSimilarity(cite_key,context1)
-    print "QUERY"
-    print display_query
-    print
-    toprint = ""
-    for t in docs[resultIndex].tokens:
-      toprint = toprint + " " + t
-    print "CHUNK"
-    print toprint
+def citProv(cite_key):
+  # Global scoping
+  global context_dom
+  global context_citStr
+  global context_value
+  global query_lines
+  global query_display
+  global query_tokens
 
-  else:
-    # Undetermined
-    print citationTypes[citType]
+  # 0. Set Up
+  context_dom = parseString(contextDemo)
+  context_value = context_dom.getElementsByTagName('context')[0].firstChild.data
+  context_value = unicodedata.normalize('NFKD', context_value).encode('ascii','ignore')
+  context_citStr = context_dom.getElementsByTagName('context')[0].getAttribute('citStr')
+  context_citStr = unicodedata.normalize('NFKD', context_citStr).encode('ascii','ignore')
 
-citProv(cite_key,context1)
+  query_lines = context_value
+  query_tokens = nltk.word_tokenize(context_value)
+  query_display = ""
+  for t in query_tokens:
+    query_display = query_display + " " + t
+
+  # 3. Using Sentence Tokenizer
+  query_lines = sentenceTokenizer.tokenize(context_value)
+
+  # 1. Using Citation Density
+  (citDensityValue, numOfCitations) = citDensity(query_lines)
+  print "### Citation Density ###"
+  print (citDensityValue, numOfCitations)
+  print
+
+  # 2. Using Cosine Similarity
+  resultIndex = cosineSimilarity(cite_key,contextDemo)
+  print "### Query ###"
+  print query_display
+  print 
+  toprint = ""
+  for t in docs[resultIndex].tokens:
+    toprint = toprint + " " + t
+  print "### Guess ###"
+  print toprint
+
+citProv(cite_key)
 
 
 
