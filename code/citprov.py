@@ -5,16 +5,16 @@
 # If specific, we wish to determine the location of the cited information
 
 # 1. Using Citation Density 
+    # Popularity: no. of references cited in the same sentence
+    # Density:    no. of difference references in citing/neighbour sentences
+    # AvgDens:    average of Density among neighbour sentences surrounding the citation sentence
 # 2. Using Cosine Similarity
 # 3. Using Sentence Tokenizer
 
 # 4. Location of citing sentence
-# 5. Popularity
-# 6. Density 
-# 7. AvgDens
 
-# 8. Cue Words 
-# 9. POS Tagging
+# 5. Cue Words 
+# 6. POS Tagging
 
 from xml.dom.minidom import parseString
 import unicodedata
@@ -27,10 +27,6 @@ import numpy
 from nltk.corpus import stopwords
 from nltk.tokenize.punkt import PunktSentenceTokenizer
 import Levenshtein
-
-cite_key = "W03-0415==>P99-1016"
-contextDemo = """<context citStr=\"Caraballo (1999)\" endWordPosition=\"593\" position=\"3648\" startWordPosition=\"592\">. In Section 4, we show how correctly extracted relationships can be used as seed-cases to extract several more relationships, thus improving recall; this work shares some similarities with that of Caraballo (1999). In Section 5 we show that combining the techniques of Section 3 and Section 4 improves both precision and recall. Section 6 demonstrates that 1Another possible view is that hyponymy should only re</context>"""
-citStr = ""
 
 sentenceTokenizer = PunktSentenceTokenizer()
 
@@ -102,7 +98,7 @@ def fetchContexts(cite_key):
         bestIndex = i
   return citations[bestIndex]
 
-def citDensity(inputText):
+def citDensity(context_lines, context_citStr):
 
   # Regular Expression
   reg = []
@@ -120,14 +116,36 @@ def citDensity(inputText):
 
   # regex = r"(((\w+)\s*,?\s*(et al.?)?|(\w+ and \w+))\s*,?\s*(\(?\s?\d{4}\s?\)?)|\[\s*(\w+)\s*\]|\[\s(\w+\d+)\s\]|[\[|\(]\s(\d+\s?,\s?)*(\d+)\s[\]|\)]|\(\s*[A-Z]\w+\s*\)|\[\s(\w+\s,?\s?)+\])"
 
-  numOfCitations = 0
+  # Tuple: (CitingSetence?, Density)
+  output = []
 
-  for l in inputText:
+  # Process citStr
+  if "et al." in context_citStr:
+    context_citStr = context_citStr.replace("et al.", "et al")
+  # Process context
+  if "et al." in context_lines:
+    context_lines = context_lines.replace("et al.", "et al")
+
+  # 3. Using Sentence Tokenizer
+  query_lines = sentenceTokenizer.tokenize(context_lines)
+
+  checker = False
+  for l in query_lines:
     obj = re.findall(regex, l)
-    numOfCitations += len(obj)
+    if context_citStr in l:
+      output.append((True, len(obj)))
+      checker = True
+    else:
+      output.append((False, len(obj)))
 
-  return (float(numOfCitations) / float(len(inputText)), numOfCitations)
-
+  density = 0
+  avgdensity = 0
+  for t in output:
+    if t[0]:
+      density += t[1]
+    else:
+      avgdensity += t[1]
+  return (density, float(avgdensity)/float(len(output)))
 
 def cosineSimilarity(cite_key, context):
   global query_tokens
@@ -224,12 +242,9 @@ def citProv(cite_key):
     for t in query_tokens:
       query_display = query_display + " " + t
 
-    # 3. Using Sentence Tokenizer
-    query_lines = sentenceTokenizer.tokenize(context_value)
-
     # 1. Using Citation Density
-    (citDensityValue, numOfCitations) = citDensity(query_lines)
-    print cite_key + " ==> " + str((citDensityValue, numOfCitations))
+    feature_citDensity = citDensity(query_lines, context_citStr)
+    print cite_key + " ==> " + str(feature_citDensity)
 
     # # 2. Using Cosine Similarity
     # resultIndex = cosineSimilarity(cite_key,contextDemo)
