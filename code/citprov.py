@@ -87,19 +87,20 @@ def fetchContexts(cite_key):
   maxRatio = 0
   for i in range(len(citations)):
     c = citations[i]
-    titleTag = []
-    index = 0
-    while titleTag == []:
-      titleTag = c.getElementsByTagName(tags[index])
-      index += 1
-    title = titleTag[0].firstChild.data
-    title = unicodedata.normalize('NFKD', title).encode('ascii','ignore')
-    ratio = Levenshtein.ratio(str(title), str(titleToMatch))
-    if ratio > maxRatio:
-      maxRatio = ratio
-      bestIndex = i
-  print citations[bestIndex].toxml()
-  sys.exit()
+    valid = c.getAttribute('valid')
+    if valid == "true":
+      titleTag = []
+      index = 0
+      while titleTag == []:
+        titleTag = c.getElementsByTagName(tags[index])
+        index += 1
+      title = titleTag[0].firstChild.data
+      title = unicodedata.normalize('NFKD', title).encode('ascii','ignore')
+      ratio = Levenshtein.ratio(str(title), str(titleToMatch))
+      if ratio > maxRatio:
+        maxRatio = ratio
+        bestIndex = i
+  return citations[bestIndex]
 
 def citDensity(inputText):
 
@@ -209,39 +210,38 @@ def citProv(cite_key):
 
   # 0. Set Up
   title = fetchTitles()
-  # context_dom = parseString(contextDemo)
-  context_dom = fetchContexts(cite_key)
-  context_value = context_dom.getElementsByTagName('context')[0].firstChild.data
-  context_value = unicodedata.normalize('NFKD', context_value).encode('ascii','ignore')
-  context_citStr = context_dom.getElementsByTagName('context')[0].getAttribute('citStr')
-  context_citStr = unicodedata.normalize('NFKD', context_citStr).encode('ascii','ignore')
+  citation_dom = fetchContexts(cite_key)
+  contexts = citation_dom.getElementsByTagName('context')
+  for c in contexts:
+    context_citStr = c.getAttribute('citStr')
+    context_citStr = unicodedata.normalize('NFKD', context_citStr).encode('ascii','ignore')
+    context_value = c.firstChild.data
+    context_value = unicodedata.normalize('NFKD', context_value).encode('ascii','ignore')
 
-  query_lines = context_value
-  query_tokens = nltk.word_tokenize(context_value)
-  query_display = ""
-  for t in query_tokens:
-    query_display = query_display + " " + t
+    query_lines = context_value
+    query_tokens = nltk.word_tokenize(context_value)
+    query_display = ""
+    for t in query_tokens:
+      query_display = query_display + " " + t
 
-  # 3. Using Sentence Tokenizer
-  query_lines = sentenceTokenizer.tokenize(context_value)
+    # 3. Using Sentence Tokenizer
+    query_lines = sentenceTokenizer.tokenize(context_value)
 
-  # 1. Using Citation Density
-  (citDensityValue, numOfCitations) = citDensity(query_lines)
-  print "### Citation Density ###"
-  print (citDensityValue, numOfCitations)
-  print
+    # 1. Using Citation Density
+    (citDensityValue, numOfCitations) = citDensity(query_lines)
+    print cite_key + " ==> " + str((citDensityValue, numOfCitations))
 
-  # 2. Using Cosine Similarity
-  resultIndex = cosineSimilarity(cite_key,contextDemo)
-  print "### Query ###"
-  print query_display
-  print 
-  toprint = ""
-  for t in docs[resultIndex].tokens:
-    toprint = toprint + " " + t
-  print "### Guess ###"
-  print toprint
-  print
+    # # 2. Using Cosine Similarity
+    # resultIndex = cosineSimilarity(cite_key,contextDemo)
+    # print "### Query ###"
+    # print query_display
+    # print 
+    # toprint = ""
+    # for t in docs[resultIndex].tokens:
+    #   toprint = toprint + " " + t
+    # print "### Guess ###"
+    # print toprint
+    # print
 
 experiment50 = "/Users/lwheng/Dropbox/fyp/annotation/annotations50.txt"
 startexperiment = open(experiment50,"r")
@@ -249,6 +249,7 @@ for l in startexperiment:
   info = l.split(",")
   cite_key = info[0]
   citProv(cite_key)
+  # sys.exit()
 
 
 
