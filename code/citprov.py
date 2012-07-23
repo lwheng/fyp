@@ -26,6 +26,7 @@ import math
 import numpy
 from nltk.corpus import stopwords
 from nltk.tokenize.punkt import PunktSentenceTokenizer
+import Levenshtein
 
 cite_key = "W03-0415==>P99-1016"
 contextDemo = """<context citStr=\"Caraballo (1999)\" endWordPosition=\"593\" position=\"3648\" startWordPosition=\"592\">. In Section 4, we show how correctly extracted relationships can be used as seed-cases to extract several more relationships, thus improving recall; this work shares some similarities with that of Caraballo (1999). In Section 5 we show that combining the techniques of Section 3 and Section 4 improves both precision and recall. Section 6 demonstrates that 1Another possible view is that hyponymy should only re</context>"""
@@ -51,6 +52,18 @@ context_value = ""
 docs_col = []
 
 vocab = []
+
+def fetchTitles():
+  print
+
+def fetchContexts(cite_key):
+  info = cite_key.split("==>")
+  citing = info[0]
+  cited = info[1]
+
+  citingFile = "/Users/lwheng/Downloads/fyp/annotations500/" + citing[0] + "-parscit-section.xml"
+  citedFile =  ""
+  return
 
 def citDensity(inputText):
 
@@ -189,6 +202,10 @@ def citProv(cite_key):
     toprint = toprint + " " + t
   print "### Guess ###"
   print toprint
+
+experiment50 = "/Users/lwheng/Dropbox/fyp/annotation/annotations50.txt"
+startexperiment = open(experiment50,"r")
+for 
 
 citProv(cite_key)
 
