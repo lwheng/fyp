@@ -8,6 +8,14 @@
 # 2. Using Cosine Similarity
 # 3. Using Sentence Tokenizer
 
+# 4. Location of citing sentence
+# 5. Popularity
+# 6. Density 
+# 7. AvgDens
+
+# 8. Cue Words 
+# 9. POS Tagging
+
 from xml.dom.minidom import parseString
 import unicodedata
 import nltk
