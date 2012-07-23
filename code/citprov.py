@@ -53,17 +53,53 @@ docs_col = []
 
 vocab = []
 
+title = {}
+
 def fetchTitles():
-  print
+  tempTitle = {}
+  titleFile = "/Users/lwheng/Dropbox/fyp/annotation/paperTitles.txt"
+  opentitlefile = open(titleFile, "r")
+  for l in opentitlefile:
+    line = l.strip()
+    info = line.split("==>")
+    tempTitle[info[0]] = info[1]
+  opentitlefile.close()
+  return tempTitle
 
 def fetchContexts(cite_key):
+  global title
   info = cite_key.split("==>")
   citing = info[0]
   cited = info[1]
 
-  citingFile = "/Users/lwheng/Downloads/fyp/annotations500/" + citing[0] + "-parscit-section.xml"
-  citedFile =  ""
-  return
+  titleToMatch = title[cited]
+
+  citingFile = "/Users/lwheng/Downloads/fyp/annotations500/" + citing + "-parscit.xml"
+  openciting = open(citingFile,"r")
+  data = openciting.read()
+  openciting.close()
+  dom = parseString(data)
+  citations = dom.getElementsByTagName('citation')
+  tags = ["title", "note", "booktitle", "journal"]
+  titleTag = []
+  index = 0
+  bestIndex = 0
+  maxRatio = 0
+  for i in range(len(citations)):
+    c = citations[i]
+    titleTag = []
+    index = 0
+    while titleTag == []:
+      titleTag = c.getElementsByTagName(tags[index])
+      index += 1
+    title = titleTag[0].firstChild.data
+    title = unicodedata.normalize('NFKD', title).encode('ascii','ignore')
+    ratio = Levenshtein.ratio(str(title), str(titleToMatch))
+    if ratio > maxRatio:
+      maxRatio = ratio
+      bestIndex = i
+  print citations[bestIndex].toxml()
+  sys.exit()
 
 def citDensity(inputText):
 
@@ -169,9 +205,12 @@ def citProv(cite_key):
   global query_lines
   global query_display
   global query_tokens
+  global title
 
   # 0. Set Up
-  context_dom = parseString(contextDemo)
+  title = fetchTitles()
+  # context_dom = parseString(contextDemo)
+  context_dom = fetchContexts(cite_key)
   context_value = context_dom.getElementsByTagName('context')[0].firstChild.data
   context_value = unicodedata.normalize('NFKD', context_value).encode('ascii','ignore')
   context_citStr = context_dom.getElementsByTagName('context')[0].getAttribute('citStr')
@@ -202,12 +241,14 @@ def citProv(cite_key):
     toprint = toprint + " " + t
   print "### Guess ###"
   print toprint
+  print
 
 experiment50 = "/Users/lwheng/Dropbox/fyp/annotation/annotations50.txt"
 startexperiment = open(experiment50,"r")
-for 
-
-citProv(cite_key)
+for l in startexperiment:
+  info = l.split(",")
+  cite_key = info[0]
+  citProv(cite_key)
 
 
 
