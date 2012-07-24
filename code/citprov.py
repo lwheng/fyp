@@ -10,11 +10,11 @@
     # AvgDens:    average of Density among neighbour sentences surrounding the citation sentence
 # 2. Using Cosine Similarity
 # 3. Using Sentence Tokenizer
+# 4. Publish Year?
 
-# 4. Location of citing sentence
-
-# 5. Cue Words 
-# 6. POS Tagging
+# x. Location of citing sentence
+# x+1. Cue Words 
+# x+2. POS Tagging
 
 from xml.dom.minidom import parseString
 import unicodedata
@@ -22,6 +22,7 @@ import nltk
 # import HTMLParser
 import sys
 import re
+import os
 import math
 import numpy
 from nltk.corpus import stopwords
@@ -147,6 +148,38 @@ def citDensity(context_lines, context_citStr):
       avgdensity += t[1]
   return (density, float(avgdensity)/float(len(output)))
 
+def publishYear(cite_key, context_citStr):
+  info = cite_key.split("==>")
+  citing = info[0]
+  cited = info[1]
+
+  citingYear = 0
+  citedYear = 0
+  regexBibYear = r"\s*year\s*=\s*\{?(\d{4})\}?\s*"
+  regexYear = r".*(\d{4}).*"
+
+  # A. Try to get citing publish year
+  rootDir = "/Users/lwheng/Downloads/fyp/annotations500/"
+  if os.path.exists(rootDir + citing + ".bib"):
+    openfile = open(rootDir + citing + ".bib", "r")
+    for l in openfile:
+      matchObj = re.findall(regexBibYear, l)
+      if matchObj:
+        citingYear = int(matchObj[0])
+
+  # B. Try to get cited publish year
+  matchObj = re.findall(regexYear, context_citStr)
+  if matchObj:
+    citedYear = int(matchObj[0])
+  else:
+    if os.path.exists(rootDir + cited + ".bib"):
+      openfile = open(rootDir + cited + ".bib", "r")
+      for l in openfile:
+        matchObj = re.findall(regexBibYear, l)
+        if matchObj:
+          citedYear = int(matchObj[0])
+  return (citingYear,citedYear)
+
 def cosineSimilarity(cite_key, context):
   global query_tokens
   global query_display
@@ -244,7 +277,11 @@ def citProv(cite_key):
 
     # 1. Using Citation Density
     feature_citDensity = citDensity(query_lines, context_citStr)
-    print cite_key + " ==> " + str(feature_citDensity)
+
+    # 4. Publish Year
+    feature_publishYear = publishYear(cite_key, context_citStr)
+    print cite_key + " ==> " + str(feature_citDensity) + "   " + str(feature_publishYear)
+    # sys.exit()
 
     # # 2. Using Cosine Similarity
     # resultIndex = cosineSimilarity(cite_key,contextDemo)
