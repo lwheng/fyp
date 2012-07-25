@@ -10,7 +10,8 @@
     # AvgDens:    average of Density among neighbour sentences surrounding the citation sentence
 # 2. Using Cosine Similarity
 # 3. Using Sentence Tokenizer
-# 4. Publish Year?
+# 4. Publish Year
+# 5. TF-IDF to determine most high-valued chunk in cited paper?
 
 # x. Location of citing sentence
 # x+1. Cue Words 
@@ -50,7 +51,11 @@ docs_col = []
 
 vocab = []
 
-title = {}
+titles = {}
+collection = ""
+
+def fetchCollection():
+  print "Fetch Collection"
 
 def fetchTitles():
   tempTitle = {}
@@ -64,12 +69,12 @@ def fetchTitles():
   return tempTitle
 
 def fetchContexts(cite_key):
-  global title
+  global titles
   info = cite_key.split("==>")
   citing = info[0]
   cited = info[1]
 
-  titleToMatch = title[cited]
+  titleToMatch = titles[cited]
 
   citingFile = "/Users/lwheng/Downloads/fyp/annotations500/" + citing + "-parscit.xml"
   openciting = open(citingFile,"r")
@@ -153,32 +158,48 @@ def publishYear(cite_key, context_citStr):
   citing = info[0]
   cited = info[1]
 
-  citingYear = 0
-  citedYear = 0
-  regexBibYear = r"\s*year\s*=\s*\{?(\d{4})\}?\s*"
-  regexYear = r".*(\d{4}).*"
+  citingYear = int(citing[1:3])
+  citedYear = int(cited[1:3])
 
-  # A. Try to get citing publish year
-  rootDir = "/Users/lwheng/Downloads/fyp/annotations500/"
-  if os.path.exists(rootDir + citing + ".bib"):
-    openfile = open(rootDir + citing + ".bib", "r")
-    for l in openfile:
-      matchObj = re.findall(regexBibYear, l)
-      if matchObj:
-        citingYear = int(matchObj[0])
-
-  # B. Try to get cited publish year
-  matchObj = re.findall(regexYear, context_citStr)
-  if matchObj:
-    citedYear = int(matchObj[0])
+  if citingYear > 50:
+    citingYear = 1900 + citingYear
   else:
-    if os.path.exists(rootDir + cited + ".bib"):
-      openfile = open(rootDir + cited + ".bib", "r")
-      for l in openfile:
-        matchObj = re.findall(regexBibYear, l)
-        if matchObj:
-          citedYear = int(matchObj[0])
+    citingYear = 2000 + citingYear
+
+  if citedYear > 50:
+    citedYear = 1900 + citedYear
+  else:
+    citedYear = 2000 + citedYear
+  # regexBibYear = r"\s*year\s*=\s*\{?(\d{4})\}?\s*"
+  # regexYear = r".*(\d{4}).*"
+
+  # # A. Try to get citing publish year
+  # rootDir = "/Users/lwheng/Downloads/fyp/annotations500/"
+  # if os.path.exists(rootDir + citing + ".bib"):
+  #   openfile = open(rootDir + citing + ".bib", "r")
+  #   for l in openfile:
+  #     matchObj = re.findall(regexBibYear, l)
+  #     if matchObj:
+  #       citingYear = int(matchObj[0])
+
+  # # B. Try to get cited publish year
+  # matchObj = re.findall(regexYear, context_citStr)
+  # if matchObj:
+  #   citedYear = int(matchObj[0])
+  # else:
+  #   if os.path.exists(rootDir + cited + ".bib"):
+  #     openfile = open(rootDir + cited + ".bib", "r")
+  #     for l in openfile:
+  #       matchObj = re.findall(regexBibYear, l)
+  #       if matchObj:
+  #         citedYear = int(matchObj[0])
   return (citingYear,citedYear)
+
+def chunkWeight(chunk, doc_collection):
+  weight = 0
+  for t in chunk.tokens:
+    weight += doc_collection.tf_idf(t, chunk)
+  return weight
 
 def cosineSimilarity(cite_key, context):
   global query_tokens
@@ -222,7 +243,16 @@ def cosineSimilarity(cite_key, context):
 
   # Prep Vectors
   results = []
+  maxChunkWeight = 0
+  maxChunkIndex = 0
   for i in range(0, len(docs)):
+
+    # TF-IDF to determine most high-valued chunk in cited paper?
+    temp = chunkWeight(docs[i], docs_col)
+    if temp > maxChunkWeight:
+      maxChunkWeight = temp
+      maxChunkIndex = i
+
     u = []
     v = []
     fd_doc_current = nltk.FreqDist(docs[i])
@@ -246,6 +276,15 @@ def cosineSimilarity(cite_key, context):
     else:
       r = nltk.cluster.util.cosine_distance(u,v)
       results.append(r)
+
+  # TF-IDF to determine most high-valued chunk in cited paper?
+  toprint = ""
+  for t in docs[maxChunkIndex].tokens:
+    toprint = toprint + " " + t
+  print "### Chunk with max weight ###"
+  print toprint
+  print
+
   return results.index(min(results))
 
 
@@ -257,10 +296,8 @@ def citProv(cite_key):
   global query_lines
   global query_display
   global query_tokens
-  global title
 
   # 0. Set Up
-  title = fetchTitles()
   citation_dom = fetchContexts(cite_key)
   contexts = citation_dom.getElementsByTagName('context')
   for c in contexts:
@@ -275,16 +312,21 @@ def citProv(cite_key):
     for t in query_tokens:
       query_display = query_display + " " + t
 
+    feature_vector = []
+
     # 1. Using Citation Density
     feature_citDensity = citDensity(query_lines, context_citStr)
+    feature_vector.append(feature_citDensity)   
 
     # 4. Publish Year
     feature_publishYear = publishYear(cite_key, context_citStr)
-    print cite_key + " ==> " + str(feature_citDensity) + "   " + str(feature_publishYear)
+    feature_vector.append(feature_publishYear)
+
+    print cite_key + "==>" + str(feature_vector)
     # sys.exit()
 
-    # # 2. Using Cosine Similarity
-    # resultIndex = cosineSimilarity(cite_key,contextDemo)
+    # 2. Using Cosine Similarity
+    # resultIndex = cosineSimilarity(cite_key,context_value)
     # print "### Query ###"
     # print query_display
     # print 
@@ -294,9 +336,12 @@ def citProv(cite_key):
     # print "### Guess ###"
     # print toprint
     # print
+    # sys.exit()
 
 experiment50 = "/Users/lwheng/Dropbox/fyp/annotation/annotations50.txt"
 startexperiment = open(experiment50,"r")
+titles = fetchTitles()
+collection = fetchCollection()
 for l in startexperiment:
   info = l.split(",")
   cite_key = info[0]
