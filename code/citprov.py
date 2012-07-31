@@ -51,20 +51,28 @@ context_dom = ""
 context_citStr = ""
 context_value = ""
 
+docs = []
 docs_col = []
 
 vocab = []
 
 titles = {}
 authors = {}
+contextCollection = ""
 collection = ""
 
 # Pickle files
-pickle_paperTitles = "/Users/lwheng/Dropbox/fyp/code/paperTitles.pickle"
-pickle_paperAuthors = "/Users/lwheng/Dropbox/fyp/code/paperAuthors.pickle"
+pickle_paperTitles = "/Users/lwheng/Downloads/fyp/paperTitles.pickle"
+pickle_paperAuthors = "/Users/lwheng/Downloads/fyp/paperAuthors.pickle"
+pickle_contextCollection = "/Users/lwheng/Downloads/fyp/contextCollection.pickle"
+# pickle_collection = "/Users/lwheng/Downloads/fyp/collection.pickle"
 
 def fetchCollection():
-  print "Fetch Collection"
+  print
+
+def fetchContextCollection():
+  tempCol = pickle.load(open(pickle_contextCollection,"rb"))
+  return tempCol
 
 def fetchTitles():
   tempTitle = {}
@@ -395,6 +403,7 @@ experiment50 = "/Users/lwheng/Dropbox/fyp/annotation/annotations50.txt"
 startexperiment = open(experiment50,"r")
 titles = fetchTitles()
 authors = fetchAuthors()
+contextCollection = fetchContextCollection()
 collection = fetchCollection()
 for l in startexperiment:
   info = l.split(",")
