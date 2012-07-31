@@ -12,6 +12,7 @@
 # 3. Using Sentence Tokenizer
 # 4. Publish Year
 # 5. TF-IDF to determine most high-valued chunk in cited paper?
+# 6. Title Overlap using Jaccard 
 
 # x. Location of citing sentence
 # x+1. Cue Words 
@@ -26,9 +27,10 @@ import re
 import os
 import math
 import numpy
+import pickle
 from nltk.corpus import stopwords
 from nltk.tokenize.punkt import PunktSentenceTokenizer
-import Levenshtein
+from nltk.metrics import distance
 
 sentenceTokenizer = PunktSentenceTokenizer()
 
@@ -54,18 +56,15 @@ vocab = []
 titles = {}
 collection = ""
 
+# Pickle files
+pickle_paperTitles = "/Users/lwheng/Dropbox/fyp/code/paperTitles.pickle"
+
 def fetchCollection():
   print "Fetch Collection"
 
 def fetchTitles():
   tempTitle = {}
-  titleFile = "/Users/lwheng/Dropbox/fyp/annotation/paperTitles.txt"
-  opentitlefile = open(titleFile, "r")
-  for l in opentitlefile:
-    line = l.strip()
-    info = line.split("==>")
-    tempTitle[info[0]] = info[1]
-  opentitlefile.close()
+  tempTitle = pickle.load(open(pickle_paperTitles, "rb"))
   return tempTitle
 
 def fetchContexts(cite_key):
@@ -86,7 +85,7 @@ def fetchContexts(cite_key):
   titleTag = []
   index = 0
   bestIndex = 0
-  maxRatio = 0
+  minDistance = 314159265358979323846264338327950288419716939937510
   for i in range(len(citations)):
     c = citations[i]
     valid = c.getAttribute('valid')
@@ -98,11 +97,20 @@ def fetchContexts(cite_key):
         index += 1
       title = titleTag[0].firstChild.data
       title = unicodedata.normalize('NFKD', title).encode('ascii','ignore')
-      ratio = Levenshtein.ratio(str(title), str(titleToMatch))
-      if ratio > maxRatio:
-        maxRatio = ratio
+      thisDistance = levenshtein(title, titleToMatch)
+      if thisDistance < minDistance:
+        minDistance = thisDistance
         bestIndex = i
   return citations[bestIndex]
+
+def levenshtein(a, b):
+  return distance.edit_distance(a,b)
+
+def jaccard(inputA, inputB):
+  # Returns jaccard index. Smaller the more similar
+  a = inputA.lower()
+  b = inputB.lower()
+  return distance.jaccard_distance(set(a.split()), set(b.split()))
 
 def citDensity(context_lines, context_citStr):
 
@@ -194,6 +202,13 @@ def publishYear(cite_key, context_citStr):
   #       if matchObj:
   #         citedYear = int(matchObj[0])
   return (citingYear,citedYear)
+
+def titleOverlap(cite_key):
+  global titles
+  info = cite_key.split("==>")
+  citing = info[0]
+  cited = info[1]
+  return jaccard(titles[citing], titles[cited])
 
 def chunkWeight(chunk, doc_collection):
   weight = 0
@@ -301,6 +316,8 @@ def citProv(cite_key):
   citation_dom = fetchContexts(cite_key)
   contexts = citation_dom.getElementsByTagName('context')
   for c in contexts:
+    feature_vector = []
+
     context_citStr = c.getAttribute('citStr')
     context_citStr = unicodedata.normalize('NFKD', context_citStr).encode('ascii','ignore')
     context_value = c.firstChild.data
@@ -312,8 +329,6 @@ def citProv(cite_key):
     for t in query_tokens:
       query_display = query_display + " " + t
 
-    feature_vector = []
-
     # 1. Using Citation Density
     feature_citDensity = citDensity(query_lines, context_citStr)
     feature_vector.append(feature_citDensity)   
@@ -322,21 +337,23 @@ def citProv(cite_key):
     feature_publishYear = publishYear(cite_key, context_citStr)
     feature_vector.append(feature_publishYear)
 
+    # 6. Title Overlap
+    feature_titleOverlap = titleOverlap(cite_key)
+    feature_vector.append(feature_titleOverlap)
+
     print cite_key + "==>" + str(feature_vector)
-    # sys.exit()
 
     # 2. Using Cosine Similarity
-    # resultIndex = cosineSimilarity(cite_key,context_value)
-    # print "### Query ###"
-    # print query_display
-    # print 
-    # toprint = ""
-    # for t in docs[resultIndex].tokens:
-    #   toprint = toprint + " " + t
-    # print "### Guess ###"
-    # print toprint
-    # print
-    # sys.exit()
+    resultIndex = cosineSimilarity(cite_key,context_value)
+    print "### Query ###"
+    print query_display
+    print 
+    toprint = ""
+    for t in docs[resultIndex].tokens:
+      toprint = toprint + " " + t
+    print "### Guess ###"
+    print toprint
+    print
 
 experiment50 = "/Users/lwheng/Dropbox/fyp/annotation/annotations50.txt"
 startexperiment = open(experiment50,"r")
@@ -346,7 +363,7 @@ for l in startexperiment:
   info = l.split(",")
   cite_key = info[0]
   citProv(cite_key)
-  # sys.exit()
+  sys.exit()
 
 
 
