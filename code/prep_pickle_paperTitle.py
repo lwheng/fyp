@@ -1,4 +1,4 @@
-import pickle
+import cPickle as pickle
 
 titleHash = {}
 titleFile = "/Users/lwheng/Dropbox/fyp/annotation/paperTitles.txt"

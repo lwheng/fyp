@@ -5,7 +5,7 @@ import sys
 import os
 import re
 import unicodedata
-import pickle
+import cPickle as pickle
 
 # Compiles all the paper titles for easy reference
 

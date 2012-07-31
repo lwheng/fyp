@@ -4,6 +4,13 @@
 # To determine the type of the citation.
 # If specific, we wish to determine the location of the cited information
 
+# Feature Set
+# 1. Citation Density
+# 2. Publishing Year Difference
+# 3. Title Overlap
+# 4. Authors Overlap
+# 5. Context's Average TF-IDF Weight
+
 # 1. Using Citation Density 
     # Popularity: no. of references cited in the same sentence
     # Density:    no. of difference references in citing/neighbour sentences
@@ -14,7 +21,9 @@
 # 5. TF-IDF to determine most high-valued chunk in cited paper?
 # 6. Title Overlap using Jaccard 
 # 7. Authors Overlap
+# 8. Sum of TF-IDF for Query
 
+# Other possible features
 # x. Location of citing sentence
 # x+1. Cue Words 
 # x+2. POS Tagging
@@ -28,7 +37,7 @@ import re
 import os
 import math
 import numpy
-import pickle
+import cPickle as pickle
 from nltk.corpus import stopwords
 from nltk.tokenize.punkt import PunktSentenceTokenizer
 from nltk.metrics import distance
@@ -41,20 +50,20 @@ citationTypes = ['General', 'Specific', 'Undetermined']
 
 punctuation = "~`!@#$%^&*()-_+={}[]|\\:;\"\'<>,.?/"
 
-query_display = ""
-query_tokens = []
-query_lines = []
-query_col = []
-query_fd = []
+# query_display = ""
+# query_tokens = []
+# query_lines = []
+# query_col = []
+# query_fd = []
 
-context_dom = ""
-context_citStr = ""
-context_value = ""
+# context_dom = ""
+# context_citStr = ""
+# context_value = ""
 
-docs = []
-docs_col = []
+# docs = []
+# docs_col = []
 
-vocab = []
+# vocab = []
 
 titles = {}
 authors = {}
@@ -71,17 +80,21 @@ def fetchCollection():
   print
 
 def fetchContextCollection():
+  print "Loading context collection..."
   tempCol = pickle.load(open(pickle_contextCollection,"rb"))
+  print "Loaded context collection"
   return tempCol
 
 def fetchTitles():
   tempTitle = {}
   tempTitle = pickle.load(open(pickle_paperTitles, "rb"))
+  print "Loaded titles"
   return tempTitle
 
 def fetchAuthors():
   tempAuthors = {}
   tempAuthors = pickle.load(open(pickle_paperAuthors, "rb"))
+  print "Loaded authors"
   return tempAuthors
 
 def fetchContexts(cite_key):
@@ -131,13 +144,12 @@ def levenshteinRatio(a, b):
   return (lensum - ldist) / lensum
 
 def jaccard(inputA, inputB):
-  # Returns jaccard index. Smaller the more similar
+  # Returns jaccard index. Smaller the more better
   a = inputA.lower()
   b = inputB.lower()
   return distance.jaccard_distance(set(a.split()), set(b.split()))
 
 def citDensity(context_lines, context_citStr):
-
   # Regular Expression
   reg = []
   reg.append(r"\(\s?(\d{1,3})\s?\)")
@@ -146,44 +158,38 @@ def citDensity(context_lines, context_citStr):
   reg.append(r"\[\s?(\d{1,3}\s?,?\s?)+\s?\]")
   reg.append(r"\[\s?([\w-],?\s?)+\s?\]")
   reg.append(r"([A-Z][A-Za-z-]+\s?,?\s?(\s(and|&)\s)?)+\s?,?\s?(et al\.?)?\s?,?\s?(\(?(\d{4})\)?)")
-
   regex = ""
   for i in range(len(reg)):
     regex += reg[i] + "|"
   regex = re.compile(regex[:-1])
-
   # regex = r"(((\w+)\s*,?\s*(et al.?)?|(\w+ and \w+))\s*,?\s*(\(?\s?\d{4}\s?\)?)|\[\s*(\w+)\s*\]|\[\s(\w+\d+)\s\]|[\[|\(]\s(\d+\s?,\s?)*(\d+)\s[\]|\)]|\(\s*[A-Z]\w+\s*\)|\[\s(\w+\s,?\s?)+\])"
-
-  # Tuple: (CitingSetence?, Density)
   output = []
-
   # Process citStr
   if "et al." in context_citStr:
     context_citStr = context_citStr.replace("et al.", "et al")
   # Process context
   if "et al." in context_lines:
     context_lines = context_lines.replace("et al.", "et al")
-
-  # 3. Using Sentence Tokenizer
   query_lines = sentenceTokenizer.tokenize(context_lines)
-
-  checker = False
+  # for l in query_lines:
+  #   obj = re.findall(regex, l)
+  #   if context_citStr in l:
+  #     output.append((True, len(obj)))
+  #   else:
+  #     output.append((False, len(obj)))
+  # density = 0
+  # avgdensity = 0
+  # for t in output:
+  #   if t[0]:
+  #     density += t[1]
+  #   else:
+  #     avgdensity += t[1]
+  citationCount = 0
   for l in query_lines:
     obj = re.findall(regex, l)
-    if context_citStr in l:
-      output.append((True, len(obj)))
-      checker = True
-    else:
-      output.append((False, len(obj)))
-
-  density = 0
-  avgdensity = 0
-  for t in output:
-    if t[0]:
-      density += t[1]
-    else:
-      avgdensity += t[1]
-  return (density, float(avgdensity)/float(len(output)))
+    citationCount += len(obj)
+  avgDensity = float(citationCount) / float(len(query_lines))
+  return avgDensity
 
 def publishYear(cite_key, context_citStr):
   info = cite_key.split("==>")
@@ -202,30 +208,7 @@ def publishYear(cite_key, context_citStr):
     citedYear = 1900 + citedYear
   else:
     citedYear = 2000 + citedYear
-  # regexBibYear = r"\s*year\s*=\s*\{?(\d{4})\}?\s*"
-  # regexYear = r".*(\d{4}).*"
-
-  # # A. Try to get citing publish year
-  # rootDir = "/Users/lwheng/Downloads/fyp/annotations500/"
-  # if os.path.exists(rootDir + citing + ".bib"):
-  #   openfile = open(rootDir + citing + ".bib", "r")
-  #   for l in openfile:
-  #     matchObj = re.findall(regexBibYear, l)
-  #     if matchObj:
-  #       citingYear = int(matchObj[0])
-
-  # # B. Try to get cited publish year
-  # matchObj = re.findall(regexYear, context_citStr)
-  # if matchObj:
-  #   citedYear = int(matchObj[0])
-  # else:
-  #   if os.path.exists(rootDir + cited + ".bib"):
-  #     openfile = open(rootDir + cited + ".bib", "r")
-  #     for l in openfile:
-  #       matchObj = re.findall(regexBibYear, l)
-  #       if matchObj:
-  #         citedYear = int(matchObj[0])
-  return (citingYear,citedYear)
+  return (citingYear-citedYear)
 
 def titleOverlap(cite_key):
   global titles
@@ -246,15 +229,16 @@ def authorOverlap(cite_key):
     for citedAuthor in authors[cited]:
       ratio = levenshteinRatio(citingAuthor, citedAuthor)
       if ratio > LAMBDA_AUTHOR_MATCH:
-        # A match
         matches += 1
         uniqueNames -= 1
+  if uniqueNames == 0:
+    return 1.0
   return float(matches) / float(uniqueNames)
 
-def chunkWeight(chunk, doc_collection):
+def chunkWeight(chunk, collection):
   weight = 0
   for t in chunk.tokens:
-    weight += doc_collection.tf_idf(t, chunk)
+    weight += collection.tf_idf(t.lower(), chunk)
   return weight
 
 def cosineSimilarity(cite_key, context):
@@ -344,14 +328,6 @@ def cosineSimilarity(cite_key, context):
 
 
 def citProv(cite_key):
-  # Global scoping
-  global context_dom
-  global context_citStr
-  global context_value
-  global query_lines
-  global query_display
-  global query_tokens
-
   # 0. Set Up
   citation_dom = fetchContexts(cite_key)
   contexts = citation_dom.getElementsByTagName('context')
@@ -373,19 +349,23 @@ def citProv(cite_key):
     feature_citDensity = citDensity(query_lines, context_citStr)
     feature_vector.append(feature_citDensity)   
 
-    # 4. Publish Year
+    # 2. Publishing Year Difference
     feature_publishYear = publishYear(cite_key, context_citStr)
     feature_vector.append(feature_publishYear)
 
-    # 6. Title Overlap
+    # 3. Title Overlap
     feature_titleOverlap = titleOverlap(cite_key)
     feature_vector.append(feature_titleOverlap)
 
-    # 7. Authors Overlap
+    # 4. Authors Overlap
     feature_authorOverlap = authorOverlap(cite_key)
     feature_vector.append(feature_authorOverlap)
 
-    print cite_key + "==>" + str(feature_vector)
+    # 5. Context's Average TF-IDF Weight
+    feature_queryWeight = float(chunkWeight(nltk.Text(query_tokens), contextCollection)) / float(len(query_tokens))
+    feature_vector.append(feature_queryWeight)
+
+    print cite_key + " : " + str(feature_vector)
 
     # # 2. Using Cosine Similarity
     # resultIndex = cosineSimilarity(cite_key,context_value)

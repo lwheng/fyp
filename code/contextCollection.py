@@ -7,7 +7,7 @@ import re
 from xml.dom.minidom import parseString
 import unicodedata
 import nltk
-import pickle
+import cPickle as pickle
 from nltk.corpus import stopwords
 
 parscitFileDir = "/Users/lwheng/Downloads/fyp/parscitxml500"
