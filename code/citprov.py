@@ -13,6 +13,7 @@
 # 4. Publish Year
 # 5. TF-IDF to determine most high-valued chunk in cited paper?
 # 6. Title Overlap using Jaccard 
+# 7. Authors Overlap
 
 # x. Location of citing sentence
 # x+1. Cue Words 
@@ -35,6 +36,7 @@ from nltk.metrics import distance
 sentenceTokenizer = PunktSentenceTokenizer()
 
 CHUNK_SIZE = 15
+LAMBDA_AUTHOR_MATCH = 0.8
 citationTypes = ['General', 'Specific', 'Undetermined']
 
 punctuation = "~`!@#$%^&*()-_+={}[]|\\:;\"\'<>,.?/"
@@ -54,10 +56,12 @@ docs_col = []
 vocab = []
 
 titles = {}
+authors = {}
 collection = ""
 
 # Pickle files
 pickle_paperTitles = "/Users/lwheng/Dropbox/fyp/code/paperTitles.pickle"
+pickle_paperAuthors = "/Users/lwheng/Dropbox/fyp/code/paperAuthors.pickle"
 
 def fetchCollection():
   print "Fetch Collection"
@@ -66,6 +70,11 @@ def fetchTitles():
   tempTitle = {}
   tempTitle = pickle.load(open(pickle_paperTitles, "rb"))
   return tempTitle
+
+def fetchAuthors():
+  tempAuthors = {}
+  tempAuthors = pickle.load(open(pickle_paperAuthors, "rb"))
+  return tempAuthors
 
 def fetchContexts(cite_key):
   global titles
@@ -105,6 +114,13 @@ def fetchContexts(cite_key):
 
 def levenshtein(a, b):
   return distance.edit_distance(a,b)
+
+def levenshteinRatio(a, b):
+  lensum = float(len(a) + len(b))
+  if lensum == 0.0:
+    return 1.0
+  ldist = levenshtein(a,b)
+  return (lensum - ldist) / lensum
 
 def jaccard(inputA, inputB):
   # Returns jaccard index. Smaller the more similar
@@ -210,6 +226,23 @@ def titleOverlap(cite_key):
   cited = info[1]
   return jaccard(titles[citing], titles[cited])
 
+def authorOverlap(cite_key):
+  global authors
+  info = cite_key.split("==>")
+  citing = info[0]
+  cited = info[1]
+  # Adapting the Jaccard idea
+  matches = 0
+  uniqueNames = len(authors[citing]) + len(authors[cited])
+  for citingAuthor in authors[citing]:
+    for citedAuthor in authors[cited]:
+      ratio = levenshteinRatio(citingAuthor, citedAuthor)
+      if ratio > LAMBDA_AUTHOR_MATCH:
+        # A match
+        matches += 1
+        uniqueNames -= 1
+  return float(matches) / float(uniqueNames)
+
 def chunkWeight(chunk, doc_collection):
   weight = 0
   for t in chunk.tokens:
@@ -261,7 +294,6 @@ def cosineSimilarity(cite_key, context):
   maxChunkWeight = 0
   maxChunkIndex = 0
   for i in range(0, len(docs)):
-
     # TF-IDF to determine most high-valued chunk in cited paper?
     temp = chunkWeight(docs[i], docs_col)
     if temp > maxChunkWeight:
@@ -341,23 +373,28 @@ def citProv(cite_key):
     feature_titleOverlap = titleOverlap(cite_key)
     feature_vector.append(feature_titleOverlap)
 
+    # 7. Authors Overlap
+    feature_authorOverlap = authorOverlap(cite_key)
+    feature_vector.append(feature_authorOverlap)
+
     print cite_key + "==>" + str(feature_vector)
 
-    # 2. Using Cosine Similarity
-    resultIndex = cosineSimilarity(cite_key,context_value)
-    print "### Query ###"
-    print query_display
-    print 
-    toprint = ""
-    for t in docs[resultIndex].tokens:
-      toprint = toprint + " " + t
-    print "### Guess ###"
-    print toprint
-    print
+    # # 2. Using Cosine Similarity
+    # resultIndex = cosineSimilarity(cite_key,context_value)
+    # print "### Query ###"
+    # print query_display
+    # print 
+    # toprint = ""
+    # for t in docs[resultIndex].tokens:
+    #   toprint = toprint + " " + t
+    # print "### Guess ###"
+    # print toprint
+    # print
 
 experiment50 = "/Users/lwheng/Dropbox/fyp/annotation/annotations50.txt"
 startexperiment = open(experiment50,"r")
 titles = fetchTitles()
+authors = fetchAuthors()
 collection = fetchCollection()
 for l in startexperiment:
   info = l.split(",")
