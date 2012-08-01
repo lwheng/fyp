@@ -9,19 +9,12 @@
 # 2. Publishing Year Difference
 # 3. Title Overlap
 # 4. Authors Overlap
-# 5. Context's Average TF-IDF Weight
+# 5. Context's Average TF-IDF Weight?
+# 6. Location Of Citing Sentence
+# 7. Cosine Similarity
 
-# 1. Using Citation Density 
-    # Popularity: no. of references cited in the same sentence
-    # Density:    no. of difference references in citing/neighbour sentences
-    # AvgDens:    average of Density among neighbour sentences surrounding the citation sentence
-# 2. Using Cosine Similarity
-# 3. Using Sentence Tokenizer
-# 4. Publish Year
-# 5. TF-IDF to determine most high-valued chunk in cited paper?
-# 6. Title Overlap using Jaccard 
-# 7. Authors Overlap
-# 8. Sum of TF-IDF for Query
+# ???
+# 7. Chunk's Average TF-IDF Weight?
 
 # Other possible features
 # x. Location of citing sentence
@@ -47,6 +40,20 @@ sentenceTokenizer = PunktSentenceTokenizer()
 CHUNK_SIZE = 15
 LAMBDA_AUTHOR_MATCH = 0.8
 citationTypes = ['General', 'Specific', 'Undetermined']
+genericHeader = [ 'abstract',
+                  'acknowledgements',
+                  'background',
+                  'categories and subject descriptors',
+                  'conclusions',
+                  'discussions',
+                  'evaluation',
+                  'general terms',
+                  'introduction',
+                  'keywords',
+                  'method',
+                  'references',
+                  'related work'
+                ]
 
 punctuation = "~`!@#$%^&*()-_+={}[]|\\:;\"\'<>,.?/"
 
@@ -105,7 +112,7 @@ def fetchContexts(cite_key):
 
   titleToMatch = titles[cited]
 
-  citingFile = "/Users/lwheng/Downloads/fyp/annotations500/" + citing + "-parscit.xml"
+  citingFile = "/Users/lwheng/Downloads/fyp/parscitxml500/" + citing + "-parscit.xml"
   openciting = open(citingFile,"r")
   data = openciting.read()
   openciting.close()
@@ -238,19 +245,25 @@ def authorOverlap(cite_key):
 def chunkWeight(chunk, collection):
   weight = 0
   for t in chunk.tokens:
-    weight += collection.tf_idf(t.lower(), chunk)
+    weight += collection.tf(t.lower(), chunk) * collection.idf(t.lower()) 
   return weight
 
-def cosineSimilarity(cite_key, context):
-  global query_tokens
-  global query_display
-  global domain
-  global docs
+def locationCitingSent(cite_key):
+  info = cite_key.split("==>")
+  citing = info[0]
+
+  parscitSectionFile = "/Users/lwheng/Downloads/fyp/parscitsectionxml500/" + citing + "-parscit-section.xml"
+  if os.path.exists(parscitSectionFile):
+    print
+  openthefile = open(parscitSectionFile, 'r')
+  data = openthefile.read()
+  openthefile.close()
+  dom = parseString(data)
+
+def cosineSimilarity(cite_key, query_tokens):
   global CHUNK_SIZE
-  global vocab
 
   # Citing Paper
-  query_fd = nltk.FreqDist(query_tokens)
   query_col = nltk.TextCollection([nltk.Text(query_tokens)])
 
   # Cited Paper
@@ -267,12 +280,15 @@ def cosineSimilarity(cite_key, context):
   except IOError as e:
     print e
   docs = []
+  docs_display = []
   for i in xrange(0, len(domain), CHUNK_SIZE/2):
     sublist = domain[i:i+CHUNK_SIZE]
     temp = ""
     for s in sublist:
       temp = temp + " " + s
-    docs.append(nltk.Text(nltk.word_tokenize(temp)))
+    text = nltk.Text(nltk.word_tokenize(temp.lower()))
+    docs.append(text)
+    docs_display.append((str(i) + "-" + str(i+CHUNK_SIZE), text))
   docs_col = nltk.TextCollection(docs)
 
   # Vocab
@@ -311,24 +327,17 @@ def cosineSimilarity(cite_key, context):
       else:
         v.append(0)
     if math.sqrt(numpy.dot(u, u)) == 0.0:
-      results.append(1000)
+      results.append(0.0)
     else:
       r = nltk.cluster.util.cosine_distance(u,v)
       results.append(r)
 
-  # TF-IDF to determine most high-valued chunk in cited paper?
-  toprint = ""
-  for t in docs[maxChunkIndex].tokens:
-    toprint = toprint + " " + t
-  print "### Chunk with max weight ###"
-  print toprint
-  print
-
-  return results.index(min(results))
-
+  feature = []
+  for i in range(len(results)):
+    feature.append((docs_display[i][0],results[i]))
+  return feature
 
 def citProv(cite_key):
-  # 0. Set Up
   citation_dom = fetchContexts(cite_key)
   contexts = citation_dom.getElementsByTagName('context')
   for c in contexts:
@@ -340,7 +349,7 @@ def citProv(cite_key):
     context_value = unicodedata.normalize('NFKD', context_value).encode('ascii','ignore')
 
     query_lines = context_value
-    query_tokens = nltk.word_tokenize(context_value)
+    query_tokens = nltk.word_tokenize(context_value.lower())
     query_display = ""
     for t in query_tokens:
       query_display = query_display + " " + t
@@ -362,22 +371,23 @@ def citProv(cite_key):
     feature_vector.append(feature_authorOverlap)
 
     # 5. Context's Average TF-IDF Weight
-    feature_queryWeight = float(chunkWeight(nltk.Text(query_tokens), contextCollection)) / float(len(query_tokens))
-    feature_vector.append(feature_queryWeight)
+    # feature_queryWeight = float(chunkWeight(nltk.Text(query_tokens), contextCollection)) / float(len(query_tokens))
+    # feature_vector.append(feature_queryWeight)
+    # print "Done Feature " + str(len(feature_vector))
 
-    print cite_key + " : " + str(feature_vector)
+    # 6. Location Of Citing Sentence
+    # feature_locationCitingSent = locationCitingSent(cite_key)
+    # feature_vector.append(feature_locationCitingSent)
 
-    # # 2. Using Cosine Similarity
-    # resultIndex = cosineSimilarity(cite_key,context_value)
-    # print "### Query ###"
-    # print query_display
-    # print 
-    # toprint = ""
-    # for t in docs[resultIndex].tokens:
-    #   toprint = toprint + " " + t
-    # print "### Guess ###"
-    # print toprint
-    # print
+    # Cosine Similarity
+    # Note: For n chunks in cited paper we perform cosineSimilarity,
+    # so we have n results
+    feature_cosineSimilarity = cosineSimilarity(cite_key, query_tokens)
+    feature_vector.append(feature_cosineSimilarity)
+
+    print cite_key + " : " + str(feature_vector[0:-1])
+    for i in feature_cosineSimilarity:
+      print i
 
 experiment50 = "/Users/lwheng/Dropbox/fyp/annotation/annotations50.txt"
 startexperiment = open(experiment50,"r")
