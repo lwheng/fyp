@@ -9,15 +9,12 @@
 # 2. Publishing Year Difference
 # 3. Title Overlap
 # 4. Authors Overlap
-# 5. Context's Average TF-IDF Weight?
-# 6. Location Of Citing Sentence
+# 5. Context's Average TF-IDF Weight
+# 6. Location Of Citing Sentence?
 # 7. Cosine Similarity
-
-# ???
-# 7. Chunk's Average TF-IDF Weight?
+# 7.1 Cited Chunk's Average TF-IDF Weight
 
 # Other possible features
-# x. Location of citing sentence
 # x+1. Cue Words 
 # x+2. POS Tagging
 
@@ -242,11 +239,11 @@ def authorOverlap(cite_key):
     return 1.0
   return float(matches) / float(uniqueNames)
 
-def chunkWeight(chunk, collection):
+def chunkAverageWeight(chunk, collection):
   weight = 0
   for t in chunk.tokens:
-    weight += collection.tf(t.lower(), chunk) * collection.idf(t.lower()) 
-  return weight
+    weight += collection.tf_idf(t.lower(), chunk)
+  return float(weight) / float(len(chunk.tokens))
 
 def locationCitingSent(cite_key):
   info = cite_key.split("==>")
@@ -260,11 +257,11 @@ def locationCitingSent(cite_key):
   openthefile.close()
   dom = parseString(data)
 
-def cosineSimilarity(cite_key, query_tokens):
+def cosineSimilarity(cite_key, query_tokens, query_col):
   global CHUNK_SIZE
 
-  # Citing Paper
-  query_col = nltk.TextCollection([nltk.Text(query_tokens)])
+  # # Citing Paper
+  # query_col = nltk.TextCollection([nltk.Text(query_tokens)])
 
   # Cited Paper
   info = cite_key.split("==>")
@@ -299,18 +296,13 @@ def cosineSimilarity(cite_key, query_tokens):
 
   # Prep Vectors
   results = []
-  maxChunkWeight = 0
-  maxChunkIndex = 0
   for i in range(0, len(docs)):
-    # TF-IDF to determine most high-valued chunk in cited paper?
-    temp = chunkWeight(docs[i], docs_col)
-    if temp > maxChunkWeight:
-      maxChunkWeight = temp
-      maxChunkIndex = i
+    # 7.1 Cited Chunk's Average TF-IDF Weight
+    chunkAvgWeight = chunkAverageWeight(docs[i], docs_col)
 
     u = []
     v = []
-    fd_doc_current = nltk.FreqDist(docs[i])
+    # fd_doc_current = nltk.FreqDist(docs[i])
     temp_query = map(lambda x: x.lower(), query_tokens)
     temp_query = [w for w in temp_query if not w in stopwords.words('english')]
     temp_query = [w for w in temp_query if not w in punctuation]
@@ -330,16 +322,33 @@ def cosineSimilarity(cite_key, query_tokens):
       results.append(0.0)
     else:
       r = nltk.cluster.util.cosine_distance(u,v)
-      results.append(r)
-
+      # results.append(r)
+      results.append((r,chunkAvgWeight))
+  # total = sum(results)
   feature = []
   for i in range(len(results)):
     feature.append((docs_display[i][0],results[i]))
+    # feature.append((docs_display[i][0],float(results[i])/float(total)*100))
   return feature
 
 def citProv(cite_key):
+  info = cite_key.split('==>')
+  citing = info[0]
+  cited = info[1]
+
   citation_dom = fetchContexts(cite_key)
   contexts = citation_dom.getElementsByTagName('context')
+
+  # Prep citing_col
+  context_list = []
+  for c in contexts:
+    value = c.firstChild.data
+    value = unicodedata.normalize('NFKD', value).encode('ascii','ignore')
+    value = value.lower()
+    tempText = nltk.Text(nltk.word_tokenize(value))
+    context_list.append(tempText)
+  citing_col = nltk.TextCollection(context_list)
+
   for c in contexts:
     feature_vector = []
 
@@ -350,6 +359,7 @@ def citProv(cite_key):
 
     query_lines = context_value
     query_tokens = nltk.word_tokenize(context_value.lower())
+    query_col = nltk.TextCollection([nltk.Text(query_tokens)])
     query_display = ""
     for t in query_tokens:
       query_display = query_display + " " + t
@@ -371,9 +381,8 @@ def citProv(cite_key):
     feature_vector.append(feature_authorOverlap)
 
     # 5. Context's Average TF-IDF Weight
-    # feature_queryWeight = float(chunkWeight(nltk.Text(query_tokens), contextCollection)) / float(len(query_tokens))
-    # feature_vector.append(feature_queryWeight)
-    # print "Done Feature " + str(len(feature_vector))
+    feature_queryWeight = chunkAverageWeight(nltk.Text(query_tokens), citing_col)
+    feature_vector.append(feature_queryWeight)
 
     # 6. Location Of Citing Sentence
     # feature_locationCitingSent = locationCitingSent(cite_key)
@@ -382,18 +391,18 @@ def citProv(cite_key):
     # Cosine Similarity
     # Note: For n chunks in cited paper we perform cosineSimilarity,
     # so we have n results
-    feature_cosineSimilarity = cosineSimilarity(cite_key, query_tokens)
+    feature_cosineSimilarity = cosineSimilarity(cite_key, query_tokens, query_col)
     feature_vector.append(feature_cosineSimilarity)
 
     print cite_key + " : " + str(feature_vector[0:-1])
     for i in feature_cosineSimilarity:
-      print i
+      print i[0] + "\t" + str(i[1])
 
 experiment50 = "/Users/lwheng/Dropbox/fyp/annotation/annotations50.txt"
 startexperiment = open(experiment50,"r")
 titles = fetchTitles()
 authors = fetchAuthors()
-contextCollection = fetchContextCollection()
+# contextCollection = fetchContextCollection()
 collection = fetchCollection()
 for l in startexperiment:
   info = l.split(",")
