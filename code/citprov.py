@@ -54,51 +54,32 @@ genericHeader = [ 'abstract',
 
 punctuation = "~`!@#$%^&*()-_+={}[]|\\:;\"\'<>,.?/"
 
-# query_display = ""
-# query_tokens = []
-# query_lines = []
-# query_col = []
-# query_fd = []
-
-# context_dom = ""
-# context_citStr = ""
-# context_value = ""
-
-# docs = []
-# docs_col = []
-
-# vocab = []
-
 titles = {}
 authors = {}
-contextCollection = ""
+# contextCollection = ""
 collection = ""
 
 # Pickle files
 pickle_paperTitles = "/Users/lwheng/Downloads/fyp/paperTitles.pickle"
 pickle_paperAuthors = "/Users/lwheng/Downloads/fyp/paperAuthors.pickle"
-pickle_contextCollection = "/Users/lwheng/Downloads/fyp/contextCollection.pickle"
-# pickle_collection = "/Users/lwheng/Downloads/fyp/collection.pickle"
+# pickle_contextCollection = "/Users/lwheng/Downloads/fyp/contextCollection.pickle"
 
-def fetchCollection():
-  print
-
-def fetchContextCollection():
-  print "Loading context collection..."
-  tempCol = pickle.load(open(pickle_contextCollection,"rb"))
-  print "Loaded context collection"
-  return tempCol
+# def fetchContextCollection():
+#   print "Loading context collection..."
+#   tempCol = pickle.load(open(pickle_contextCollection,"rb"))
+#   print "Loaded context collection"
+#   return tempCol
 
 def fetchTitles():
   tempTitle = {}
   tempTitle = pickle.load(open(pickle_paperTitles, "rb"))
-  print "Loaded titles"
+  # print "Loaded titles"
   return tempTitle
 
 def fetchAuthors():
   tempAuthors = {}
   tempAuthors = pickle.load(open(pickle_paperAuthors, "rb"))
-  print "Loaded authors"
+  # print "Loaded authors"
   return tempAuthors
 
 def fetchContexts(cite_key):
@@ -388,22 +369,24 @@ def citProv(cite_key):
     # feature_locationCitingSent = locationCitingSent(cite_key)
     # feature_vector.append(feature_locationCitingSent)
 
-    # Cosine Similarity
+    # 7. Cosine Similarity + 7.1 Cited Chunk's Average TF-IDF Weight
     # Note: For n chunks in cited paper we perform cosineSimilarity,
     # so we have n results
     feature_cosineSimilarity = cosineSimilarity(cite_key, query_tokens, query_col)
     feature_vector.append(feature_cosineSimilarity)
 
-    print cite_key + " : " + str(feature_vector[0:-1])
+    # print cite_key + " : " + str(feature_vector[0:-1])
     for i in feature_cosineSimilarity:
-      print i[0] + "\t" + str(i[1])
+      display = feature_vector[0:-1]
+      display.append(i[1])
+      print cite_key + " : " + str(i[0]) + " : " + str(display)
+      # print i[0] + "\t" + str(i[1])
 
 experiment50 = "/Users/lwheng/Dropbox/fyp/annotation/annotations50.txt"
 startexperiment = open(experiment50,"r")
 titles = fetchTitles()
 authors = fetchAuthors()
 # contextCollection = fetchContextCollection()
-collection = fetchCollection()
 for l in startexperiment:
   info = l.split(",")
   cite_key = info[0]
