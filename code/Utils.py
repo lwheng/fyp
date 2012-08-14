@@ -11,6 +11,47 @@ from nltk.corpus import stopwords
 from nltk.tokenize.punkt import PunktSentenceTokenizer
 from nltk.metrics import distance
 
+class weight:
+	def __init__(self):
+		self.sentenceTokenizer = PunktSentenceTokenizer()
+
+	def chunkAverageWeight(self, chunk, collection):
+		tempWeight = 0
+		if len(chunk.tokens) == 0:
+			return 0
+		for t in chunk.tokens:
+			tempWeight += collection.tf_idf(t.lower(), chunk)
+		return float(tempWeight) / float(len(chunk.tokens))
+
+	def citDensity(self, context_lines, context_citStr):
+		# Regular Expression
+		reg = []
+		reg.append(r"\(\s?(\d{1,3})\s?\)")
+		reg.append(r"\(\s?(\d{4})\s?\)")
+		reg.append(r"\(\s?(\d{4};?\s?)+\s?")
+		reg.append(r"\[\s?(\d{1,3}\s?,?\s?)+\s?\]")
+		reg.append(r"\[\s?([\w-],?\s?)+\s?\]")
+		reg.append(r"([A-Z][A-Za-z-]+\s?,?\s?(\s(and|&)\s)?)+\s?,?\s?(et al\.?)?\s?,?\s?(\(?(\d{4})\)?)")
+		regex = ""
+		for i in range(len(reg)):
+			regex += reg[i] + "|"
+		regex = re.compile(regex[:-1])
+		# regex = r"(((\w+)\s*,?\s*(et al.?)?|(\w+ and \w+))\s*,?\s*(\(?\s?\d{4}\s?\)?)|\[\s*(\w+)\s*\]|\[\s(\w+\d+)\s\]|[\[|\(]\s(\d+\s?,\s?)*(\d+)\s[\]|\)]|\(\s*[A-Z]\w+\s*\)|\[\s(\w+\s,?\s?)+\])"
+		output = []
+		# Process citStr
+		if "et al." in context_citStr:
+			context_citStr = context_citStr.replace("et al.", "et al")
+		# Process context
+		if "et al." in context_lines:
+			context_lines = context_lines.replace("et al.", "et al")
+		query_lines = self.sentenceTokenizer.tokenize(context_lines)
+		citationCount = 0
+		for l in query_lines:
+			obj = re.findall(regex, l)
+			citationCount += len(obj)
+		avgDensity = float(citationCount) / float(len(query_lines))
+		return avgDensity
+
 class dist:
 	def levenshtein(self, a, b):
 		return distance.edit_distance(a, b)
@@ -28,12 +69,31 @@ class dist:
 		b = inputB.lower()
 		return distance.jaccard_distance(set(a.split()), set(b.split()))
 
+	def publishYear(self, cite_key):
+		info = cite_key.split("==>")
+		citing = info[0]
+		cited = info[1]
+
+		citingYear = int(citing[1:3])
+		citedYear = int(cited[1:3])
+
+		if citingYear > 50:
+			citingYear = 1900 + citingYear
+		else:
+			citingYear = 2000 + citingYear
+
+		if citedYear > 50:
+			citedYear = 1900 + citedYear
+		else:
+			citedYear = 2000 + citedYear
+		return (citingYear-citedYear)
+
 class pickler:
 	# Pickle files
-	pickle_paperTitles = "/Users/lwheng/Downloads/fyp/paperTitles.pickle"
-	pickle_paperAuthors = "/Users/lwheng/Downloads/fyp/paperAuthors.pickle"
-	titles = {}
-	authors = {}
+	# pickle_paperTitles = "/Users/lwheng/Downloads/fyp/paperTitles.pickle"
+	# pickle_paperAuthors = "/Users/lwheng/Downloads/fyp/paperAuthors.pickle"
+	# titles = {}
+	# authors = {}
 	# pickle_contextCollection = "/Users/lwheng/Downloads/fyp/contextCollection.pickle"
 
 	def __init__(self, paperTitles="/Users/lwheng/Downloads/fyp/paperTitles.pickle", paperAuthors="/Users/lwheng/Downloads/fyp/paperAuthors.pickle"):
@@ -55,38 +115,3 @@ class pickler:
 		tempAuthors = pickle.load(open(self.pickle_paperAuthors, "rb"))
 		# print "Loaded authors"
 		return tempAuthors
-
-	def fetchContexts(self, cite_key):
-		info = cite_key.split("==>")
-		citing = info[0]
-		cited = info[1]
-
-		titleToMatch = self.titles[cited]
-
-		citingFile = "/Users/lwheng/Downloads/fyp/parscitxml500/" + citing + "-parscit.xml"
-		openciting = open(citingFile,"r")
-		data = openciting.read()
-		openciting.close()
-		dom = parseString(data)
-		citations = dom.getElementsByTagName('citation')
-		tags = ["title", "note", "booktitle", "journal"]
-		titleTag = []
-		index = 0
-		bestIndex = 0
-		minDistance = 314159265358979323846264338327950288419716939937510
-		for i in range(len(citations)):
-			c = citations[i]
-			valid = c.getAttribute('valid')
-			if valid == "true":
-				titleTag = []
-				index = 0
-				while titleTag == []:
-					titleTag = c.getElementsByTagName(tags[index])
-					index += 1
-				title = titleTag[0].firstChild.data
-				title = unicodedata.normalize('NFKD', title).encode('ascii','ignore')
-				thisDistance = levenshtein(title, titleToMatch)
-				if thisDistance < minDistance:
-					minDistance = thisDistance
-					bestIndex = i
-		return citations[bestIndex]

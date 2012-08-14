@@ -1,10 +1,10 @@
 import Utils
 
 class citprov:
-	LAMBDA_AUTHOR_MATCH = 0.8
 	def __init__(self):
 		self.pickler = Utils.pickler()
 		self.dist = Utils.dist()
+		self.LAMBDA_AUTHOR_MATCH = 0.8
 
 	def titleOverlap(self, cite_key, titles):
 		info = cite_key.split("==>")
