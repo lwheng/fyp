@@ -1,4 +1,4 @@
-from xml.dom.minidom import parseString
+from xml.dom.minidom import parse
 import unicodedata
 import nltk
 import sys
@@ -10,6 +10,29 @@ import cPickle as pickle
 from nltk.corpus import stopwords
 from nltk.tokenize.punkt import PunktSentenceTokenizer
 from nltk.metrics import distance
+
+class nltk_tools:
+	def nltkWordTokenize(self, text):
+		return nltk.word_tokenize(text)
+
+	def nltkText(self, tokens):
+		return nltk.Text(tokens)
+
+	def nltkTextCollection(self, documents):
+		return nltk.TextCollection(documents)
+
+	def nltkStopwords(self):
+		return stopwords.words('english')
+
+	def nltkCosineDistance(self, u, v):
+		return nltk.cluster.util.cosine_distance(u,v)
+
+class tools:
+	def parseString(self, data):
+		return parse(data)
+
+	def normalize(self, text):
+		return unicodedata.normalize('NFKD', text).encode('ascii','ignore')
 
 class weight:
 	def __init__(self):
