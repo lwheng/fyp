@@ -1,4 +1,4 @@
-from xml.dom.minidom import parse
+from xml.dom.minidom import parseString
 import unicodedata
 import nltk
 import sys
@@ -28,8 +28,8 @@ class nltk_tools:
 		return nltk.cluster.util.cosine_distance(u,v)
 
 class tools:
-	def parseString(self, data):
-		return parse(data)
+	def parseXML(self, data):
+		return parseString(data)
 
 	def normalize(self, text):
 		return unicodedata.normalize('NFKD', text).encode('ascii','ignore')
