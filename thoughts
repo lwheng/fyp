@@ -1,0 +1,11 @@
+The project should be split into 2 tiers: 
+1. To first decide whether it is a General or Specific citation
+2. If Specific, then decide which chunk in cited paper is the cited chunk
+
+Features for 1st tier??
+1. To look at only the citing paper i.e. citing sentences and surrounding sentences
+2. To look at the location of the citing sentence?
+3. Citation density?
+4. Publish year difference?
+5. Title overlap?
+6. Authors overlap?
