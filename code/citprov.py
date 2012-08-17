@@ -55,7 +55,7 @@ class citprov:
     tags = ["title", "note", "booktitle", "journal"]
     titleTag = []
     index = 0
-    bestIndex = 0
+    bestIndex = -1
     minDistance = 314159265358979323846264338327950288419716939937510
     for i in range(len(citations)):
       c = citations[i]
@@ -72,6 +72,8 @@ class citprov:
         if thisDistance < minDistance:
           minDistance = thisDistance
           bestIndex = i
+    if bestIndex == -1:
+      return None
     return citations[bestIndex]
 
   def cosineSimilarity(self, cite_key, query_tokens, query_col, citedpaper="/Users/lwheng/Downloads/fyp/pdfbox-0.72/"):
@@ -153,7 +155,10 @@ class citprov:
     cited = info[1]
 
     citation_dom = self.fetchContexts(cite_key, self.pickler.titles)
-    contexts = citation_dom.getElementsByTagName('context')
+    if citation_dom:
+      contexts = citation_dom.getElementsByTagName('context')
+    else:
+      return [cite_key, None, '-']
 
     # Prep citing_col
     context_list = []
@@ -169,6 +174,8 @@ class citprov:
 
     for c in contexts:
       feature_vector = []
+      feature_vector.append(cite_key)
+      feature_vector.append(c)
 
       context_citStr = c.getAttribute('citStr')
       context_citStr = self.tools.normalize(context_citStr)
