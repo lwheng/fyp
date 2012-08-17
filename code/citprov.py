@@ -157,7 +157,9 @@ class citprov:
     citation_dom = self.fetchContexts(cite_key, self.pickler.titles)
     if citation_dom:
       contexts = citation_dom.getElementsByTagName('context')
+      # What if no context? Need to fix
     else:
+      # Need to fix this
       return [cite_key, None, '-']
 
     # Prep citing_col
