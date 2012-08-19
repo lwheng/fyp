@@ -76,6 +76,22 @@ class weight:
     return avgDensity
 
 class dist:
+  def __init__(self):
+    self.genericHeader = [ 'abstract',
+                          'acknowledgements',
+                          'background',
+                          'categories and subject descriptors',
+                          'conclusions',
+                          'discussions',
+                          'evaluation',
+                          'general terms',
+                          'introduction',
+                          'keywords',
+                          'method',
+                          'references',
+                          'related work'
+                          ]
+
   def levenshtein(self, a, b):
     return distance.edit_distance(a, b)
 
@@ -110,6 +126,20 @@ class dist:
     else:
       citedYear = 2000 + citedYear
     return (citingYear-citedYear)
+
+  def citSentLocation(self, cite_key, context, citingFile="/Users/lwheng/Downloads/fyp/parscitsectionxml500/"):
+    citing = cite_key.split('==>')[0]
+    citingFile = citingFile + citing + "-parscit-section.xml"
+    print citingFile
+    if os.path.exists(citingFile):
+      openfile = open(citingFile, 'r')
+      data = openfile.read()
+      openfile.close()
+      dom = parseString(data)
+      variant = dom.getElementsByTagName('variant')[0]
+      return variant.childNodes
+    else:
+      return "No section file"
 
 class pickler:
   # Pickle files

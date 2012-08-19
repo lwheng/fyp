@@ -14,6 +14,21 @@ class citprov:
     self.LAMBDA_AUTHOR_MATCH = 0.8
     self.CHUNK_SIZE = 15
     self.punctuation = "~`!@#$%^&*()-_+={}[]|\\:;\"\'<>,.?/"
+    self.citationTypes = ['General', 'Specific', 'Undetermined']
+    self.genericHeader = [ 'abstract',
+                          'acknowledgements',
+                          'background',
+                          'categories and subject descriptors',
+                          'conclusions',
+                          'discussions',
+                          'evaluation',
+                          'general terms',
+                          'introduction',
+                          'keywords',
+                          'method',
+                          'references',
+                          'related work'
+                          ]
 
   def titleOverlap(self, cite_key, titles):
     info = cite_key.split("==>")
@@ -157,9 +172,9 @@ class citprov:
     citation_dom = self.fetchContexts(cite_key, self.pickler.titles)
     if citation_dom:
       contexts = citation_dom.getElementsByTagName('context')
-      # What if no context? Need to fix
+      # What if no context? --> According to ParsCit, citation is valid, but has no contexts
     else:
-      # Need to fix this
+      # No citation
       return [cite_key, None, '-']
 
     # Prep citing_col
@@ -219,10 +234,8 @@ class citprov:
       # Note: For n chunks in cited paper we perform cosineSimilarity,
       # so we have n results
       # We skip this part for now
-      """
       feature_cosineSimilarity = self.cosineSimilarity(cite_key, query_tokens, query_col)
       feature_vector.append(feature_cosineSimilarity)
-      """
 
       #print cite_key + " : " + str(feature_vector[0:-1])
       # for i in feature_cosineSimilarity:
@@ -234,5 +247,3 @@ class citprov:
 
       data.append(feature_vector)
     return data
-
-
