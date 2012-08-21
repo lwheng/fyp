@@ -1,4 +1,5 @@
 from xml.dom.minidom import parseString
+from xml.dom import Node
 import unicodedata
 import nltk
 import re
@@ -134,10 +135,28 @@ class dist:
       data = openfile.read()
       openfile.close()
       dom = parseString(data)
-      variant = dom.getElementsByTagName('variant')[0]
       # Can consider using DOM Node.nodeType
       # And also to use DOM Node.previousSibling and Node.nextSibling, and nodeName = 'sectionHeader'/'subsectionHeader'
-      return variant.childNodes
+      # return variant.childNodes
+      target = ""
+      bodyTexts = dom.getElementsByTagName('bodyText')
+      searching = True
+      for b in bodyTexts:
+        # Look for the citing sentence with some method
+        print b
+
+      return
+      searching = False
+      while searching:
+        if target.nodeType == Node.ELEMENT_NODE:
+          if target.nodeName == 'sectionHeader':
+            searching = False
+            return 'Section Header'
+          elif target.nodeName == 'subsectionHeader':
+            searching = False
+            return 'Sub Section Header'
+        else:
+          target = target.previousSibling
     else:
       return "No section file"
 
