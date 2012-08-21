@@ -1,7 +1,6 @@
 from xml.dom.minidom import parseString
 import unicodedata
 import nltk
-import sys
 import re
 import os
 import math

@@ -30,6 +30,9 @@ class citprov:
                           'related work'
                           ]
 
+  def sayHello(self):
+    return "Hello, world! I'm Citprov!"
+
   def titleOverlap(self, cite_key, titles):
     info = cite_key.split("==>")
     citing = info[0]
