@@ -77,7 +77,7 @@ class weight:
 
 class dist:
   def __init__(self):
-    self.genericHeader = [ 'abstract',
+    self.genericHeader = ['abstract',
                           'acknowledgements',
                           'background',
                           'categories and subject descriptors',
@@ -130,13 +130,14 @@ class dist:
   def citSentLocation(self, cite_key, context, citingFile="/Users/lwheng/Downloads/fyp/parscitsectionxml500/"):
     citing = cite_key.split('==>')[0]
     citingFile = citingFile + citing + "-parscit-section.xml"
-    print citingFile
     if os.path.exists(citingFile):
       openfile = open(citingFile, 'r')
       data = openfile.read()
       openfile.close()
       dom = parseString(data)
       variant = dom.getElementsByTagName('variant')[0]
+      # Can consider using DOM Node.nodeType
+      # And also to use DOM Node.previousSibling and Node.nextSibling, and nodeName = 'sectionHeader'/'subsectionHeader'
       return variant.childNodes
     else:
       return "No section file"
