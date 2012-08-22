@@ -1,6 +1,7 @@
 from xml.dom.minidom import parseString
 from xml.dom import Node
 import unicodedata
+import sys
 import nltk
 import re
 import os
@@ -135,30 +136,35 @@ class dist:
       data = openfile.read()
       openfile.close()
       dom = parseString(data)
-      # Can consider using DOM Node.nodeType
-      # And also to use DOM Node.previousSibling and Node.nextSibling, and nodeName = 'sectionHeader'/'subsectionHeader'
-      # return variant.childNodes
-      target = ""
+      target = None
       bodyTexts = dom.getElementsByTagName('bodyText')
-      searching = True
-      for b in bodyTexts:
-        # Look for the citing sentence with some method
-        print b
+      regex = r"\<.*\>(.*)\<.*\>"
+      tool = tools()
 
-      return
-      searching = False
-      while searching:
-        if target.nodeType == Node.ELEMENT_NODE:
-          if target.nodeName == 'sectionHeader':
-            searching = False
-            return 'Section Header'
-          elif target.nodeName == 'subsectionHeader':
-            searching = False
-            return 'Sub Section Header'
-        else:
+      for b in bodyTexts:
+        text = tool.normalize(b.toxml().replace("\n", " ").replace("- ", "").strip())
+        obj = re.findall(regex, text)
+        if context in obj[0]:
+          target = b
+          break
+
+      if target:
+        searching = True
+        sectionHeaderNode = None
+        target = target.previousSibling
+        while target:
+          if target.nodeType == Node.ELEMENT_NODE:
+            if target.nodeName == 'sectionHeader':
+              sectionHeaderNode = target
+              break
           target = target.previousSibling
+        return tool.normalize(sectionHeaderNode.attributes['genericHeader'].value)
+      else:
+        # Not found in any bodyText
+        return None
     else:
-      return "No section file"
+      # No section file
+      return None
 
 class pickler:
   # Pickle files
