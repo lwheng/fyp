@@ -1,2 +1,10 @@
 gitignore
 .DS_Store
+*.aux
+*.bbl
+*.blg
+*.lof
+*.log
+*.lot
+*.synctex.gz
+*.toc
