@@ -231,7 +231,7 @@ class citprov:
 
       # 6. Location Of Citing Sentence
       feature_locationCitingSent = self.dist.citSentLocation(cite_key, context_citStr, context_value)
-      feature_vector.append(feature_locationCitingSent)
+      feature_vector.extend(feature_locationCitingSent)
 
       # 7. Cosine Similarity + 7.1 Cited Chunk's Average TF-IDF Weight
       # Note: For n chunks in cited paper we perform cosineSimilarity,

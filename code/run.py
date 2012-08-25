@@ -19,8 +19,8 @@ for l in open(experiment,'r'):
 for s in source:
   data.append(s[2:])
 
-print data
-sys.exit()
+#print data
+#sys.exit()
 
 # Prep target
 target = []

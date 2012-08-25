@@ -99,7 +99,8 @@ class dist:
                           'keywords',
                           'method',
                           'references',
-                          'related work'
+                          'related work',
+                          'none'
                           ]
 
   def levenshtein(self, a, b):
@@ -140,11 +141,13 @@ class dist:
   def citSentLocation(self, cite_key, context_citStr, context, citingFile="/Users/lwheng/Downloads/fyp/parscitsectionxml500/"):
     citing = cite_key.split('==>')[0]
     citingFile = citingFile + citing + "-parscit-section.xml"
+    vector = []
     if os.path.exists(citingFile):
       # Using context_citStr, first determine which is the citing sentence
       # We replace "et al." by "et al" so the sentence tokenizer doesn't split it up
       context_citStr = context_citStr.replace("et al.", "et al")
       context = context.replace("et al.", "et al")
+
       context_lines = self.sentenceTokenizer.tokenize(context)
       citSent = self.tools.searchTermInLines(context_citStr, context_lines)
       openfile = open(citingFile, 'r')
@@ -165,7 +168,7 @@ class dist:
         if tempDist < minDistance:
           minDistance = tempDist
           target = b
-
+      
       if target:
         searching = True
         sectionHeaderNode = None
@@ -176,13 +179,26 @@ class dist:
               sectionHeaderNode = target
               break
           target = target.previousSibling
-        return tool.normalize(sectionHeaderNode.attributes['genericHeader'].value)
+        header = tool.normalize(sectionHeaderNode.attributes['genericHeader'].value)
+        for h in (self.genericHeader):
+          if header == h:
+            vector.append(1)
+          else:
+            vector.append(0)
+        return vector
+        #return tool.normalize(sectionHeaderNode.attributes['genericHeader'].value)
       else:
-        print "Not found"
-        return None
+        # Not found
+        for h in (self.genericHeader):
+          vector.append(0)
+        vector[-1] = 1
+        return vector
     else:
       # No section file
-      return None
+      for h in (self.genericHeader):
+        vector.append(0)
+      vector[-1] = 1
+      return vector
 
 class pickler:
   # Pickle files
