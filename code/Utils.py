@@ -35,6 +35,13 @@ class tools:
   def normalize(self, text):
     return unicodedata.normalize('NFKD', text).encode('ascii','ignore')
 
+  def searchTermInLines(self, term, lines):
+    for i in range(len(lines)):
+      l = lines[i]
+      if term in l:
+        return i
+    return None
+
 class weight:
   def __init__(self):
     self.sentenceTokenizer = PunktSentenceTokenizer()
@@ -78,6 +85,8 @@ class weight:
 
 class dist:
   def __init__(self):
+    self.sentenceTokenizer = PunktSentenceTokenizer()
+    self.tools = tools()
     self.genericHeader = ['abstract',
                           'acknowledgements',
                           'background',
@@ -128,10 +137,16 @@ class dist:
       citedYear = 2000 + citedYear
     return (citingYear-citedYear)
 
-  def citSentLocation(self, cite_key, context, citingFile="/Users/lwheng/Downloads/fyp/parscitsectionxml500/"):
+  def citSentLocation(self, cite_key, context_citStr, context, citingFile="/Users/lwheng/Downloads/fyp/parscitsectionxml500/"):
     citing = cite_key.split('==>')[0]
     citingFile = citingFile + citing + "-parscit-section.xml"
     if os.path.exists(citingFile):
+      # Using context_citStr, first determine which is the citing sentence
+      # We replace "et al." by "et al" so the sentence tokenizer doesn't split it up
+      context_citStr = context_citStr.replace("et al.", "et al")
+      context = context.replace("et al.", "et al")
+      context_lines = self.sentenceTokenizer.tokenize(context)
+      citSent = self.tools.searchTermInLines(context_citStr, context_lines)
       openfile = open(citingFile, 'r')
       data = openfile.read()
       openfile.close()
@@ -141,12 +156,15 @@ class dist:
       regex = r"\<.*\>(.*)\<.*\>"
       tool = tools()
 
-      for b in bodyTexts:
+      minDistance = 314159265358979323846264338327950288419716939937510
+      for i in range(len(bodyTexts)):
+        b = bodyTexts[i]
         text = tool.normalize(b.toxml().replace("\n", " ").replace("- ", "").strip())
         obj = re.findall(regex, text)
-        if context in obj[0]:
+        tempDist = self.jaccard(context_lines[citSent], text)
+        if tempDist < minDistance:
+          minDistance = tempDist
           target = b
-          break
 
       if target:
         searching = True
@@ -160,7 +178,7 @@ class dist:
           target = target.previousSibling
         return tool.normalize(sectionHeaderNode.attributes['genericHeader'].value)
       else:
-        # Not found in any bodyText
+        print "Not found"
         return None
     else:
       # No section file

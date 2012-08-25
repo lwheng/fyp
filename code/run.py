@@ -1,6 +1,7 @@
 import Citprov
 import Classifier
 import cPickle as pickle
+import sys
 
 run = Citprov.citprov()
 cls = Classifier.classifier()
@@ -17,6 +18,9 @@ for l in open(experiment,'r'):
   source.extend(out)
 for s in source:
   data.append(s[2:])
+
+print data
+sys.exit()
 
 # Prep target
 target = []
