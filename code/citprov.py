@@ -15,23 +15,9 @@ class citprov:
     self.CHUNK_SIZE = 15
     self.punctuation = "~`!@#$%^&*()-_+={}[]|\\:;\"\'<>,.?/"
     self.citationTypes = ['General', 'Specific', 'Undetermined']
-    self.genericHeader = [ 'abstract',
-                          'acknowledgements',
-                          'background',
-                          'categories and subject descriptors',
-                          'conclusions',
-                          'discussions',
-                          'evaluation',
-                          'general terms',
-                          'introduction',
-                          'keywords',
-                          'method',
-                          'references',
-                          'related work'
-                          ]
 
   def sayHello(self):
-    return "Hello, world! I'm Citprov!"
+    return "Hello, world! I'm Citprov! If you can see this, then you are able to call my methods"
 
   def titleOverlap(self, cite_key, titles):
     info = cite_key.split("==>")
@@ -63,14 +49,13 @@ class citprov:
 
     titleToMatch = titles[cited]
 
-    # citingFile = "/Users/lwheng/Downloads/fyp/parscitxml500/" + citing + "-parscit.xml"
     citingFile = citingFile + citing + "-parscit.xml"
     openciting = open(citingFile,"r")
     data = openciting.read()
     openciting.close()
     dom = self.tools.parseXML(data)
     citations = dom.getElementsByTagName('citation')
-    tags = ["title", "note", "booktitle", "journal"]
+    tags = ["title", "note", "booktitle", "journal", "tech", "author"]
     titleTag = []
     index = 0
     bestIndex = -1
@@ -82,6 +67,13 @@ class citprov:
         titleTag = []
         index = 0
         while titleTag == []:
+          # DEBUG
+          if index == len(tags)+1:
+            print cite_key
+            print
+            print c.toxml()
+            print
+          # ^^^^^^^^^
           titleTag = c.getElementsByTagName(tags[index])
           index += 1
         title = titleTag[0].firstChild.data
@@ -130,7 +122,7 @@ class citprov:
     # Prep Vectors
     results = []
     for i in range(0, len(docs)):
-      # 7.1 Cited Chunk's Average TF-IDF Weight
+      # Cited Chunk's Average TF-IDF Weight
       chunkAvgWeight = self.weight.chunkAverageWeight(docs[i], docs_col)
 
       u = []
@@ -233,7 +225,13 @@ class citprov:
       feature_locationCitingSent = self.dist.citSentLocation(cite_key, context_citStr, context_value)
       feature_vector.extend(feature_locationCitingSent)
 
-      # 7. Cosine Similarity + 7.1 Cited Chunk's Average TF-IDF Weight
+      # 7. Cue words? ('demonstrated', 'showed' etc...)
+
+      # 8. Sentence begin with pronouns?
+
+
+
+      # Cosine Similarity + Cited Chunk's Average TF-IDF Weight
       # Note: For n chunks in cited paper we perform cosineSimilarity,
       # so we have n results
       # We skip this part for now

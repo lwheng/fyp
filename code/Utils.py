@@ -67,8 +67,6 @@ class weight:
     for i in range(len(reg)):
       regex += reg[i] + "|"
     regex = re.compile(regex[:-1])
-    # regex = r"(((\w+)\s*,?\s*(et al.?)?|(\w+ and \w+))\s*,?\s*(\(?\s?\d{4}\s?\)?)|\[\s*(\w+)\s*\]|\[\s(\w+\d+)\s\]|[\[|\(]\s(\d+\s?,\s?)*(\d+)\s[\]|\)]|\(\s*[A-Z]\w+\s*\)|\[\s(\w+\s,?\s?)+\])"
-    output = []
     # Process citStr
     if "et al." in context_citStr:
       context_citStr = context_citStr.replace("et al.", "et al")
@@ -179,6 +177,11 @@ class dist:
               sectionHeaderNode = target
               break
           target = target.previousSibling
+        if target == None:
+          for h in (self.genericHeader):
+            vector.append(0)
+          vector[-1] = 1 # Setting 'None' to 1
+          return vector
         header = tool.normalize(sectionHeaderNode.attributes['genericHeader'].value)
         for h in (self.genericHeader):
           if header == h:
@@ -191,22 +194,16 @@ class dist:
         # Not found
         for h in (self.genericHeader):
           vector.append(0)
-        vector[-1] = 1
+        vector[-1] = 1 # Setting 'None' to 1
         return vector
     else:
       # No section file
       for h in (self.genericHeader):
         vector.append(0)
-      vector[-1] = 1
+      vector[-1] = 1 # Setting 'None' to 1
       return vector
 
 class pickler:
-  # Pickle files
-  # pickle_paperTitles = "/Users/lwheng/Downloads/fyp/paperTitles.pickle"
-  # pickle_paperAuthors = "/Users/lwheng/Downloads/fyp/paperAuthors.pickle"
-  # titles = {}
-  # authors = {}
-  # pickle_contextCollection = "/Users/lwheng/Downloads/fyp/contextCollection.pickle"
 
   def __init__(self, paperTitles="/Users/lwheng/Downloads/fyp/paperTitles.pickle", paperAuthors="/Users/lwheng/Downloads/fyp/paperAuthors.pickle"):
     self.pickle_paperTitles = paperTitles
@@ -225,5 +222,4 @@ class pickler:
   def fetchAuthors(self):
     tempAuthors = {}
     tempAuthors = pickle.load(open(self.pickle_paperAuthors, "rb"))
-    # print "Loaded authors"
     return tempAuthors
