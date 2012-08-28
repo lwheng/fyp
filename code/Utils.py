@@ -1,7 +1,6 @@
 from xml.dom.minidom import parseString
 from xml.dom import Node
 import unicodedata
-import sys
 import nltk
 import re
 import os
@@ -118,9 +117,8 @@ class dist:
     return distance.jaccard_distance(set(a.split()), set(b.split()))
 
   def publishYear(self, cite_key):
-    info = cite_key.split("==>")
-    citing = info[0]
-    cited = info[1]
+    citing = cite_key['citing']
+    cited = cite_key['cited']
 
     citingYear = int(citing[1:3])
     citedYear = int(cited[1:3])
@@ -137,7 +135,7 @@ class dist:
     return (citingYear-citedYear)
 
   def citSentLocation(self, cite_key, context_citStr, context, citingFile="/Users/lwheng/Downloads/fyp/parscitsectionxml500/"):
-    citing = cite_key.split('==>')[0]
+    citing = cite_key['citing']
     citingFile = citingFile + citing + "-parscit-section.xml"
     vector = []
     if os.path.exists(citingFile):
@@ -205,9 +203,10 @@ class dist:
 
 class pickler:
 
-  def __init__(self, paperTitles="/Users/lwheng/Downloads/fyp/paperTitles.pickle", paperAuthors="/Users/lwheng/Downloads/fyp/paperAuthors.pickle"):
+  def __init__(self, paperTitles="/Users/lwheng/Downloads/fyp/paperTitles.pickle", paperAuthors="/Users/lwheng/Downloads/fyp/paperAuthors.pickle", datasetPath="/Users/lwheng/Downloads/fyp/Dataset.pickle"):
     self.pickle_paperTitles = paperTitles
     self.pickle_paperAuthors = paperAuthors
+    self.pickle_dataset = datasetPath
     self.titles = self.fetchTitles()
     self.authors = self.fetchAuthors()
 
@@ -223,3 +222,78 @@ class pickler:
     tempAuthors = {}
     tempAuthors = pickle.load(open(self.pickle_paperAuthors, "rb"))
     return tempAuthors
+
+  def fetchDataset(self):
+    tempDataset = {}
+    tempDataset = pickle.load(open(self.pickle_dataset, "rb"))
+    return tempDataset
+
+  def dumpPickle(self, data, filename):
+    pickle.dump(data, open(filename+".pickle", "wb"))
+
+class dataset:
+  def __init__(self, tools, dist, rootDirectory="/Users/lwheng/Downloads/fyp/"):
+    self.parscitSectionPath = os.path.join(rootDirectory, "parscitsectionxml")
+    self.parscitPath = os.path.join(rootDirectory, "parscitxml")
+    self.tools = tools
+    self.dist = dist
+
+  def fetchExperiment(self, experimentFile="/Users/lwheng/Dropbox/fyp/annotation/annotations500.txt"):
+    openfile = open(experimentFile,'r')
+    experiment = []
+    for l in openfile:
+      info = l.strip().split('==>')
+      data = {}
+      data['citing'] = info[0]
+      data['cited'] = info[1]
+      experiment.append(data)
+    return experiment
+
+  def fetchContexts(self, cite_key, titles):
+    citing = cite_key['citing']
+    cited = cite_key['cited']
+    titleToMatch = titles[cited]
+
+    citingFile = os.path.join(self.parscitPath, citing+"-parscit.xml")
+    openciting = open(citingFile,"r")
+    data = openciting.read()
+    openciting.close()
+    dom = self.tools.parseXML(data)
+    citations = dom.getElementsByTagName('citation')
+    tags = ["title", "note", "booktitle", "journal", "tech", "author"]
+    titleTag = []
+    index = 0
+    bestIndex = -1
+    minDistance = 314159265358979323846264338327950288419716939937510
+    for i in range(len(citations)):
+      c = citations[i]
+      valid = c.getAttribute('valid')
+      if valid == "true":
+        titleTag = []
+        index = 0
+        while titleTag == []:
+          titleTag = c.getElementsByTagName(tags[index])
+          index += 1
+        title = titleTag[0].firstChild.data
+        title = self.tools.normalize(title)
+        thisDistance = self.dist.levenshtein(title, titleToMatch)
+        if thisDistance < minDistance:
+          minDistance = thisDistance
+          bestIndex = i
+    if bestIndex == -1:
+      return None
+    return citations[bestIndex]
+
+  def fetchDataset(self, titles, authors):
+    experiments = self.fetchExperiment()
+    dataset = {}
+    for e in experiments:
+      record = {}
+      dom = self.fetchContexts(e, titles)
+      contexts = dom.getElementsByTagName('context')
+      record['citing'] = {'authors':authors[e['citing']], 'title':titles[e['citing']]}
+      record['cited'] = {'authors':authors[e['cited']], 'title':titles[e['cited']]}
+      record['contexts'] = contexts
+      dataset[str(e['citing']+"==>"+e['cited'])] = record
+    return dataset
+

@@ -3,12 +3,13 @@ import math
 import numpy
 
 class citprov:
-  def __init__(self):
-    self.pickler = Utils.pickler()
-    self.dist = Utils.dist()
-    self.tools = Utils.tools()
-    self.weight = Utils.weight()
-    self.nltk_Tools = Utils.nltk_tools()
+  def __init__(self, pickler, tools, dist, weight, dataset, nltk_Tools):
+    self.pickler = pickler
+    self.tools = tools
+    self.dist = dist
+    self.weight = weight
+    self.dataset = dataset
+    self.nltk_Tools = nltk_Tools
 
     self.stopwords = self.nltk_Tools.nltkStopwords()
     self.LAMBDA_AUTHOR_MATCH = 0.8
@@ -20,15 +21,11 @@ class citprov:
     return "Hello, world! I'm Citprov! If you can see this, then you are able to call my methods"
 
   def titleOverlap(self, cite_key, titles):
-    info = cite_key.split("==>")
-    citing = info[0]
-    cited = info[1]
-    return self.dist.jaccard(titles[citing], titles[cited])
+    return self.dist.jaccard(titles[cite_key['citing']], titles[cite_key['cited']])
 
   def authorOverlap(self, cite_key, authors):
-    info = cite_key.split("==>")
-    citing = info[0]
-    cited = info[1]
+    citing = cite_key['citing']
+    cited = cite_key['cited']
     # Adapting the Jaccard idea
     matches = 0
     uniqueNames = len(authors[citing]) + len(authors[cited])
@@ -42,56 +39,9 @@ class citprov:
       return 1.0
     return float(matches) / float(uniqueNames)
 
-  def fetchContexts(self, cite_key, titles, citingFile="/Users/lwheng/Downloads/fyp/parscitxml500/"):
-    info = cite_key.split("==>")
-    citing = info[0]
-    cited = info[1]
-
-    titleToMatch = titles[cited]
-
-    citingFile = citingFile + citing + "-parscit.xml"
-    openciting = open(citingFile,"r")
-    data = openciting.read()
-    openciting.close()
-    dom = self.tools.parseXML(data)
-    citations = dom.getElementsByTagName('citation')
-    tags = ["title", "note", "booktitle", "journal", "tech", "author"]
-    titleTag = []
-    index = 0
-    bestIndex = -1
-    minDistance = 314159265358979323846264338327950288419716939937510
-    for i in range(len(citations)):
-      c = citations[i]
-      valid = c.getAttribute('valid')
-      if valid == "true":
-        titleTag = []
-        index = 0
-        while titleTag == []:
-          # DEBUG
-          if index == len(tags)+1:
-            print cite_key
-            print
-            print c.toxml()
-            print
-          # ^^^^^^^^^
-          titleTag = c.getElementsByTagName(tags[index])
-          index += 1
-        title = titleTag[0].firstChild.data
-        title = self.tools.normalize(title)
-        thisDistance = self.dist.levenshtein(title, titleToMatch)
-        if thisDistance < minDistance:
-          minDistance = thisDistance
-          bestIndex = i
-    if bestIndex == -1:
-      return None
-    return citations[bestIndex]
-
   def cosineSimilarity(self, cite_key, query_tokens, query_col, citedpaper="/Users/lwheng/Downloads/fyp/pdfbox-0.72/"):
-    # Cited Paper
-    info = cite_key.split("==>")
-    citing = info[0]
-    cited = info[1]
-    # citedpaper = "/Users/lwheng/Downloads/fyp/pdfbox-0.72/" + cited[0] + "/" + cited[0:3] + "/" + cited + ".txt"
+    citing = cite_key['citing']
+    cited = cite_key['cited']
     citedpaper = citedpaper + cited[0] + "/" + cited[0:3] + "/" + cited + ".txt"
     domain = []
     try:
@@ -160,11 +110,10 @@ class citprov:
     return feature
 
   def citProv(self, cite_key):
-    info = cite_key.split('==>')
-    citing = info[0]
-    cited = info[1]
+    citing = cite_key['citing']
+    cited = cite_key['cited']
 
-    citation_dom = self.fetchContexts(cite_key, self.pickler.titles)
+    citation_dom = self.dataset.fetchContexts(cite_key, self.pickler.titles)
     if citation_dom:
       contexts = citation_dom.getElementsByTagName('context')
       # What if no context? --> According to ParsCit, citation is valid, but has no contexts

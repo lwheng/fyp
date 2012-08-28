@@ -5,18 +5,16 @@ execfile('Citprov.py')
 
 import Citprov
 import Classifier
-import cPickle as pickle
+import Utils
 import sys
 
-run = Citprov.citprov()
-cls = Classifier.classifier()
-
-def prepSourceAndData(dataFile="/Users/lwheng/Dropbox/fyp/annotation/run01.txt"):
+def prepSourceAndData():
   source = []
   data = []
-  for l in open(dataFile,'r'):
-    cite_key = l.strip().split(',')[0]
-    out = run.citProv(cite_key)
+  experiment = dataset.fetchExperiment()
+  for e in experiment:
+    out = run.citProv(e)
+    print out
     source.extend(out)
   for s in source:
     data.append(s[2:])
@@ -33,18 +31,20 @@ def prepTarget(targetFile="/Users/lwheng/Dropbox/fyp/annotation/annotations50exp
   return target
 
 if __name__ == '__main__':
-  run = Citprov.citprov()
+  pickler = Utils.pickler()
+  tools = Utils.tools()
+  dist = Utils.dist()
+  weight = Utils.weight()
+  dataset = Utils.dataset(tools, dist)
+  nltk_Tools = Utils.nltk_tools()
+
+  run = Citprov.citprov(pickler, tools, dist, weight, dataset, nltk_Tools)
   cls = Classifier.classifier()
-  if len(sys.argv) >= 3:
-    (source,data) = prepSourceAndData(sys.argv[1])
-    target = prepTarget(sys.argv[2])
-  else:
-    (source, data) = prepSourceAndData()
-    target = prepTarget()
+
+  (source, data) = prepSourceAndData()
+  target = prepTarget()
 
   # Stop here if you don't have enough annotated target
-  for s in source:
-    print s
   sys.exit()
   cls.prepClassifier(data, target)
   for i in range(len(data)):
