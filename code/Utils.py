@@ -10,6 +10,8 @@ import cPickle as pickle
 from nltk.corpus import stopwords
 from nltk.tokenize.punkt import PunktSentenceTokenizer
 from nltk.metrics import distance
+from sklearn import svm
+import sys
 
 class nltk_tools:
   def nltkWordTokenize(self, text):
@@ -44,6 +46,19 @@ class tools:
 class weight:
   def __init__(self):
     self.sentenceTokenizer = PunktSentenceTokenizer()
+    reg = []
+    reg.append(r"\(\s?(\d{1,3})\s?\)")
+    reg.append(r"\(\s?(\d{4})\s?\)")
+    reg.append(r"\(\s?(\d{4};?\s?)+\s?")
+    reg.append(r"\[\s?(\d{1,3}\s?,?\s?)+\s?\]")
+    reg.append(r"\[\s?([\w-],?\s?)+\s?\]")
+    reg.append(r"et al\.?,?")
+    #reg.append(r"([A-Z][A-Za-z-]+\s?,?\s?(\s(and|&)\s)?)+\s?,?\s?,?\s?(\(?(\d{4})\)?)")
+    #reg.append(r"([A-Z][A-Za-z-]+\s?,?\s?(\s(and|&)\s)?)+\s?,?\s?(et al\.?)?\s?,?\s?(\(?(\d{4})\)?)")
+    self.regex = ""
+    for i in range(len(reg)):
+      self.regex += reg[i] + "|"
+    self.regex = re.compile(self.regex[:-1])
 
   def chunkAverageWeight(self, chunk, collection):
     tempWeight = 0
@@ -54,18 +69,6 @@ class weight:
     return float(tempWeight) / float(len(chunk.tokens))
 
   def citDensity(self, context_lines, context_citStr):
-    # Regular Expression
-    reg = []
-    reg.append(r"\(\s?(\d{1,3})\s?\)")
-    reg.append(r"\(\s?(\d{4})\s?\)")
-    reg.append(r"\(\s?(\d{4};?\s?)+\s?")
-    reg.append(r"\[\s?(\d{1,3}\s?,?\s?)+\s?\]")
-    reg.append(r"\[\s?([\w-],?\s?)+\s?\]")
-    reg.append(r"([A-Z][A-Za-z-]+\s?,?\s?(\s(and|&)\s)?)+\s?,?\s?(et al\.?)?\s?,?\s?(\(?(\d{4})\)?)")
-    regex = ""
-    for i in range(len(reg)):
-      regex += reg[i] + "|"
-    regex = re.compile(regex[:-1])
     # Process citStr
     if "et al." in context_citStr:
       context_citStr = context_citStr.replace("et al.", "et al")
@@ -75,7 +78,7 @@ class weight:
     query_lines = self.sentenceTokenizer.tokenize(context_lines)
     citationCount = 0
     for l in query_lines:
-      obj = re.findall(regex, l)
+      obj = re.findall(self.regex, l)
       citationCount += len(obj)
     avgDensity = float(citationCount) / float(len(query_lines))
     return avgDensity
@@ -202,31 +205,17 @@ class dist:
       return vector
 
 class pickler:
-
   def __init__(self, paperTitles="/Users/lwheng/Downloads/fyp/paperTitles.pickle", paperAuthors="/Users/lwheng/Downloads/fyp/paperAuthors.pickle", datasetPath="/Users/lwheng/Downloads/fyp/Dataset.pickle"):
     self.pickle_paperTitles = paperTitles
     self.pickle_paperAuthors = paperAuthors
     self.pickle_dataset = datasetPath
-    self.titles = self.fetchTitles()
-    self.authors = self.fetchAuthors()
+    self.titles = self.loadPickle(self.pickle_paperTitles)
+    self.authors = self.loadPickle(self.pickle_paperAuthors)
+    self.dataset = self.loadPickle(self.pickle_dataset)
 
-  def fetchTitle(self, paperID):
-    return self.titles[paperID]
-
-  def fetchTitles(self):
-    tempTitle = {}
-    tempTitle = pickle.load(open(self.pickle_paperTitles, "rb"))
-    return tempTitle
-
-  def fetchAuthors(self):
-    tempAuthors = {}
-    tempAuthors = pickle.load(open(self.pickle_paperAuthors, "rb"))
-    return tempAuthors
-
-  def fetchDataset(self):
-    tempDataset = {}
-    tempDataset = pickle.load(open(self.pickle_dataset, "rb"))
-    return tempDataset
+  def loadPickle(self, filename):
+    temp = pickle.load(open(filename, "rb"))
+    return temp
 
   def dumpPickle(self, data, filename):
     pickle.dump(data, open(filename+".pickle", "wb"))
@@ -249,7 +238,7 @@ class dataset:
       experiment.append(data)
     return experiment
 
-  def fetchContexts(self, cite_key, titles):
+  def prepContexts(self, cite_key, titles):
     citing = cite_key['citing']
     cited = cite_key['cited']
     titleToMatch = titles[cited]
@@ -284,16 +273,40 @@ class dataset:
       return None
     return citations[bestIndex]
 
-  def fetchDataset(self, titles, authors):
+  def prepDataset(self, titles, authors):
     experiments = self.fetchExperiment()
     dataset = {}
     for e in experiments:
       record = {}
-      dom = self.fetchContexts(e, titles)
+      dom = self.prepContexts(e, titles)
       contexts = dom.getElementsByTagName('context')
       record['citing'] = {'authors':authors[e['citing']], 'title':titles[e['citing']]}
       record['cited'] = {'authors':authors[e['cited']], 'title':titles[e['cited']]}
       record['contexts'] = contexts
       dataset[str(e['citing']+"==>"+e['cited'])] = record
     return dataset
+    
+class classifier:
+  def __init__(self):
+    self.data = []
+    self.target = []
+    # Specify what classifier to use here
+    self.clf = svm.SVC()
+
+  def loadData(self, source):
+    self.data = source
+
+  def loadTarget(self, source):
+    self.target = source
+
+  def prepClassifier(self, data, target):
+    # Data: Observations
+    # Target: Known classifications
+    self.data = data
+    self.target = target
+    self.clf.fit(data, target)
+
+  def predict(self, observation):
+    # Takes in an observation and returns a prediction
+    return self.clf.predict(observation)
 

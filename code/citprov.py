@@ -3,13 +3,13 @@ import math
 import numpy
 
 class citprov:
-  def __init__(self, pickler, tools, dist, weight, dataset, nltk_Tools):
-    self.pickler = pickler
-    self.tools = tools
-    self.dist = dist
-    self.weight = weight
-    self.dataset = dataset
+  def __init__(self, nltk_Tools, tools, weight, dist, pickler, dataset):
     self.nltk_Tools = nltk_Tools
+    self.tools = tools
+    self.weight = weight
+    self.dist = dist
+    self.pickler = pickler
+    self.dataset = dataset
 
     self.stopwords = self.nltk_Tools.nltkStopwords()
     self.LAMBDA_AUTHOR_MATCH = 0.8
@@ -109,17 +109,19 @@ class citprov:
       # feature.append((docs_display[i][0],float(results[i])/float(total)*100))
     return feature
 
-  def citProv(self, cite_key):
+  def citProv(self, cite_key, sourceData):
     citing = cite_key['citing']
     cited = cite_key['cited']
 
-    citation_dom = self.dataset.fetchContexts(cite_key, self.pickler.titles)
-    if citation_dom:
-      contexts = citation_dom.getElementsByTagName('context')
-      # What if no context? --> According to ParsCit, citation is valid, but has no contexts
-    else:
-      # No citation
-      return [cite_key, None, '-']
+    # citation_dom = self.dataset.fetchContexts(cite_key, self.pickler.titles)
+    #if citation_dom:
+    #  contexts = citation_dom.getElementsByTagName('context')
+    #  # What if no context? --> According to ParsCit, citation is valid, but has no contexts
+    #else:
+    #  # No citation
+    #  return [cite_key, None, '-']
+
+    contexts = sourceData['contexts']
 
     # Prep citing_col
     context_list = []
@@ -152,7 +154,7 @@ class citprov:
 
       # 1. Using Citation Density
       feature_citDensity = self.weight.citDensity(query_lines, context_citStr)
-      feature_vector.append(feature_citDensity)  
+      feature_vector.append(feature_citDensity)
 
       # 2. Publishing Year Difference
       feature_publishYear = self.dist.publishYear(cite_key)
@@ -177,8 +179,6 @@ class citprov:
       # 7. Cue words? ('demonstrated', 'showed' etc...)
 
       # 8. Sentence begin with pronouns?
-
-
 
       # Cosine Similarity + Cited Chunk's Average TF-IDF Weight
       # Note: For n chunks in cited paper we perform cosineSimilarity,
