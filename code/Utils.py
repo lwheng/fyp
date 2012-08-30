@@ -46,6 +46,8 @@ class tools:
 class weight:
   def __init__(self):
     self.sentenceTokenizer = PunktSentenceTokenizer()
+    self.dist = dist()
+    self.LAMBDA_AUTHOR_MATCH = 0.8
     reg = []
     reg.append(r"\(\s?(\d{1,3})\s?\)")
     reg.append(r"\(\s?(\d{4})\s?\)")
@@ -67,6 +69,25 @@ class weight:
     for t in chunk.tokens:
       tempWeight += collection.tf_idf(t.lower(), chunk)
     return float(tempWeight) / float(len(chunk.tokens))
+    
+  def titleOverlap(self, cite_key, titles):
+    return self.dist.jaccard(titles[cite_key['citing']], titles[cite_key['cited']])
+    
+  def authorOverlap(self, cite_key, authors):
+    citing = cite_key['citing']
+    cited = cite_key['cited']
+    # Adapting the Jaccard idea
+    matches = 0
+    uniqueNames = len(authors[citing]) + len(authors[cited])
+    for citingAuthor in authors[citing]:
+      for citedAuthor in authors[cited]:
+        ratio = self.dist.levenshteinRatio(citingAuthor, citedAuthor)
+        if ratio > self.LAMBDA_AUTHOR_MATCH:
+          matches += 1
+          uniqueNames -= 1
+    if uniqueNames == 0:
+      return 1.0
+    return float(matches) / float(uniqueNames)
 
   def citDensity(self, context_lines, context_citStr):
     # Process citStr
@@ -205,13 +226,15 @@ class dist:
       return vector
 
 class pickler:
-  def __init__(self, paperTitles="/Users/lwheng/Downloads/fyp/paperTitles.pickle", paperAuthors="/Users/lwheng/Downloads/fyp/paperAuthors.pickle", datasetPath="/Users/lwheng/Downloads/fyp/Dataset.pickle"):
-    self.pickle_paperTitles = paperTitles
-    self.pickle_paperAuthors = paperAuthors
-    self.pickle_dataset = datasetPath
-    self.titles = self.loadPickle(self.pickle_paperTitles)
-    self.authors = self.loadPickle(self.pickle_paperAuthors)
-    self.dataset = self.loadPickle(self.pickle_dataset)
+  def __init__(self, rootDirectory="/Users/lwheng/Downloads/fyp"):
+    self.pathAuthors = os.path.join(rootDirectory, "Authors.pickle")
+    self.pathDataset = os.path.join(rootDirectory, "Dataset.pickle")
+    self.pathExperiment = os.path.join(rootDirectory, "Experiment.pickle")
+    self.pathTitles = os.path.join(rootDirectory, "Titles.pickle")
+
+    self.authors = self.loadPickle(self.pathAuthors)
+    self.experiment = self.loadPickle(self.pathExperiment)
+    self.titles = self.loadPickle(self.pathTitles)
 
   def loadPickle(self, filename):
     temp = pickle.load(open(filename, "rb"))
@@ -221,24 +244,13 @@ class pickler:
     pickle.dump(data, open(filename+".pickle", "wb"))
 
 class dataset:
-  def __init__(self, tools, dist, rootDirectory="/Users/lwheng/Downloads/fyp/"):
+  def __init__(self, dist, tools, rootDirectory="/Users/lwheng/Downloads/fyp/"):
     self.parscitSectionPath = os.path.join(rootDirectory, "parscitsectionxml")
     self.parscitPath = os.path.join(rootDirectory, "parscitxml")
-    self.tools = tools
     self.dist = dist
+    self.tools = tools
 
-  def fetchExperiment(self, experimentFile="/Users/lwheng/Dropbox/fyp/annotation/annotations500.txt"):
-    openfile = open(experimentFile,'r')
-    experiment = []
-    for l in openfile:
-      info = l.strip().split('==>')
-      data = {}
-      data['citing'] = info[0]
-      data['cited'] = info[1]
-      experiment.append(data)
-    return experiment
-
-  def prepContexts(self, cite_key, titles):
+  def prepContexts(self, dist, tools, titles, cite_key):
     citing = cite_key['citing']
     cited = cite_key['cited']
     titleToMatch = titles[cited]
@@ -247,7 +259,7 @@ class dataset:
     openciting = open(citingFile,"r")
     data = openciting.read()
     openciting.close()
-    dom = self.tools.parseXML(data)
+    dom = tools.parseXML(data)
     citations = dom.getElementsByTagName('citation')
     tags = ["title", "note", "booktitle", "journal", "tech", "author"]
     titleTag = []
@@ -264,8 +276,8 @@ class dataset:
           titleTag = c.getElementsByTagName(tags[index])
           index += 1
         title = titleTag[0].firstChild.data
-        title = self.tools.normalize(title)
-        thisDistance = self.dist.levenshtein(title, titleToMatch)
+        title = tools.normalize(title)
+        thisDistance = dist.levenshtein(title, titleToMatch)
         if thisDistance < minDistance:
           minDistance = thisDistance
           bestIndex = i
@@ -273,17 +285,18 @@ class dataset:
       return None
     return citations[bestIndex]
 
-  def prepDataset(self, titles, authors):
-    experiments = self.fetchExperiment()
+  def prepDataset(self, dist, tools, authors, experiment, titles):
     dataset = {}
-    for e in experiments:
+    for e in experiment:
       record = {}
-      dom = self.prepContexts(e, titles)
-      contexts = dom.getElementsByTagName('context')
-      record['citing'] = {'authors':authors[e['citing']], 'title':titles[e['citing']]}
-      record['cited'] = {'authors':authors[e['cited']], 'title':titles[e['cited']]}
-      record['contexts'] = contexts
-      dataset[str(e['citing']+"==>"+e['cited'])] = record
+      dom = self.prepContexts(dist, tools, titles, e)
+      if dom:
+        contexts = dom.getElementsByTagName('context')
+        if len(contexts) > 0:
+          record['citing'] = {'authors':authors[e['citing']], 'title':titles[e['citing']]}
+          record['cited'] = {'authors':authors[e['cited']], 'title':titles[e['cited']]}
+          record['contexts'] = contexts
+          dataset[str(e['citing']+"==>"+e['cited'])] = record
     return dataset
     
 class classifier:
