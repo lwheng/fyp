@@ -254,7 +254,11 @@ class dataset:
   def fetchExperiment(self, dataset):
     temp = []
     for k in dataset.keys():
-      temp.append(k)
+      record = {}
+      info = k.split("==>")
+      record['citing'] = info[0]
+      record['cited'] = info[1]
+      temp.append(record)
     return temp
 
   def prepContexts(self, dist, tools, titles, cite_key):

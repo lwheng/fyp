@@ -36,11 +36,8 @@ if __name__ == '__main__':
 
   run = Citprov.citprov(nltk_Tools, tools, weight, dist, pickler, dataset)
   cls = Utils.classifier()
-
   (source, data) = prepSourceAndData(pickler.dataset, dataset.fetchExperiment(pickler.dataset))
   target = prepTarget()
-  for s in source:
-    print s
   cls.prepClassifier(data[0:79], target)
   for i in range(len(data[0:79])):
     print str(source[i][0]) + "\t" + "\t Prediction: " + str(cls.predict(data[i])) + "\t Annotation: " + str(target[i])
