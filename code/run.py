@@ -34,9 +34,12 @@ if __name__ == '__main__':
   pickler = Utils.pickler()
   dataset = Utils.dataset(tools, dist)
 
-  run = Citprov.citprov(nltk_Tools, tools, weight, dist, pickler, dataset)
+  run = Citprov.citprov(nltk_Tools, tools, weight, dist, pickler)
   cls = Utils.classifier()
   (source, data) = prepSourceAndData(pickler.dataset, dataset.fetchExperiment(pickler.dataset))
+  for s in source:
+    print s
+  sys.exit()
   target = prepTarget()
   cls.prepClassifier(data[0:79], target)
   for i in range(len(data[0:79])):

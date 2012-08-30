@@ -3,13 +3,12 @@ import math
 import numpy
 
 class citprov:
-  def __init__(self, nltk_Tools, tools, weight, dist, pickler, dataset):
+  def __init__(self, nltk_Tools, tools, weight, dist, pickler):
     self.nltk_Tools = nltk_Tools
     self.tools = tools
     self.weight = weight
     self.dist = dist
     self.pickler = pickler
-    self.dataset = dataset
 
     self.stopwords = self.nltk_Tools.nltkStopwords()
     self.LAMBDA_AUTHOR_MATCH = 0.8
