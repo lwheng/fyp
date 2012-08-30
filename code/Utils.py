@@ -233,6 +233,7 @@ class pickler:
     self.pathTitles = os.path.join(rootDirectory, "Titles.pickle")
 
     self.authors = self.loadPickle(self.pathAuthors)
+    self.dataset = self.loadPickle(self.pathDataset)
     self.experiment = self.loadPickle(self.pathExperiment)
     self.titles = self.loadPickle(self.pathTitles)
 
@@ -249,6 +250,12 @@ class dataset:
     self.parscitPath = os.path.join(rootDirectory, "parscitxml")
     self.dist = dist
     self.tools = tools
+
+  def fetchExperiment(self, dataset):
+    temp = []
+    for k in dataset.keys():
+      temp.append(k)
+    return temp
 
   def prepContexts(self, dist, tools, titles, cite_key):
     citing = cite_key['citing']

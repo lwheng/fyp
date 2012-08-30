@@ -113,14 +113,6 @@ class citprov:
     citing = cite_key['citing']
     cited = cite_key['cited']
 
-    # citation_dom = self.dataset.fetchContexts(cite_key, self.pickler.titles)
-    #if citation_dom:
-    #  contexts = citation_dom.getElementsByTagName('context')
-    #  # What if no context? --> According to ParsCit, citation is valid, but has no contexts
-    #else:
-    #  # No citation
-    #  return [cite_key, None, '-']
-
     contexts = sourceData['contexts']
 
     # Prep citing_col
