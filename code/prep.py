@@ -32,14 +32,6 @@ if __name__ == '__main__':
   dataset_tools = Utils.dataset_tools(tools, dist)
 
   run = Citprov.citprov(nltk_Tools, tools, weight, dist, pickler)
-  cls = Utils.classifier()
   experiment = dataset_tools.fetchExperiment(pickler.raw)
   dataset = prepDataset(pickler.raw, experiment)
-  for d in dataset:
-    print d
-  print len(dataset)
-  sys.exit()
-  target = prepTarget()
-  cls.prepClassifier(data[0:79], target)
-  for i in range(len(data[0:79])):
-    print str(source[i][0]) + "\t" + "\t Prediction: " + str(cls.predict(data[i])) + "\t Annotation: " + str(target[i])
+  pickler.dumpPickle(dataset, "Dataset_to_be_annotated.pickle")
