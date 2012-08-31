@@ -230,11 +230,13 @@ class pickler:
     self.pathAuthors = os.path.join(rootDirectory, "Authors.pickle")
     self.pathDataset = os.path.join(rootDirectory, "Dataset.pickle")
     self.pathExperiment = os.path.join(rootDirectory, "Experiment.pickle")
+    self.pathRaw = os.path.join(rootDirectory, "Raw.pickle")
     self.pathTitles = os.path.join(rootDirectory, "Titles.pickle")
 
     self.authors = self.loadPickle(self.pathAuthors)
-    self.dataset = self.loadPickle(self.pathDataset)
+    #self.dataset = self.loadPickle(self.pathDataset)
     self.experiment = self.loadPickle(self.pathExperiment)
+    self.raw = self.loadPickle(self.pathRaw)
     self.titles = self.loadPickle(self.pathTitles)
 
   def loadPickle(self, filename):
@@ -244,22 +246,22 @@ class pickler:
   def dumpPickle(self, data, filename):
     pickle.dump(data, open(filename+".pickle", "wb"))
 
-class dataset:
+class dataset_tools:
   def __init__(self, dist, tools, rootDirectory="/Users/lwheng/Downloads/fyp/"):
     self.parscitSectionPath = os.path.join(rootDirectory, "parscitsectionxml")
     self.parscitPath = os.path.join(rootDirectory, "parscitxml")
     self.dist = dist
     self.tools = tools
 
-  def fetchExperiment(self, dataset):
-    temp = []
-    for k in dataset.keys():
+  def fetchExperiment(self, raw):
+    experiment = []
+    for k in raw.keys():
       record = {}
       info = k.split("==>")
       record['citing'] = info[0]
       record['cited'] = info[1]
-      temp.append(record)
-    return temp
+      experiment.append(record)
+    return experiment
 
   def prepContexts(self, dist, tools, titles, cite_key):
     citing = cite_key['citing']
@@ -296,8 +298,8 @@ class dataset:
       return None
     return citations[bestIndex]
 
-  def prepDataset(self, dist, tools, authors, experiment, titles):
-    dataset = {}
+  def prepRaw(self, dist, tools, authors, experiment, titles):
+    raw = {}
     for e in experiment:
       record = {}
       dom = self.prepContexts(dist, tools, titles, e)
@@ -307,9 +309,9 @@ class dataset:
           record['citing'] = {'authors':authors[e['citing']], 'title':titles[e['citing']]}
           record['cited'] = {'authors':authors[e['cited']], 'title':titles[e['cited']]}
           record['contexts'] = contexts
-          dataset[str(e['citing']+"==>"+e['cited'])] = record
-    return dataset
-    
+          raw[str(e['citing']+"==>"+e['cited'])] = record
+    return raw
+
 class classifier:
   def __init__(self):
     self.data = []

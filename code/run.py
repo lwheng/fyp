@@ -6,15 +6,12 @@ import Citprov
 import Utils
 import sys
 
-def prepSourceAndData(thisDataset, experiment):
-  source = []
-  data = []
+def prepDataset(raw, experiment):
+  dataset = []
   for e in experiment:
-    out = run.citProv(e, thisDataset[e['citing']+"==>"+e['cited']])
-    source.extend(out)
-  for s in source:
-    data.append(s[2:])
-  return (source, data)
+    out = run.citProv(e, raw[e['citing']+"==>"+e['cited']])
+    dataset.extend(out)
+  return dataset
 
 def prepTarget(targetFile="/Users/lwheng/Dropbox/fyp/annotation/annotations50experiment_run01.txt"):
   target = []
@@ -32,13 +29,15 @@ if __name__ == '__main__':
   weight = Utils.weight()
   dist = Utils.dist()
   pickler = Utils.pickler()
-  dataset = Utils.dataset(tools, dist)
+  dataset_tools = Utils.dataset_tools(tools, dist)
 
   run = Citprov.citprov(nltk_Tools, tools, weight, dist, pickler)
   cls = Utils.classifier()
-  (source, data) = prepSourceAndData(pickler.dataset, dataset.fetchExperiment(pickler.dataset))
-  for s in source:
-    print s
+  experiment = dataset_tools.fetchExperiment(pickler.raw)
+  dataset = prepDataset(pickler.raw, experiment)
+  for d in dataset:
+    print d
+  print len(dataset)
   sys.exit()
   target = prepTarget()
   cls.prepClassifier(data[0:79], target)
