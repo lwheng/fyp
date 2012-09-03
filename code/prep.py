@@ -34,4 +34,4 @@ if __name__ == '__main__':
   run = Citprov.citprov(nltk_Tools, tools, weight, dist, pickler)
   experiment = dataset_tools.fetchExperiment(pickler.raw)
   dataset = prepDataset(pickler.raw, experiment)
-  pickler.dumpPickle(dataset, "Dataset_to_be_annotated.pickle")
+  pickler.dumpPickle(dataset, "DatasetTBA.pickle")

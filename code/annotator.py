@@ -14,7 +14,7 @@ def normalize(text):
 
 @app.route("/")
 def hello():
-  return "<h1>Hello World</h1>"
+  return "<h1>Hello, Low Wee. Welcome to annotating.</h1>"
 
 @app.route("/<int:context_id>")
 def show(context_id):
