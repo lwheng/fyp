@@ -290,7 +290,7 @@ class dataset_tools:
           index += 1
         title = titleTag[0].firstChild.data
         title = tools.normalize(title)
-        thisDistance = dist.levenshtein(title, titleToMatch)
+        thisDistance = dist.levenshtein(title.lower(), titleToMatch.lower())
         if thisDistance < minDistance:
           minDistance = thisDistance
           bestIndex = i
