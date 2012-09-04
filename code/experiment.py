@@ -13,7 +13,7 @@ parscitSectionPath = "/Users/lwheng/Downloads/fyp/parscitsectionxml"
 parscitPath = "/Users/lwheng/Downloads/fyp/parscitxml"
 pdfboxPath = "/Users/lwheng/Downloads/fyp/pdfbox-0.72"
 
-numOfRecords = 703
+numOfRecords = 722
 records = []
 
 def checkFileInDirectory(path, filename, extension):

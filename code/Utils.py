@@ -140,6 +140,11 @@ class dist:
     b = inputB.lower()
     return distance.jaccard_distance(set(a.split()), set(b.split()))
 
+  def masi(self, a, b):
+    a = a.lower()
+    b = b.lower()
+    return distance.masi_distance(set(a.split()), set(b.split()))
+
   def publishYear(self, cite_key):
     citing = cite_key['citing']
     cited = cite_key['cited']
@@ -281,19 +286,25 @@ class dataset_tools:
     minDistance = 314159265358979323846264338327950288419716939937510
     for i in range(len(citations)):
       c = citations[i]
-      valid = c.getAttribute('valid')
-      if valid == "true":
-        titleTag = []
-        index = 0
-        while titleTag == []:
-          titleTag = c.getElementsByTagName(tags[index])
-          index += 1
-        title = titleTag[0].firstChild.data
-        title = tools.normalize(title)
-        thisDistance = dist.levenshtein(title.lower(), titleToMatch.lower())
-        if thisDistance < minDistance:
-          minDistance = thisDistance
-          bestIndex = i
+      #valid = c.getAttribute('valid')
+      #if valid == "true":
+      titleTag = []
+      for index in range(len(tags)):
+        titleTag = c.getElementsByTagName(tags[index])
+        if titleTag:
+          break
+      if titleTag == [] or titleTag[0].firstChild == None:
+        continue
+      title = titleTag[0].firstChild.data
+      title = tools.normalize(title)
+      if re.search("Computational Linguistics,$", title):
+        title = title.replace("Computational Linguistics,", "")
+      levenshteinDistance = dist.levenshtein(title.lower(), titleToMatch.lower())
+      masiDistance = dist.masi(title, titleToMatch)
+      thisDistance = levenshteinDistance*masiDistance
+      if thisDistance < minDistance:
+        minDistance = thisDistance
+        bestIndex = i
     if bestIndex == -1:
       return None
     return citations[bestIndex]
