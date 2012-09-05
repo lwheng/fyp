@@ -241,7 +241,7 @@ class pickler:
     self.authors = self.loadPickle(self.pathAuthors)
     #self.dataset = self.loadPickle(self.pathDataset)
     self.experiment = self.loadPickle(self.pathExperiment)
-    self.raw = self.loadPickle(self.pathRaw)
+    #self.raw = self.loadPickle(self.pathRaw)
     self.titles = self.loadPickle(self.pathTitles)
 
   def loadPickle(self, filename):
