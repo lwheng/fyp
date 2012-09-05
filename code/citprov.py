@@ -10,6 +10,8 @@ class citprov:
     self.dist = dist
     self.pickler = pickler
 
+    self.titles = self.pickler.loadPickle(self.pickler.pathTitles)
+    self.authors = self.pickler.loadPickle(self.pickler.pathAuthors)
     self.stopwords = self.nltk_Tools.nltkStopwords()
     self.LAMBDA_AUTHOR_MATCH = 0.8
     self.CHUNK_SIZE = 15
@@ -152,11 +154,11 @@ class citprov:
       feature_vector.append(feature_publishYear)
 
       # 3. Title Overlap
-      feature_titleOverlap = self.titleOverlap(cite_key, self.pickler.titles)
+      feature_titleOverlap = self.titleOverlap(cite_key, self.titles)
       feature_vector.append(feature_titleOverlap)
 
       # 4. Authors Overlap
-      feature_authorOverlap = self.authorOverlap(cite_key, self.pickler.authors)
+      feature_authorOverlap = self.authorOverlap(cite_key, self.authors)
       feature_vector.append(feature_authorOverlap)
 
       # 5. Context's Average TF-IDF Weight

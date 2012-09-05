@@ -238,11 +238,11 @@ class pickler:
     self.pathRaw = os.path.join(rootDirectory, "Raw.pickle")
     self.pathTitles = os.path.join(rootDirectory, "Titles.pickle")
 
-    self.authors = self.loadPickle(self.pathAuthors)
+    #self.authors = self.loadPickle(self.pathAuthors)
     #self.dataset = self.loadPickle(self.pathDataset)
-    self.experiment = self.loadPickle(self.pathExperiment)
+    #self.experiment = self.loadPickle(self.pathExperiment)
     #self.raw = self.loadPickle(self.pathRaw)
-    self.titles = self.loadPickle(self.pathTitles)
+    #self.titles = self.loadPickle(self.pathTitles)
 
   def loadPickle(self, filename):
     temp = pickle.load(open(filename, "rb"))
@@ -323,25 +323,34 @@ class dataset_tools:
           raw[str(e['citing']+"==>"+e['cited'])] = record
     return raw
 
+  def prepDataset(self, run, raw, experiment):
+    dataset = []
+    for e in experiment:
+      out = run.citProv(e, raw[e['citing']+"==>"+e['cited']])
+      dataset.extend(out)
+    return dataset
+
+  def prepAnnotations(self, annotationFile):
+    regex = r"\#(\d{3})\s+(.*)==>(.*),(.*)"
+    for l in open(annotationFile):
+      l = l.strip()
+      obj = re.findall(regex, l)
+      index = obj[0]
+      cite_key = {'citing':obj[1], 'cited':obj[2]}
+      annotation = obj[3]
+
 class classifier:
-  def __init__(self):
-    self.data = []
-    self.target = []
+  def __init__(self, classifier):
+    self.data = None
+    self.target = None
     # Specify what classifier to use here
-    self.clf = svm.SVC()
-
-  def loadData(self, source):
-    self.data = source
-
-  def loadTarget(self, source):
-    self.target = source
+    self.clf = classifer
 
   def prepClassifier(self, data, target):
     # Data: Observations
     # Target: Known classifications
-    self.data = data
-    self.target = target
     self.clf.fit(data, target)
+    return self.clf
 
   def predict(self, observation):
     # Takes in an observation and returns a prediction
