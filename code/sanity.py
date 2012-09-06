@@ -1,9 +1,13 @@
+execfile('Utils.py')
 import Utils
-pickler = Utils.pickler()
 
-datasetTBA = pickler.loadPickle('/Users/lwheng/Downloads/fyp/DatasetTBA.pickle')
-for r in datasetTBA:
-  print str(r[0]['citing']+"==>"+r[0]['cited'])
-  print str(r[1].attributes['citStr'].value)
-  print pickler.authors[r[0]['cited']]
-  print
+if __name__ == '__main__':
+  numOfInstances = 1
+  pickler = Utils.pickler()
+  model = pickler.loadPickle(pickler.pathModel)
+  dataset = pickler.loadPickle(pickler.pathDatasetTBA)
+  observations = []
+  for i in range(numOfInstances):
+    observations.append(dataset[i][2:])
+  for o in observations:
+    print model.predict(o)

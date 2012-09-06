@@ -236,6 +236,7 @@ class pickler:
     self.pathDataset = os.path.join(rootDirectory, "Dataset.pickle")
     self.pathDatasetTBA = os.path.join(rootDirectory, "DatasetTBA.pickle")
     self.pathExperiment = os.path.join(rootDirectory, "Experiment.pickle")
+    self.pathModel = os.path.join(rootDirectory, "Model.pickle")
     self.pathRaw = os.path.join(rootDirectory, "Raw.pickle")
     self.pathTarget = os.path.join(rootDirectory, "Target.pickle")
     self.pathTitles = os.path.join(rootDirectory, "Titles.pickle")
