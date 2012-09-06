@@ -346,8 +346,8 @@ class dataset_tools:
       target.append((index, cite_key, annotation))
     return target
   
-  def prepModel(self, classifier, dataset, target, numOfInstances):
-    classifier.fit(dataset[0:numOfInstances], target[0:numOfInstances])
+  def prepModel(self, classifier, dataset, target):
+    print classifier.fit(dataset, target)
     return classifier
 
 class classifier:
