@@ -234,8 +234,10 @@ class pickler:
   def __init__(self, rootDirectory="/Users/lwheng/Downloads/fyp"):
     self.pathAuthors = os.path.join(rootDirectory, "Authors.pickle")
     self.pathDataset = os.path.join(rootDirectory, "Dataset.pickle")
+    self.pathDatasetTBA = os.path.join(rootDirectory, "DatasetTBA.pickle")
     self.pathExperiment = os.path.join(rootDirectory, "Experiment.pickle")
     self.pathRaw = os.path.join(rootDirectory, "Raw.pickle")
+    self.pathTarget = os.path.join(rootDirectory, "Target.pickle")
     self.pathTitles = os.path.join(rootDirectory, "Titles.pickle")
 
     #self.authors = self.loadPickle(self.pathAuthors)
@@ -330,14 +332,22 @@ class dataset_tools:
       dataset.extend(out)
     return dataset
 
-  def prepAnnotations(self, annotationFile):
+  def prepTarget(self, annotationFile):
     regex = r"\#(\d{3})\s+(.*)==>(.*),(.*)"
+    target = []
     for l in open(annotationFile):
       l = l.strip()
       obj = re.findall(regex, l)
-      index = obj[0]
-      cite_key = {'citing':obj[1], 'cited':obj[2]}
-      annotation = obj[3]
+      info = obj[0]
+      index = int(info[0])
+      cite_key = {'citing':info[1], 'cited':info[2]}
+      annotation = info[3]
+      target.append((index, cite_key, annotation))
+    return target
+  
+  def prepModel(self, classifier, dataset, target, numOfInstances):
+    classifier.fit(dataset[0:numOfInstances], target[0:numOfInstances])
+    return classifier
 
 class classifier:
   def __init__(self, classifier):

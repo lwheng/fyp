@@ -4,7 +4,6 @@ execfile('Citprov.py')
 
 import Citprov
 import Utils
-import sys
 
 if __name__ == '__main__':
   nltk_Tools = Utils.nltk_tools()
