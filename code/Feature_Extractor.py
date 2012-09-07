@@ -2,7 +2,7 @@ import Utils
 import math
 import numpy
 
-class citprov:
+class extractor:
   def __init__(self, nltk_Tools, tools, weight, dist, pickler):
     self.nltk_Tools = nltk_Tools
     self.tools = tools
@@ -110,7 +110,7 @@ class citprov:
       # feature.append((docs_display[i][0],float(results[i])/float(total)*100))
     return feature
 
-  def citProv(self, cite_key, sourceData):
+  def extractFeatures(self, cite_key, sourceData):
     citing = cite_key['citing']
     cited = cite_key['cited']
 

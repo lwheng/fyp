@@ -1,5 +1,4 @@
 import os
-import sys
 import cPickle as pickle
 
 # To generate 500 records
