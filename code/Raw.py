@@ -8,6 +8,6 @@ authors = p.loadPickle(p.pathAuthors)
 experiment = p.loadPickle(p.pathExperiment)
 titles = p.loadPickle(p.pathTitles)
 
-raw = d.prepRaw(d.dist, d.tools, authors, experiment, titles)
+raw = d.prepRaw(authors, experiment, titles)
 print len(raw.keys())
 p.dumpPickle(raw, "Raw")

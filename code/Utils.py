@@ -5,7 +5,7 @@ import nltk
 import re
 import os
 import math
-import numpy
+import numpy as np
 import cPickle as pickle
 from nltk.corpus import stopwords
 from nltk.tokenize.punkt import PunktSentenceTokenizer
@@ -255,10 +255,11 @@ class pickler:
     pickle.dump(data, open(filename+".pickle", "wb"))
 
 class dataset_tools:
-  def __init__(self, dist, tools, rootDirectory="/Users/lwheng/Downloads/fyp/"):
+  def __init__(self, dist, nltk_Tools, tools, rootDirectory="/Users/lwheng/Downloads/fyp/"):
     self.parscitSectionPath = os.path.join(rootDirectory, "parscitsectionxml")
     self.parscitPath = os.path.join(rootDirectory, "parscitxml")
     self.dist = dist
+    self.nltk_Tools = nltk_Tools
     self.tools = tools
 
   def fetchExperiment(self, raw):
@@ -312,11 +313,11 @@ class dataset_tools:
       return None
     return citations[bestIndex]
 
-  def prepRaw(self, dist, tools, authors, experiment, titles):
+  def prepRaw(self, authors, experiment, titles):
     raw = {}
     for e in experiment:
       record = {}
-      dom = self.prepContexts(dist, tools, titles, e)
+      dom = self.prepContexts(self.dist, self.tools, titles, e)
       if dom:
         contexts = dom.getElementsByTagName('context')
         if len(contexts) > 0:
@@ -329,9 +330,17 @@ class dataset_tools:
   def prepDataset(self, run, raw, experiment):
     dataset = []
     for e in experiment:
-      out = run.citProv(e, raw[e['citing']+"==>"+e['cited']])
-      dataset.extend(out)
-    return dataset
+      contexts = raw[e['citing']+"==>"+e['cited']]['contexts']
+      context_list = []
+      for c in contexts:
+        value = self.tools.normalize(c.firstChild.data).lower()
+        context_list.append(self.nltk_Tools.nltkText(self.nltk_Tools.nltkWordTokenize(value)))
+      citing_col = self.nltk_Tools.nltkTextCollection(context_list)
+      for c in contexts:
+        x = run.extractFeatures(e, c, citing_col)
+        dataset.append(x)
+    X = np.asarray(dataset)
+    return X
 
   def prepTarget(self, annotationFile):
     regex = r"\#(\d{3})\s+(.*)==>(.*),(.*)"

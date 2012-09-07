@@ -1,14 +1,14 @@
 import Utils
 import math
-import numpy
+import numpy as np
 
 class extractor:
-  def __init__(self, nltk_Tools, tools, weight, dist, pickler):
+  def __init__(self, dist, nltk_Tools, pickler, tools, weight):
+    self.dist = dist
     self.nltk_Tools = nltk_Tools
+    self.pickler = pickler
     self.tools = tools
     self.weight = weight
-    self.dist = dist
-    self.pickler = pickler
 
     self.titles = self.pickler.loadPickle(self.pickler.pathTitles)
     self.authors = self.pickler.loadPickle(self.pickler.pathAuthors)
@@ -97,7 +97,7 @@ class extractor:
           v.append(docs_col.tf_idf(term, temp_doc))
         else:
           v.append(0)
-      if math.sqrt(numpy.dot(u, u)) == 0.0:
+      if math.sqrt(np.dot(u, u)) == 0.0:
         results.append((0.0, 0.0))
       else:
         r = self.nltk_Tools.nltkCosineDistance(u,v)
@@ -110,7 +110,51 @@ class extractor:
       # feature.append((docs_display[i][0],float(results[i])/float(total)*100))
     return feature
 
-  def extractFeatures(self, cite_key, sourceData):
+  def extractFeatures(self, cite_key, context, citing_col):
+    citing = cite_key['citing']
+    cited = cite_key['cited']
+
+    # Context is ONE context
+    citStr = context.getAttribute('citStr')
+    citStr = self.tools.normalize(citStr)
+    query = context.firstChild.data
+    query = self.tools.normalize(query)
+
+    query_tokens = self.nltk_Tools.nltkWordTokenize(query.lower())
+    query_text = self.nltk_Tools.nltkText(query_tokens)
+    query_col = self.nltk_Tools.nltkTextCollection([query_text])
+
+    # Extract Features
+    x = []
+
+    # Citation Density
+    feature_citDensity = self.weight.citDensity(query, citStr)
+    x.append(feature_citDensity)
+
+    # Publishing Year Difference
+    feature_publishYear = self.dist.publishYear(cite_key)
+    x.append(feature_publishYear)
+
+    # Title Overlap
+    feature_titleOverlap = self.titleOverlap(cite_key, self.titles)
+    x.append(feature_titleOverlap)
+
+    # Authors Overlap
+    feature_authorOverlap = self.authorOverlap(cite_key, self.authors)
+    x.append(feature_authorOverlap)
+
+    # Context's Average TF-IDF Weight
+    feature_queryWeight = self.weight.chunkAverageWeight(query_text, citing_col)
+    x.append(feature_queryWeight)
+
+    # Location of Citing Sentence
+    feature_locationCitSent = self.dist.citSentLocation(cite_key, citStr, query)
+    x.extend(feature_locationCitSent)
+
+    return x
+
+
+  def extractFeatures_backup(self, cite_key, sourceData):
     citing = cite_key['citing']
     cited = cite_key['cited']
 
