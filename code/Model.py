@@ -4,7 +4,7 @@ from sklearn import svm
 import sys
 
 if __name__ == "__main__":
-  numOfInstances = 4
+  numOfInstances = 25
   pickler = Utils.pickler()
   dataset_tools = Utils.dataset_tools(Utils.dist(), Utils.nltk_tools(), Utils.tools())
   # Pick a classifier model

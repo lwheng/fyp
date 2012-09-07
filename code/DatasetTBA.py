@@ -4,6 +4,7 @@ execfile('Feature_Extractor.py')
 
 import Feature_Extractor
 import Utils
+import sys
 
 if __name__ == '__main__':
   nltk_Tools = Utils.nltk_tools()
@@ -16,5 +17,6 @@ if __name__ == '__main__':
   run = Feature_Extractor.extractor(dist, nltk_Tools, pickler, tools, weight)
   raw = pickler.loadPickle(pickler.pathRaw)
   experiment = dataset_tools.fetchExperiment(raw)
-  X = dataset_tools.prepDataset(run, raw, experiment)
+  (keys, X) = dataset_tools.prepDataset(run, raw, experiment)
+  pickler.dumpPickle(keys, "DatasetTBA_keys")
   pickler.dumpPickle(X, "DatasetTBA")

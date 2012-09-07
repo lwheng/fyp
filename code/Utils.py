@@ -235,6 +235,7 @@ class pickler:
     self.pathAuthors = os.path.join(rootDirectory, "Authors.pickle")
     self.pathDataset = os.path.join(rootDirectory, "Dataset.pickle")
     self.pathDatasetTBA = os.path.join(rootDirectory, "DatasetTBA.pickle")
+    self.pathDatasetTBA_keys = os.path.join(rootDirectory, "DatasetTBA_keys.pickle")
     self.pathExperiment = os.path.join(rootDirectory, "Experiment.pickle")
     self.pathModel = os.path.join(rootDirectory, "Model.pickle")
     self.pathRaw = os.path.join(rootDirectory, "Raw.pickle")
@@ -329,6 +330,7 @@ class dataset_tools:
 
   def prepDataset(self, run, raw, experiment):
     dataset = []
+    keys = []
     for e in experiment:
       contexts = raw[e['citing']+"==>"+e['cited']]['contexts']
       context_list = []
@@ -339,8 +341,9 @@ class dataset_tools:
       for c in contexts:
         x = run.extractFeatures(e, c, citing_col)
         dataset.append(x)
+        keys.append(e)
     X = np.asarray(dataset)
-    return X
+    return (keys, X)
 
   def prepTarget(self, annotationFile):
     regex = r"\#(\d{3})\s+(.*)==>(.*),(.*)"
