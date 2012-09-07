@@ -16,6 +16,10 @@ if __name__ == '__main__':
   X_keys = pickler.loadPickle(pickler.pathDatasetTBA_keys)
   y = pickler.loadPickle(pickler.pathTarget)
   observations = []
+  print "# of Data Points: " + str(numOfInstances)
+  print model
   for i in range(numOfInstances):
     o = X[i]
-    print X_keys[i]['citing']+'==>'+X_keys[i]['cited'] + ": Predicted '" + str(makeReadable(model.predict(o)[0])) + "' for Answer " + y[i]
+    #print X_keys[i]['citing']+'==>'+X_keys[i]['cited'] + ": Predicted '" + str(makeReadable(model.predict(o)[0])) + "' for Answer " + y[i]
+    print X_keys[i]['citing']+'==>'+X_keys[i]['cited'] + ": Predicted '" + str(model.predict_proba(o)[0]) + "' for Answer " + y[i]
+  print 

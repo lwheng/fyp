@@ -1,6 +1,7 @@
 execfile('Utils.py')
 import Utils
 from sklearn import svm
+from sklearn.linear_model import LogisticRegression
 import sys
 
 if __name__ == "__main__":
@@ -9,13 +10,14 @@ if __name__ == "__main__":
   dataset_tools = Utils.dataset_tools(Utils.dist(), Utils.nltk_tools(), Utils.tools())
   # Pick a classifier model
   clf = svm.SVC()
+  clf = LogisticRegression()
   # Load DatasetTBA
   X = pickler.loadPickle(pickler.pathDatasetTBA)
   temp_X = X[:numOfInstances]
-  
+
   # Load Annotated Dataset / Target
   y = pickler.loadPickle(pickler.pathTarget)
-
+  
   temp_y = []
   for i in range(numOfInstances):
     t = y[i]
@@ -25,8 +27,5 @@ if __name__ == "__main__":
     else:
       temp_y.append(1)
 
-  #for i in range(numOfInstances):
-  #  print str(X[i])+","+str(y[i])
-  # Fit the classifier to get the Model
   Model = dataset_tools.prepModel(clf, temp_X, temp_y)
   pickler.dumpPickle(Model, "Model")
