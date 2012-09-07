@@ -10,8 +10,6 @@ import cPickle as pickle
 from nltk.corpus import stopwords
 from nltk.tokenize.punkt import PunktSentenceTokenizer
 from nltk.metrics import distance
-from sklearn import svm
-import sys
 
 class nltk_tools:
   def nltkWordTokenize(self, text):
