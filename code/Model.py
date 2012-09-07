@@ -4,38 +4,29 @@ from sklearn import svm
 import sys
 
 if __name__ == "__main__":
-  numOfInstances = 25
+  numOfInstances = 4
   pickler = Utils.pickler()
-  dataset_tools = Utils.dataset_tools(Utils.dist(), Utils.tools())
+  dataset_tools = Utils.dataset_tools(Utils.dist(), Utils.nltk_tools(), Utils.tools())
   # Pick a classifier model
   clf = svm.SVC()
   # Load DatasetTBA
-  DatasetTBA = pickler.loadPickle(pickler.pathDatasetTBA)
-  X = []
-  for i in range(numOfInstances):
-    d = DatasetTBA[i]
-    X.append(d[2:])
-
-  #X = []
-  #X.append(DatasetTBA[0][2:])
-  #X.append(DatasetTBA[2][2:])
+  X = pickler.loadPickle(pickler.pathDatasetTBA)
+  temp_X = X[:numOfInstances]
+  
   # Load Annotated Dataset / Target
-  Target = pickler.loadPickle(pickler.pathTarget)
-  y = []
+  y = pickler.loadPickle(pickler.pathTarget)
+
+  temp_y = []
   for i in range(numOfInstances):
-    t = Target[i]
+    t = y[i]
     if t == "-":
       # General
-      y.append(0)
+      temp_y.append(0)
     else:
-      y.append(1)
-
-  #y = []
-  #y.append(0)
-  #y.append(1)
+      temp_y.append(1)
 
   #for i in range(numOfInstances):
   #  print str(X[i])+","+str(y[i])
   # Fit the classifier to get the Model
-  Model = dataset_tools.prepModel(clf, X, y)
+  Model = dataset_tools.prepModel(clf, temp_X, temp_y)
   pickler.dumpPickle(Model, "Model")

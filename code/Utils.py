@@ -353,10 +353,14 @@ class dataset_tools:
       cite_key = {'citing':info[1], 'cited':info[2]}
       annotation = info[3]
       target.append((index, cite_key, annotation))
-    return target
+    temp = []
+    for t in target:
+      temp.append(t[2])
+    y = np.asarray(temp)
+    return y
   
   def prepModel(self, classifier, dataset, target):
-    print classifier.fit(dataset, target)
+    classifier.fit(dataset, target)
     return classifier
 
 class classifier:
