@@ -327,6 +327,7 @@ class dataset_tools:
     return raw
 
   def prepDataset(self, run, raw, experiment):
+    forannotation = []
     dataset = []
     keys = []
     for e in experiment:
@@ -338,10 +339,11 @@ class dataset_tools:
       citing_col = self.nltk_Tools.nltkTextCollection(context_list)
       for c in contexts:
         x = run.extractFeatures(e, c, citing_col)
+        forannotation.append((e, c))
         dataset.append(x)
         keys.append(e)
     X = np.asarray(dataset)
-    return (keys, X)
+    return (forannotation, keys, X)
 
   def prepTarget(self, annotationFile):
     regex = r"\#(\d{3})\s+(.*)==>(.*),(.*)"

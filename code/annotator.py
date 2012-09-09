@@ -4,7 +4,7 @@ import os
 import unicodedata
 app = Flask(__name__)
 
-DatasetTBAFile = "/Users/lwheng/Downloads/fyp/DatasetTBA.pickle"
+DatasetTBAFile = "/Users/lwheng/Downloads/fyp/For_Annotation.pickle"
 DatasetTBA = pickle.load(open(DatasetTBAFile,'r'))
 
 pdfboxPath = "/Users/lwheng/Downloads/fyp/pdfbox-0.72"
