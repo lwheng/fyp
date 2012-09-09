@@ -5,7 +5,7 @@ from sklearn.linear_model import LogisticRegression
 import sys
 
 if __name__ == "__main__":
-  numOfInstances = 100
+  numOfInstances = 128
   pickler = Utils.pickler()
   dataset_tools = Utils.dataset_tools(Utils.dist(), Utils.nltk_tools(), Utils.tools())
   # Pick a classifier model
@@ -24,6 +24,8 @@ if __name__ == "__main__":
     if t == "-":
       # General
       temp_y.append(0)
+    elif t == '?':
+      temp_y.append(2)
     else:
       temp_y.append(1)
 
