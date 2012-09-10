@@ -9,7 +9,7 @@ def makeReadable(prediction):
     return 'Specific'
 
 if __name__ == '__main__':
-  numOfInstances = 128
+  numOfInstances = 150
   pickler = Utils.pickler()
   model = pickler.loadPickle(pickler.pathModel)
   X = pickler.loadPickle(pickler.pathDatasetTBA)
