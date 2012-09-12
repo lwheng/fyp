@@ -1,4 +1,5 @@
 import Utils
+import Feature_Extractor
 
 class predictor:
   def __init__(self):
@@ -7,5 +8,5 @@ class predictor:
   
   def predict(self, model, query):
     # Process query
-    queryProcessed = ""
+    # Extract features from query, Feature_Extractor.extractFeatures(cite_key, context, citing_col)
     return model.predict(queryProcessed)
