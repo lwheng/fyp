@@ -7,6 +7,7 @@ from sklearn import svm
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import precision_recall_curve
 from sklearn.metrics import auc
+from sklearn.metrics import confusion_matrix
 import sys
 
 if __name__ == "__main__":
@@ -30,7 +31,7 @@ if __name__ == "__main__":
       # General
       temp_y.append(0)
     elif t == '?':
-      temp_y.append(2)
+      temp_y.append(0)
     else:
       temp_y.append(1)
 
@@ -47,11 +48,16 @@ if __name__ == "__main__":
 
 # Add noisy features
 np.random.seed(0)
+
 X = np.c_[X, np.random.randn(n_samples, 200 * n_features)]
 
 # Run classifier
 classifier = svm.SVC(kernel='linear', probability=True)
 probas_ = classifier.fit(X[:half], y[:half]).predict_proba(X[half:])
+
+cm_prediction_ = classifier.fit(X[:half], y[:half]).predict(X[half:])
+# Compute confusion matrix
+cm = confusion_matrix(y[half:], cm_prediction_)
 
 # Compute Precision-Recall and plot curve
 precision, recall, thresholds = precision_recall_curve(y[half:], probas_[:, 1])
@@ -66,4 +72,12 @@ pl.ylim([0.0, 1.05])
 pl.xlim([0.0, 1.0])
 pl.title('Precision-Recall example: AUC=%0.2f' % area)
 pl.legend(loc="lower left")
+pl.show()
+
+print cm
+
+# Show confusion matrix
+pl.matshow(cm)
+pl.title('Confusion matrix')
+pl.colorbar()
 pl.show()

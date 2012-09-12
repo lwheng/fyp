@@ -8,7 +8,8 @@ app = Flask(__name__)
 DatasetTBAFile = "/home/lwheng/Desktop/For_Annotation.pickle" 
 DatasetTBA = pickle.load(open(DatasetTBAFile,'r'))
 
-pdfboxPath = "/Users/lwheng/Downloads/fyp/pdfbox-0.72"
+#pdfboxPath = "/Users/lwheng/Downloads/fyp/pdfbox-0.72"
+pdfboxPath = "/home/lwheng/Desktop/pdfbox-0.72"
 
 def normalize(text):
   return unicodedata.normalize('NFKD',text).encode('ascii', 'ignore')
