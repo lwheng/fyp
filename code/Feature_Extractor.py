@@ -40,7 +40,7 @@ class extractor:
       return 1.0
     return float(matches) / float(uniqueNames)
 
-  def cosineSimilarity(self, cite_key, query_tokens, query_col, citedpaper="/Users/lwheng/Downloads/fyp/pdfbox-0.72/"):
+  def cosineSimilarity(self, cite_key, query_tokens, query_col, citedpaper):
     citing = cite_key['citing']
     cited = cite_key['cited']
     citedpaper = citedpaper + cited[0] + "/" + cited[0:3] + "/" + cited + ".txt"
@@ -152,6 +152,6 @@ class extractor:
     x.extend(feature_locationCitSent)
 
     # Cosine Similarity
-    feature_cosineSimilarity = self.cosineSimilarity(cite_key, query_tokens, query_col)
+    feature_cosineSimilarity = self.cosineSimilarity(cite_key, query_tokens, query_col, self.pickler.pathPDFBox)
     x.append(feature_cosineSimilarity)
     return x
