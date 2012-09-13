@@ -10,6 +10,7 @@ import cPickle as pickle
 from nltk.corpus import stopwords
 from nltk.tokenize.punkt import PunktSentenceTokenizer
 from nltk.metrics import distance
+import sys
 
 class nltk_tools:
   def nltkWordTokenize(self, text):
@@ -230,6 +231,7 @@ class dist:
 
 class pickler:
   def __init__(self, rootDirectory="/Users/lwheng/Downloads/fyp"):
+    self.pathAnnotations = os.path.join(rootDirectory, "Annotations.pickle")
     self.pathAuthors = os.path.join(rootDirectory, "Authors.pickle")
     self.pathDataset = os.path.join(rootDirectory, "Dataset.pickle")
     self.pathDatasetTBA = os.path.join(rootDirectory, "DatasetTBA.pickle")
@@ -239,12 +241,6 @@ class pickler:
     self.pathRaw = os.path.join(rootDirectory, "Raw.pickle")
     self.pathTarget = os.path.join(rootDirectory, "Target.pickle")
     self.pathTitles = os.path.join(rootDirectory, "Titles.pickle")
-
-    #self.authors = self.loadPickle(self.pathAuthors)
-    #self.dataset = self.loadPickle(self.pathDataset)
-    #self.experiment = self.loadPickle(self.pathExperiment)
-    #self.raw = self.loadPickle(self.pathRaw)
-    #self.titles = self.loadPickle(self.pathTitles)
 
   def loadPickle(self, filename):
     temp = pickle.load(open(filename, "rb"))
@@ -340,12 +336,19 @@ class dataset_tools:
       for c in contexts:
         x = run.extractFeatures(e, c, citing_col)
         forannotation.append((e, c))
-        dataset.append(x)
-        keys.append(e)
+        instances = []
+        featuresLessCosSim = x[:-1]
+        for i in x[-1]:
+          temp = featuresLessCosSim[:]
+          temp.append(i[1][1])
+          temp.append(i[1][0].item())
+          instances.append(temp)
+          keys.append(e)
+        dataset.extend(instances)
     X = np.asarray(dataset)
     return (forannotation, keys, X)
 
-  def prepTarget(self, annotationFile):
+  def prepAnnotations(self, annotationFile):
     regex = r"\#(\d{3})\s+(.*)==>(.*),(.*)"
     target = []
     for l in open(annotationFile):
@@ -361,7 +364,7 @@ class dataset_tools:
       temp.append(t[2])
     y = np.asarray(temp)
     return y
-  
+
   def prepModel(self, classifier, dataset, target):
     classifier.fit(dataset, target)
     return classifier

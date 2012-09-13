@@ -98,7 +98,7 @@ class extractor:
         else:
           v.append(0)
       if math.sqrt(np.dot(u, u)) == 0.0:
-        results.append((0.0, 0.0))
+        results.append((np.float64(0.0), 0.0))
       else:
         r = self.nltk_Tools.nltkCosineDistance(u,v)
         # results.append(r)
@@ -151,86 +151,7 @@ class extractor:
     feature_locationCitSent = self.dist.citSentLocation(cite_key, citStr, query)
     x.extend(feature_locationCitSent)
 
+    # Cosine Similarity
+    feature_cosineSimilarity = self.cosineSimilarity(cite_key, query_tokens, query_col)
+    x.append(feature_cosineSimilarity)
     return x
-
-
-  def extractFeatures_backup(self, cite_key, sourceData):
-    citing = cite_key['citing']
-    cited = cite_key['cited']
-
-    contexts = sourceData['contexts']
-
-    # Prep citing_col
-    context_list = []
-    for c in contexts:
-      value = c.firstChild.data
-      value = self.tools.normalize(value)
-      value = value.lower()
-      tempText = self.nltk_Tools.nltkText(self.nltk_Tools.nltkWordTokenize(value))
-      context_list.append(tempText)
-    citing_col = self.nltk_Tools.nltkTextCollection(context_list)
-
-    data = []
-
-    for c in contexts:
-      feature_vector = []
-      feature_vector.append(cite_key)
-      feature_vector.append(c)
-
-      context_citStr = c.getAttribute('citStr')
-      context_citStr = self.tools.normalize(context_citStr)
-      context_value = c.firstChild.data
-      context_value = self.tools.normalize(context_value)
-
-      query_lines = context_value
-      query_tokens = self.nltk_Tools.nltkWordTokenize(context_value.lower())
-      query_col = self.nltk_Tools.nltkTextCollection([self.nltk_Tools.nltkText(query_tokens)])
-      query_display = ""
-      for t in query_tokens:
-        query_display = query_display + " " + t
-
-      # 1. Using Citation Density
-      feature_citDensity = self.weight.citDensity(query_lines, context_citStr)
-      feature_vector.append(feature_citDensity)
-
-      # 2. Publishing Year Difference
-      feature_publishYear = self.dist.publishYear(cite_key)
-      feature_vector.append(feature_publishYear)
-
-      # 3. Title Overlap
-      feature_titleOverlap = self.titleOverlap(cite_key, self.titles)
-      feature_vector.append(feature_titleOverlap)
-
-      # 4. Authors Overlap
-      feature_authorOverlap = self.authorOverlap(cite_key, self.authors)
-      feature_vector.append(feature_authorOverlap)
-
-      # 5. Context's Average TF-IDF Weight
-      feature_queryWeight = self.weight.chunkAverageWeight(self.nltk_Tools.nltkText(query_tokens), citing_col)
-      feature_vector.append(feature_queryWeight)
-
-      # 6. Location Of Citing Sentence
-      feature_locationCitingSent = self.dist.citSentLocation(cite_key, context_citStr, context_value)
-      feature_vector.extend(feature_locationCitingSent)
-
-      # 7. Cue words? ('demonstrated', 'showed' etc...)
-
-      # 8. Sentence begin with pronouns?
-
-      # Cosine Similarity + Cited Chunk's Average TF-IDF Weight
-      # Note: For n chunks in cited paper we perform cosineSimilarity,
-      # so we have n results
-      # We skip this part for now
-      #feature_cosineSimilarity = self.cosineSimilarity(cite_key, query_tokens, query_col)
-      #feature_vector.append(feature_cosineSimilarity)
-
-      #print cite_key + " : " + str(feature_vector[0:-1])
-      # for i in feature_cosineSimilarity:
-      #   display = feature_vector[0:-1]
-      #   display.append(i[1][0])
-      #   display.append(i[1][1])
-      #   print cite_key + " : " + str(i[0]) + " : " + str(display)
-        # print i[0] + "\t" + str(i[1])
-
-      data.append(feature_vector)
-    return data

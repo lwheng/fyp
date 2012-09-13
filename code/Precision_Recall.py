@@ -38,7 +38,7 @@ if __name__ == "__main__":
   X = temp_X
   y = np.asarray(temp_y)
 
-  X, y = X[y != 2], y[y != 2]  # Keep also 2 classes (0 and 1)
+  #X, y = X[y != 2], y[y != 2]  # Keep also 2 classes (0 and 1)
   n_samples, n_features = X.shape
   p = range(n_samples)  # Shuffle samples
   random.seed(0)
@@ -48,15 +48,15 @@ if __name__ == "__main__":
 
 # Add noisy features
 np.random.seed(0)
-
-X = np.c_[X, np.random.randn(n_samples, 200 * n_features)]
+#X = np.c_[X, np.random.randn(n_samples, 200 * n_features)]
 
 # Run classifier
 classifier = svm.SVC(kernel='linear', probability=True)
+print classifier
 probas_ = classifier.fit(X[:half], y[:half]).predict_proba(X[half:])
 
-cm_prediction_ = classifier.fit(X[:half], y[:half]).predict(X[half:])
 # Compute confusion matrix
+cm_prediction_ = classifier.fit(X[:half], y[:half]).predict(X[half:])
 cm = confusion_matrix(y[half:], cm_prediction_)
 
 # Compute Precision-Recall and plot curve

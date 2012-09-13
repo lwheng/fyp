@@ -4,7 +4,6 @@ execfile('Feature_Extractor.py')
 
 import Feature_Extractor
 import Utils
-import sys
 
 if __name__ == '__main__':
   nltk_Tools = Utils.nltk_tools()
@@ -21,3 +20,5 @@ if __name__ == '__main__':
   pickler.dumpPickle(forannotation, "For_Annotation")
   pickler.dumpPickle(keys, "DatasetTBA_keys")
   pickler.dumpPickle(X, "DatasetTBA")
+  print X
+  print X.shape
