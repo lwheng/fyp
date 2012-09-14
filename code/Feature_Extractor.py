@@ -40,10 +40,10 @@ class extractor:
       return 1.0
     return float(matches) / float(uniqueNames)
 
-  def cosineSimilarity(self, cite_key, query_tokens, query_col, citedpaper):
+  def cosineSimilarity(self, cite_key, query_tokens, query_col, pathPDFBox):
     citing = cite_key['citing']
     cited = cite_key['cited']
-    citedpaper = citedpaper + cited[0] + "/" + cited[0:3] + "/" + cited + ".txt"
+    citedpaper = pathPDFBox + "/" + cited[0] + "/" + cited[0:3] + "/" + cited + ".txt"
     domain = []
     try:
       openfile = open(citedpaper,"r")
@@ -148,7 +148,7 @@ class extractor:
     x.append(feature_queryWeight)
 
     # Location of Citing Sentence
-    feature_locationCitSent = self.dist.citSentLocation(cite_key, citStr, query)
+    feature_locationCitSent = self.dist.citSentLocation(cite_key, citStr, query, self.pickler.pathParscitSection)
     x.extend(feature_locationCitSent)
 
     # Cosine Similarity

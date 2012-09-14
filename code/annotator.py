@@ -1,15 +1,15 @@
 from flask import Flask
+import Utils
 import cPickle as pickle
 import os
 import unicodedata
 app = Flask(__name__)
+pickler = Utils.pickler()
 
-#DatasetTBAFile = "/Users/lwheng/Downloads/fyp/For_Annotation.pickle"
-DatasetTBAFile = "/home/lwheng/Desktop/For_Annotation.pickle" 
+DatasetTBAFile = pickler.pathForAnnotation
 DatasetTBA = pickle.load(open(DatasetTBAFile,'r'))
 
-#pdfboxPath = "/Users/lwheng/Downloads/fyp/pdfbox-0.72"
-pdfboxPath = "/home/lwheng/Desktop/pdfbox-0.72"
+pdfboxPath = pickler.pathPDFBox
 
 def normalize(text):
   return unicodedata.normalize('NFKD',text).encode('ascii', 'ignore')

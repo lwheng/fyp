@@ -11,13 +11,6 @@ from nltk.corpus import stopwords
 from nltk.tokenize.punkt import PunktSentenceTokenizer
 from nltk.metrics import distance
 
-#rootDir = "/Users/lwheng/Downloads/fyp"
-rootDir = "/home/lwheng/Desktop"
-
-#codeDir = "/Users/lwheng/Dropbox/fyp/code"
-codeDir = "/home/lwheng/Dropbox/fyp/code"
-
-
 class nltk_tools:
   def nltkWordTokenize(self, text):
     return nltk.word_tokenize(text)
@@ -168,9 +161,9 @@ class dist:
       citedYear = 2000 + citedYear
     return (citingYear-citedYear)
 
-  def citSentLocation(self, cite_key, context_citStr, context, rootDirectory=rootDir):
+  def citSentLocation(self, cite_key, context_citStr, context, pathParscitSection):
     citing = cite_key['citing']
-    citingFile = os.path.join(rootDirectory, "parscitsectionxml", citing + "-parscit-section.xml")
+    citingFile = os.path.join(pathParscitSection, citing + "-parscit-section.xml")
     vector = []
     if os.path.exists(citingFile):
       # Using context_citStr, first determine which is the citing sentence
@@ -236,22 +229,26 @@ class dist:
       return vector
 
 class pickler:
-  def __init__(self, rootDirectory=rootDir, codeDirectory=codeDir):
-    self.pathAnnotations = os.path.join(rootDirectory, "Annotations.pickle")
-    self.pathAuthors = os.path.join(rootDirectory, "Authors.pickle")
-    self.pathCode = codeDirectory
-    self.pathDataset = os.path.join(rootDirectory, "Dataset.pickle")
-    self.pathDatasetTBA = os.path.join(rootDirectory, "DatasetTBA.pickle")
-    self.pathDatasetTBA_keys = os.path.join(rootDirectory, "DatasetTBA_keys.pickle")
-    self.pathExperiment = os.path.join(rootDirectory, "Experiment.pickle")
-    self.pathModel = os.path.join(rootDirectory, "Model.pickle")
-    self.pathParscitSection = os.path.join(rootDirectory, "parscitsectionxml")
-    self.pathParscitXml = os.path.join(rootDirectory, "parscitxml")
-    self.pathPDFBox = os.path.join(rootDirectory, "pdfbox-0.72")
-    self.pathRaw = os.path.join(rootDirectory, "Raw.pickle")
-    self.pathRoot = rootDirectory
-    self.pathTarget = os.path.join(rootDirectory, "Target.pickle")
-    self.pathTitles = os.path.join(rootDirectory, "Titles.pickle")
+  def __init__(self):
+    config = pickle.load(open("Config.pickle", "r"))
+    self.pathRoot = config[0]
+    self.pathCode = config[1]
+    self.pathParscit = os.path.join(self.pathRoot, "parscitxml")
+    self.pathParscitSection = os.path.join(self.pathRoot, "parscitsectionxml")
+    self.pathPDFBox = os.path.join(self.pathRoot, "pdfbox-0.72")
+
+    # Pickles
+    self.pathAnnotations = os.path.join(self.pathRoot, "Annotations.pickle")
+    self.pathAuthors = os.path.join(self.pathRoot, "Authors.pickle")
+    self.pathDataset = os.path.join(self.pathRoot, "Dataset.pickle")
+    self.pathDatasetTBA = os.path.join(self.pathRoot, "DatasetTBA.pickle")
+    self.pathDatasetTBA_keys = os.path.join(self.pathRoot, "DatasetTBA_keys.pickle")
+    self.pathExperiment = os.path.join(self.pathRoot, "Experiment.pickle")
+    self.pathForAnnotation = os.path.join(self.pathRoot, "For_Annotation.pickle")
+    self.pathModel = os.path.join(self.pathRoot, "Model.pickle")
+    self.pathRaw = os.path.join(self.pathRoot, "Raw.pickle")
+    self.pathTarget = os.path.join(self.pathRoot, "Target.pickle")
+    self.pathTitles = os.path.join(self.pathRoot, "Titles.pickle")
 
   def loadPickle(self, filename):
     temp = pickle.load(open(filename, "rb"))
@@ -261,11 +258,11 @@ class pickler:
     pickle.dump(data, open(filename+".pickle", "wb"))
 
 class dataset_tools:
-  def __init__(self, dist, nltk_Tools, tools, rootDirectory=rootDir):
-    self.parscitSectionPath = os.path.join(rootDirectory, "parscitsectionxml")
-    self.parscitPath = os.path.join(rootDirectory, "parscitxml")
+  def __init__(self, dist, nltk_Tools, pickler, tools):
     self.dist = dist
     self.nltk_Tools = nltk_Tools
+    self.parscitPath = pickler.pathParscit
+    self.parscitSectionPath = pickler.pathParscitSection
     self.tools = tools
 
   def fetchExperiment(self, raw):

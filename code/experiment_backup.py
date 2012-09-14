@@ -21,7 +21,7 @@ linesContext = unicodedata.normalize('NFKD', linesContext).encode('ascii','ignor
 query = nltk.word_tokenize(linesContext)
 query_display = ""
 for i in query:
-	query_display = query_display + " " + i
+  query_display = query_display + " " + i
 fd_query = nltk.FreqDist(query)
 
 reg = []
@@ -34,7 +34,7 @@ reg.append(r"([A-Z][a-z-]+\s?,?\s?(\(and|&)\s)?)+\s?,?\s?(et al.)?\s?,?\s?(\(?(\
 
 regex = ""
 for i in range(len(reg)):
-	regex += reg[i] + "|"
+  regex += reg[i] + "|"
 regex = re.compile(regex[:-1])
 
 # for citation density
@@ -54,19 +54,19 @@ t = []
 SIZE = 10
 lines = []
 try:
-	openfile = open(citedpaper,"r")
-	for l in openfile:
-		lines.append(nltk.word_tokenize(l.strip()))
-	openfile.close()
+  openfile = open(citedpaper,"r")
+  for l in openfile:
+    lines.append(nltk.word_tokenize(l.strip()))
+  openfile.close()
 except IOError as e:
-	print e	
+  print e  
 doc = []
 for i in xrange(0, len(lines), SIZE):
-	sublist = lines[i:i+SIZE]
-	temp = []
-	for s in sublist:
-		temp.extend(s)
-	doc.append(temp)
+  sublist = lines[i:i+SIZE]
+  temp = []
+  for s in sublist:
+    temp.extend(s)
+  doc.append(temp)
 
 query_col = nltk.TextCollection(query)
 col = nltk.TextCollection(doc)
@@ -90,37 +90,37 @@ u = []
 v = []
 results = []
 for i in range(0,len(doc)):
-	fd_doc0 = nltk.FreqDist(doc[i])
-	for term in vocab:
-		if term in query:
-			# u.append(fd_query[term]) # using just frequency
-			u.append(query_col.tf_idf(term, doc[i])) # using tf-idf weighting scheme
-		else:
-			u.append(0)
-		if term in doc[i]:
-			# v.append(fd_doc0[term]) # using just frequency
-			v.append(col.tf_idf(term, doc[i])) # using tf-idf weighting scheme
-		else:
-			v.append(0)
-	r = nltk.cluster.util.cosine_distance(u,v)
-	results.append(r)
-	
+  fd_doc0 = nltk.FreqDist(doc[i])
+  for term in vocab:
+    if term in query:
+      # u.append(fd_query[term]) # using just frequency
+      u.append(query_col.tf_idf(term, doc[i])) # using tf-idf weighting scheme
+    else:
+      u.append(0)
+    if term in doc[i]:
+      # v.append(fd_doc0[term]) # using just frequency
+      v.append(col.tf_idf(term, doc[i])) # using tf-idf weighting scheme
+    else:
+      v.append(0)
+  r = nltk.cluster.util.cosine_distance(u,v)
+  results.append(r)
+  
 print "QUERY"
 print query_display
 print
 toprint = ""
 for i in doc[results.index(max(results))]:
-	toprint = toprint + " " + i
+  toprint = toprint + " " + i
 print "GUESS"
 print toprint
 print
 print max(results)
 print results
-	
-	
-	
-	
-		
+  
+  
+  
+  
+    
 # 
 # contexts = []
 # contexts.append("""<context position="3648" citStr="Caraballo (1999)" startWordPosition="592" endWordPosition="593">. In Section 4, we show how correctly extracted relationships can be used as “seed-cases” to extract several more relationships, thus improving recall; this work shares some similarities with that of Caraballo (1999). In Section 5 we show that combining the techniques of Section 3 and Section 4 improves both precision and recall. Section 6 demonstrates that 1Another possible view is that “hyponymy” should only re</context>""")
