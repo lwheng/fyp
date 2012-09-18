@@ -72,7 +72,10 @@ class weight:
     
   def titleOverlap(self, cite_key, titles):
     return self.dist.jaccard(titles[cite_key['citing']], titles[cite_key['cited']])
-    
+
+  def titleOverlapRaw(self, title_citing, title_cited):
+    return self.dist.jaccard(title_citing, title_cited)
+
   def authorOverlap(self, cite_key, authors):
     citing = cite_key['citing']
     cited = cite_key['cited']
@@ -81,6 +84,19 @@ class weight:
     uniqueNames = len(authors[citing]) + len(authors[cited])
     for citingAuthor in authors[citing]:
       for citedAuthor in authors[cited]:
+        ratio = self.dist.levenshteinRatio(citingAuthor, citedAuthor)
+        if ratio > self.LAMBDA_AUTHOR_MATCH:
+          matches += 1
+          uniqueNames -= 1
+    if uniqueNames == 0:
+      return 1.0
+    return float(matches) / float(uniqueNames)
+
+  def authorOverlapRaw(self, authors_citing, authors_cited):
+    matches = 0
+    uniqueNames = len(authors_citing) + len(authors_cited)
+    for citingAuthor in authors_citing:
+      for citedAuthor in authors_cited:
         ratio = self.dist.levenshteinRatio(citingAuthor, citedAuthor)
         if ratio > self.LAMBDA_AUTHOR_MATCH:
           matches += 1
@@ -209,7 +225,10 @@ class dist:
             vector.append(0)
           vector[-1] = 1 # Setting 'None' to 1
           return vector
-        header = tool.normalize(sectionHeaderNode.attributes['genericHeader'].value)
+        if sectionHeaderNode.attributes.has_key('genericHeader'):
+          header = sectionHeaderNode.attributes['genericHeader'].value
+        elif sectionHeaderNode.attributes.has_key('genericheader'):
+          header = sectionHeaderNode.attributes['genericheader'].value
         for h in (self.genericHeader):
           if header == h:
             vector.append(1)
@@ -225,6 +244,64 @@ class dist:
         return vector
     else:
       # No section file
+      for h in (self.genericHeader):
+        vector.append(0)
+      vector[-1] = 1 # Setting 'None' to 1
+      return vector
+
+  def citSentLocationRaw(self, context_citStr, context, dom_citing_parscit_section):
+    vector = []
+    # Using context_citStr, first determine which is the citing sentence
+    # We replace "et al." by "et al" so the sentence tokenizer doesn't split it up
+    context_citStr = context_citStr.replace("et al.", "et al")
+    context = context.replace("et al.", "et al")
+
+    context_lines = self.sentenceTokenizer.tokenize(context)
+    citSent = self.tools.searchTermInLines(context_citStr, context_lines)
+    dom = dom_citing_parscit_section
+    target = None
+    bodyTexts = dom.getElementsByTagName('bodyText')
+    regex = r"\<.*\>(.*)\<.*\>"
+    tool = tools()
+
+    minDistance = 314159265358979323846264338327950288419716939937510
+    for i in range(len(bodyTexts)):
+      b = bodyTexts[i]
+      text = b.toxml().replace("\n", " ").replace("- ", "").strip()
+      obj = re.findall(regex, text)
+      tempDist = self.jaccard(context_lines[citSent], text)
+      if tempDist < minDistance:
+        minDistance = tempDist
+        target = b
+    
+    if target:
+      searching = True
+      sectionHeaderNode = None
+      target = target.previousSibling
+      while target:
+        if target.nodeType == Node.ELEMENT_NODE:
+          if target.nodeName == 'sectionHeader':
+            sectionHeaderNode = target
+            break
+        target = target.previousSibling
+      if target == None:
+        for h in (self.genericHeader):
+          vector.append(0)
+        vector[-1] = 1 # Setting 'None' to 1
+        return vector
+      if sectionHeaderNode.attributes.has_key('genericHeader'):
+        header = sectionHeaderNode.attributes['genericHeader'].value
+      elif sectionHeaderNode.attributes.has_key('genericheader'):
+        header = sectionHeaderNode.attributes['genericheader'].value
+      for h in (self.genericHeader):
+        if header == h:
+          vector.append(1)
+        else:
+          vector.append(0)
+      return vector
+      #return tool.normalize(sectionHeaderNode.attributes['genericHeader'].value)
+    else:
+      # Not found
       for h in (self.genericHeader):
         vector.append(0)
       vector[-1] = 1 # Setting 'None' to 1
@@ -305,7 +382,42 @@ class dataset_tools:
       if titleTag == [] or titleTag[0].firstChild == None:
         continue
       title = titleTag[0].firstChild.data
-      title = tools.normalize(title)
+      if not type(title) == unicode:
+        title = tools.normalize(title)
+      if re.search("Computational Linguistics,$", title):
+        title = title.replace("Computational Linguistics,", "")
+      levenshteinDistance = dist.levenshtein(title.lower(), titleToMatch.lower())
+      masiDistance = dist.masi(title, titleToMatch)
+      thisDistance = levenshteinDistance*masiDistance
+      if thisDistance < minDistance:
+        minDistance = thisDistance
+        bestIndex = i
+    if bestIndex == -1:
+      return None
+    return citations[bestIndex]
+
+  def prepContextsRaw(self, dist, tools, title_citing, title_cited, dom_citing_parscit):
+    titleToMatch = title_cited
+    dom = dom_citing_parscit
+
+    citations = dom.getElementsByTagName('citation')
+    tags = ["title", "note", "booktitle", "journal", "tech", "author"]
+    titleTag = []
+    index = 0
+    bestIndex = -1
+    minDistance = 314159265358979323846264338327950288419716939937510
+    for i in range(len(citations)):
+      c = citations[i]
+      titleTag = []
+      for index in range(len(tags)):
+        titleTag = c.getElementsByTagName(tags[index])
+        if titleTag:
+          break
+      if titleTag == [] or titleTag[0].firstChild == None:
+        continue
+      title = titleTag[0].firstChild.data
+      if not type(title) == unicode:
+        title = tools.normalize(title)
       if re.search("Computational Linguistics,$", title):
         title = title.replace("Computational Linguistics,", "")
       levenshteinDistance = dist.levenshtein(title.lower(), titleToMatch.lower())

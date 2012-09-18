@@ -21,25 +21,6 @@ class extractor:
   def sayHello(self):
     return "Hello, world! I'm Citprov! If you can see this, then you are able to call my methods"
 
-  def titleOverlap(self, cite_key, titles):
-    return self.dist.jaccard(titles[cite_key['citing']], titles[cite_key['cited']])
-
-  def authorOverlap(self, cite_key, authors):
-    citing = cite_key['citing']
-    cited = cite_key['cited']
-    # Adapting the Jaccard idea
-    matches = 0
-    uniqueNames = len(authors[citing]) + len(authors[cited])
-    for citingAuthor in authors[citing]:
-      for citedAuthor in authors[cited]:
-        ratio = self.dist.levenshteinRatio(citingAuthor, citedAuthor)
-        if ratio > self.LAMBDA_AUTHOR_MATCH:
-          matches += 1
-          uniqueNames -= 1
-    if uniqueNames == 0:
-      return 1.0
-    return float(matches) / float(uniqueNames)
-
   def cosineSimilarity(self, cite_key, query_tokens, query_col, pathPDFBox):
     citing = cite_key['citing']
     cited = cite_key['cited']
@@ -136,11 +117,11 @@ class extractor:
     x.append(feature_publishYear)
 
     # Title Overlap
-    feature_titleOverlap = self.titleOverlap(cite_key, self.titles)
+    feature_titleOverlap = self.weight.titleOverlap(cite_key, self.titles)
     x.append(feature_titleOverlap)
 
     # Authors Overlap
-    feature_authorOverlap = self.authorOverlap(cite_key, self.authors)
+    feature_authorOverlap = self.weight.authorOverlap(cite_key, self.authors)
     x.append(feature_authorOverlap)
 
     # Context's Average TF-IDF Weight
@@ -154,4 +135,45 @@ class extractor:
     # Cosine Similarity
     feature_cosineSimilarity = self.cosineSimilarity(cite_key, query_tokens, query_col, self.pickler.pathPDFBox)
     x.append(feature_cosineSimilarity)
+    return x
+
+  def extractFeaturesRaw(self, context, citing_col, dom_citing_parscit_section, title_citing, title_cited, authors_citing, authors_cited):
+    # Context is ONE context
+    citStr = context.getAttribute('citStr')
+    query = context.firstChild.data
+
+    query_tokens = self.nltk_Tools.nltkWordTokenize(query.lower())
+    query_text = self.nltk_Tools.nltkText(query_tokens)
+    query_col = self.nltk_Tools.nltkTextCollection([query_text])
+
+    # Extract Features
+    x = []
+
+    # Citation Density
+    feature_citDensity = self.weight.citDensity(query, citStr)
+    x.append(feature_citDensity)
+
+    # Publishing Year Difference
+    #feature_publishYear = self.dist.publishYear(cite_key)
+    #x.append(feature_publishYear)
+
+    # Title Overlap
+    feature_titleOverlap = self.weight.titleOverlapRaw(title_citing, title_cited)
+    x.append(feature_titleOverlap)
+
+    # Authors Overlap
+    feature_authorOverlap = self.weight.authorOverlapRaw(authors_citing, authors_cited)
+    x.append(feature_authorOverlap)
+
+    # Context's Average TF-IDF Weight
+    feature_queryWeight = self.weight.chunkAverageWeight(query_text, citing_col)
+    x.append(feature_queryWeight)
+
+    # Location of Citing Sentence
+    feature_locationCitSent = self.dist.citSentLocationRaw(citStr, query, dom_citing_parscit_section)
+    x.extend(feature_locationCitSent)
+
+    # Cosine Similarity
+    #feature_cosineSimilarity = self.cosineSimilarity(cite_key, query_tokens, query_col, self.pickler.pathPDFBox)
+    #x.append(feature_cosineSimilarity)
     return x
