@@ -32,9 +32,10 @@ class tools:
     return parseString(data)
 
   def normalize(self, text):
-    text = unicode(text, errors='ignore')
-    return text
-    #return unicodedata.normalize('NFKD', text).encode('ascii','ignore')
+    if not type(text) == unicode:
+      text = unicode(text, errors='ignore')
+      return text
+    return unicodedata.normalize('NFKD', text).encode('ascii','ignore')
 
   def searchTermInLines(self, term, lines):
     for i in range(len(lines)):
@@ -73,7 +74,7 @@ class weight:
   def titleOverlap(self, cite_key, titles):
     return self.dist.jaccard(titles[cite_key['citing']], titles[cite_key['cited']])
 
-  def titleOverlapRaw(self, title_citing, title_cited):
+  def titleOverlapCFS(self, title_citing, title_cited):
     return self.dist.jaccard(title_citing, title_cited)
 
   def authorOverlap(self, cite_key, authors):
@@ -92,7 +93,7 @@ class weight:
       return 1.0
     return float(matches) / float(uniqueNames)
 
-  def authorOverlapRaw(self, authors_citing, authors_cited):
+  def authorOverlapCFS(self, authors_citing, authors_cited):
     matches = 0
     uniqueNames = len(authors_citing) + len(authors_cited)
     for citingAuthor in authors_citing:
@@ -179,6 +180,24 @@ class dist:
       citedYear = 2000 + citedYear
     return (citingYear-citedYear)
 
+  def publishYearCFS(self, cite_key):
+    citing = cite_key['citing']
+    cited = cite_key['cited']
+
+    citingYear = int(citing[1:3])
+    citedYear = int(cited[1:3])
+
+    if citingYear > 50:
+      citingYear = 1900 + citingYear
+    else:
+      citingYear = 2000 + citingYear
+
+    if citedYear > 50:
+      citedYear = 1900 + citedYear
+    else:
+      citedYear = 2000 + citedYear
+    return (citingYear-citedYear)
+
   def citSentLocation(self, cite_key, context_citStr, context, pathParscitSection):
     citing = cite_key['citing']
     citingFile = os.path.join(pathParscitSection, citing + "-parscit-section.xml")
@@ -203,7 +222,8 @@ class dist:
       minDistance = 314159265358979323846264338327950288419716939937510
       for i in range(len(bodyTexts)):
         b = bodyTexts[i]
-        text = tool.normalize(b.toxml().replace("\n", " ").replace("- ", "").strip())
+        #text = tool.normalize(b.toxml().replace("\n", " ").replace("- ", "").strip())
+        text = b.toxml().replace("\n", " ").replace("- ", "").strip()
         obj = re.findall(regex, text)
         tempDist = self.jaccard(context_lines[citSent], text)
         if tempDist < minDistance:
@@ -249,7 +269,7 @@ class dist:
       vector[-1] = 1 # Setting 'None' to 1
       return vector
 
-  def citSentLocationRaw(self, context_citStr, context, dom_citing_parscit_section):
+  def citSentLocationCFS(self, context_citStr, context, dom_citing_parscit_section):
     vector = []
     # Using context_citStr, first determine which is the citing sentence
     # We replace "et al." by "et al" so the sentence tokenizer doesn't split it up
@@ -321,10 +341,12 @@ class pickler:
     self.pathAuthors = os.path.join(self.pathRoot, "Authors.pickle")
     self.pathDataset = os.path.join(self.pathRoot, "Dataset.pickle")
     self.pathDatasetTBA = os.path.join(self.pathRoot, "DatasetTBA.pickle")
+    self.pathDatasetTBACFS = os.path.join(self.pathRoot, "DatasetTBACFS.pickle")
     self.pathDatasetTBA_keys = os.path.join(self.pathRoot, "DatasetTBA_keys.pickle")
     self.pathExperiment = os.path.join(self.pathRoot, "Experiment.pickle")
     self.pathForAnnotation = os.path.join(self.pathRoot, "For_Annotation.pickle")
     self.pathModel = os.path.join(self.pathRoot, "Model.pickle")
+    self.pathModelCFS = os.path.join(self.pathRoot, "ModelCFS.pickle")
     self.pathRaw = os.path.join(self.pathRoot, "Raw.pickle")
     self.pathTarget = os.path.join(self.pathRoot, "Target.pickle")
     self.pathTitles = os.path.join(self.pathRoot, "Titles.pickle")
@@ -396,7 +418,7 @@ class dataset_tools:
       return None
     return citations[bestIndex]
 
-  def prepContextsRaw(self, dist, tools, title_citing, title_cited, dom_citing_parscit):
+  def prepContextsCFS(self, dist, tools, title_citing, title_cited, dom_citing_parscit):
     titleToMatch = title_cited
     dom = dom_citing_parscit
 
@@ -467,6 +489,26 @@ class dataset_tools:
           instances.append(temp)
           keys.append(e)
         dataset.extend(instances)
+    X = np.asarray(dataset)
+    return (forannotation, keys, X)
+
+  def prepDatasetCFS(self, run, raw, experiment):
+    forannotation = []
+    dataset = []
+    keys = []
+    for e in experiment:
+      contexts = raw[e['citing']+"==>"+e['cited']]['contexts']
+      context_list = []
+      for c in contexts:
+        value = c.firstChild.data.lower()
+        value = unicodedata.normalize('NFKD', value).encode('utf-8','ignore')
+        context_list.append(self.nltk_Tools.nltkText(self.nltk_Tools.nltkWordTokenize(value)))
+      citing_col = self.nltk_Tools.nltkTextCollection(context_list)
+      for c in contexts:
+        x = run.extractFeaturesCFS(e, c, citing_col)
+        forannotation.append((e, c))
+        keys.append(e)
+        dataset.append(x)
     X = np.asarray(dataset)
     return (forannotation, keys, X)
 
