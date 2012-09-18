@@ -3,7 +3,7 @@ import cPickle as pickle
 
 if __name__ == '__main__':
   if len(sys.argv) < 2:
-    print "USAGE: python Config.py [mac | ubuntu | wing]"
+    print "USAGE: python Config.py [mac | citweb | ubuntu | wing]"
     sys.exit()
   rootDir = ""
   codeDir = ""
@@ -17,5 +17,8 @@ if __name__ == '__main__':
   elif option == "wing":
     rootDir = "/home/lwheng/fypsource"
     codeDir = "/home/lwheng/fyp/code"
+  elif option == "citweb":
+    rootDir = "/Users/lwheng/Downloads/citweb"
+    codeDir = "/Users/lwheng/Dropbox/citweb/CitWeb"
   config = (rootDir, codeDir)
   pickle.dump(config, open("Config.pickle", "wb"))

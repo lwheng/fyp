@@ -32,7 +32,9 @@ class tools:
     return parseString(data)
 
   def normalize(self, text):
-    return unicodedata.normalize('NFKD', text).encode('ascii','ignore')
+    text = unicode(text, errors='ignore')
+    return text
+    #return unicodedata.normalize('NFKD', text).encode('ascii','ignore')
 
   def searchTermInLines(self, term, lines):
     for i in range(len(lines)):
