@@ -3,15 +3,17 @@ import math
 import numpy as np
 
 class extractor:
-  def __init__(self, dist, nltk_Tools, pickler, tools, weight):
+  def __init__(self, dist, nltk_Tools, pickler, tools, weight, authors, titles):
     self.dist = dist
     self.nltk_Tools = nltk_Tools
     self.pickler = pickler
     self.tools = tools
     self.weight = weight
 
-    self.titles = self.pickler.loadPickle(self.pickler.pathTitles)
-    self.authors = self.pickler.loadPickle(self.pickler.pathAuthors)
+    #self.authors = self.pickler.loadPickle(self.pickler.pathAuthors)
+    #self.titles = self.pickler.loadPickle(self.pickler.pathTitles)
+    self.authors = authors
+    self.titles = titles
     self.stopwords = self.nltk_Tools.nltkStopwords()
     self.LAMBDA_AUTHOR_MATCH = 0.8
     self.CHUNK_SIZE = 15
@@ -137,15 +139,10 @@ class extractor:
     x.append(feature_cosineSimilarity)
     return x
 
-  def extractFeaturesCFS(self, cite_key, context, citing_col):
-    citing = cite_key['citing']
-    cited = cite_key['cited']
-
+  def extractFeaturesCFS_v2(self, context, citing_col, dom_citing_parscit_section, dom_cited_parscit_section, title_citing, title_cited, authors_citing, authors_cited):
     # Context is ONE context
     citStr = context.getAttribute('citStr')
-    citStr = self.tools.normalize(citStr)
     query = context.firstChild.data
-    query = self.tools.normalize(query)
 
     query_tokens = self.nltk_Tools.nltkWordTokenize(query.lower())
     query_text = self.nltk_Tools.nltkText(query_tokens)
@@ -163,11 +160,11 @@ class extractor:
     #x.append(feature_publishYear)
 
     # Title Overlap
-    feature_titleOverlap = self.weight.titleOverlap(cite_key, self.titles)
+    feature_titleOverlap = self.weight.titleOverlapCFS(title_citing, title_cited)
     x.append(feature_titleOverlap)
 
     # Authors Overlap
-    feature_authorOverlap = self.weight.authorOverlap(cite_key, self.authors)
+    feature_authorOverlap = self.weight.authorOverlapCFS(authors_citing, authors_cited)
     x.append(feature_authorOverlap)
 
     # Context's Average TF-IDF Weight
@@ -175,7 +172,7 @@ class extractor:
     x.append(feature_queryWeight)
 
     # Location of Citing Sentence
-    feature_locationCitSent = self.dist.citSentLocation(cite_key, citStr, query, self.pickler.pathParscitSection)
+    feature_locationCitSent = self.dist.citSentLocationCFS(citStr, query, dom_citing_parscit_section)
     x.extend(feature_locationCitSent)
 
     # Cosine Similarity
@@ -183,7 +180,7 @@ class extractor:
     #x.append(feature_cosineSimilarity)
     return x
 
-  def extractFeaturesOnce(self, context, citing_col, dom_citing_parscit_section, title_citing, title_cited, authors_citing, authors_cited):
+  def extractFeaturesCFS_v1(self, context, citing_col, dom_citing_parscit_section, title_citing, title_cited, authors_citing, authors_cited):
     # Context is ONE context
     citStr = context.getAttribute('citStr')
     query = context.firstChild.data

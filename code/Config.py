@@ -18,7 +18,7 @@ if __name__ == '__main__':
     rootDir = "/home/lwheng/fypsource"
     codeDir = "/home/lwheng/fyp/code"
   elif option == "citweb":
-    rootDir = "/Users/lwheng/Downloads/citweb"
-    codeDir = "/Users/lwheng/Dropbox/citweb/CitWeb"
+    rootDir = "./"
+    codeDir = "./"
   config = (rootDir, codeDir)
   pickle.dump(config, open("Config.pickle", "wb"))

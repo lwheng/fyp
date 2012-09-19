@@ -10,6 +10,7 @@ import cPickle as pickle
 from nltk.corpus import stopwords
 from nltk.tokenize.punkt import PunktSentenceTokenizer
 from nltk.metrics import distance
+import sys
 
 class nltk_tools:
   def nltkWordTokenize(self, text):
@@ -44,6 +45,22 @@ class tools:
         return i
     # Cannot find, return the mid of the chunk
     return int(len(lines)/2)
+
+  def annotationToRanges(self, a):
+    ranges = []
+    if a == "-":
+      return [(-1,-1)]
+    else:
+      temp = a.split("!")
+      for t in temp:
+        if t:
+          top = t.split("-")[0]
+          bottom = t.split("-")[1]
+          ranges.append((int(top),int(bottom)))
+    return ranges
+
+  def inRange(self, toCheck, annotation):
+    return
 
 class weight:
   def __init__(self):
@@ -474,6 +491,7 @@ class dataset_tools:
     forannotation = []
     dataset = []
     keys = []
+    target = []
     indexAnnotations = 0
     indexInstances = 0
 
@@ -485,17 +503,27 @@ class dataset_tools:
         context_list.append(self.nltk_Tools.nltkText(self.nltk_Tools.nltkWordTokenize(value)))
       citing_col = self.nltk_Tools.nltkTextCollection(context_list)
       for c in contexts:
+        currentAnnotation = annotations[indexAnnotations]
+        indexAnnotations += 1
+        currentRanges = self.tools.annotationToRanges(currentAnnotation)
+
         x = run.extractFeatures(e, c, citing_col)
         forannotation.append((e, c))
         instances = []
         featuresLessCosSim = x[:-1]
         for i in x[-1]:
+          chunkRange = self.tools.annotationToRanges(i[0])
           temp = featuresLessCosSim[:]
+          # i[1][1] is chunkAvgWeight
           temp.append(i[1][1])
+          # i[1][0] is cosineSim
           temp.append(i[1][0].item())
           instances.append(temp)
           keys.append(e)
         dataset.extend(instances)
+        for i in instances:
+          print i
+      sys.exit()
     X = np.asarray(dataset)
     return (forannotation, keys, X)
 
