@@ -16,14 +16,19 @@ if __name__ == '__main__':
 
   run = Feature_Extractor.extractor(dist, nltk_Tools, pickler, tools, weight)
   raw = pickler.loadPickle(pickler.pathRaw)
+  annotations = pickler.loadPickle(pickler.pathAnnotations)
   experiment = dataset_tools.fetchExperiment(raw)
+  sys.exit()
+
   #(forannotation, keys, X) = dataset_tools.prepDataset(run, raw, experiment)
   #pickler.dumpPickle(forannotation, "For_Annotation")
   #pickler.dumpPickle(keys, "DatasetTBA_keys")
   #pickler.dumpPickle(X, "DatasetTBA")
+
   (forannotation, keys, X) = dataset_tools.prepDatasetCFS(run, raw, experiment)
   pickler.dumpPickle(forannotation, "For_AnnotationCFS")
   pickler.dumpPickle(keys, "DatasetTBA_keysCFS")
   pickler.dumpPickle(X, "DatasetTBACFS")
+
   print X
   print X.shape
