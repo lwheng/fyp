@@ -93,6 +93,62 @@ class extractor:
       # feature.append((docs_display[i][0],float(results[i])/float(total)*100))
     return feature
 
+  def cosineSimilarityCFS(self, query_tokens, query_col, dom_cited_parscit_section):
+    bodyTexts = dom_cited_parscit_section.getElementsByTagName('bodyText')
+    docs = []
+    for bodyText in bodyTexts:
+      wholeText = bodyText.firstChild.wholeText
+      wholeText = wholeText.lower()
+      text = self.nltk_Tools.nltkText(self.nltk_Tools.nltkWordTokenize(wholeText.lower()))
+      docs.append(text)
+    docs_col = self.nltk_Tools.nltkTextCollection(docs)
+
+    # Vocab
+    vocab = list(set(query_col) | set(docs_col))
+    vocab = map(lambda x: x.lower(), vocab)
+    vocab = [w for w in vocab if not w in self.stopwords]
+    vocab = [w for w in vocab if not w in self.punctuation]
+
+    # Prep Vectors
+    results = []
+    for i in range(0, len(docs)):
+      # Cited Chunk's Average TF-IDF Weight
+      chunkAvgWeight = self.weight.chunkAverageWeight(docs[i], docs_col)
+
+      u = []
+      v = []
+      # fd_doc_current = nltk.FreqDist(docs[i])
+      temp_query = map(lambda x: x.lower(), query_tokens)
+      temp_query = [w for w in temp_query if not w in self.stopwords]
+      temp_query = [w for w in temp_query if not w in self.punctuation]
+      temp_doc = map(lambda x: x.lower(), docs[i])
+      temp_doc = [w for w in temp_doc if not w in self.stopwords]
+      temp_doc = [w for w in temp_doc if not w in self.punctuation]
+      for term in vocab:
+        if term in temp_query:
+          try:
+            u.append(docs_col.tf_idf(term, temp_doc))
+          except:
+            u.append(0)
+        else:
+          u.append(0)
+        if term in temp_doc:
+          v.append(docs_col.tf_idf(term, temp_doc))
+        else:
+          v.append(0)
+      if math.sqrt(np.dot(u, u)) == 0.0:
+        results.append((np.float64(0.0), 0.0))
+      else:
+        r = self.nltk_Tools.nltkCosineDistance(u,v)
+        # results.append(r)
+        results.append((r,chunkAvgWeight))
+    # total = sum(results)
+    feature = []
+    for i in range(len(results)):
+      feature.append((docs[i],results[i]))
+      # feature.append((docs_display[i][0],float(results[i])/float(total)*100))
+    return feature
+
   def extractFeatures(self, cite_key, context, citing_col):
     citing = cite_key['citing']
     cited = cite_key['cited']
@@ -176,8 +232,8 @@ class extractor:
     x.extend(feature_locationCitSent)
 
     # Cosine Similarity
-    #feature_cosineSimilarity = self.cosineSimilarity(cite_key, query_tokens, query_col, self.pickler.pathPDFBox)
-    #x.append(feature_cosineSimilarity)
+    feature_cosineSimilarity = self.cosineSimilarityCFS(query_tokens, query_col, dom_cited_parscit_section)
+    x.append(feature_cosineSimilarity)
     return x
 
   def extractFeaturesCFS_v1(self, context, citing_col, dom_citing_parscit_section, title_citing, title_cited, authors_citing, authors_cited):
