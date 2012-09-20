@@ -4,7 +4,7 @@ from xml.dom.minidom import parseString
 
 if __name__ == "__main__":
   # Output
-  doms = []
+  doms = {}
 
   # Load Config.pickle
   config = pickle.load(open('Config.pickle','r'))
@@ -16,8 +16,8 @@ if __name__ == "__main__":
   filtered = pickle.load(open(os.path.join(path_pickles,'Filtered.pickle'),'r'))
 
   # Open files and extract DOMs
+  num = len(filtered)
   for f in filtered:
-    print f
     citing = f['citing']
     cited = f['cited']
 
@@ -46,7 +46,9 @@ if __name__ == "__main__":
     dom_parscit_section_cited = parseString(data)
 
     # Append to output
-    doms.append((dom_parscit_citing, dom_parscit_section_citing, dom_parscit_cited, dom_parscit_section_cited))
+    print "No. left = " + str(num)
+    num -= 1
+    doms[f] = (dom_parscit_citing, dom_parscit_section_citing, dom_parscit_cited, dom_parscit_section_cited)
 
     # Dump pickle
     pickle.dump(doms, open(os.path.join(path_pickles,'Doms.pickle'),'wb'))
