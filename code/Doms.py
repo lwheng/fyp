@@ -12,7 +12,7 @@ if __name__ == "__main__":
   path_parscit_section = config['path_parscit_section']
 
   # Load Filtered pickle
-  filtered = pickle.load(open('Filtered.pickle','r'))
+  filtered = pickle.load(open(os.path.join(path_pickles,'Filtered.pickle'),'r'))
 
   # Open files and extract DOMs
   for f in filtered:
