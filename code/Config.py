@@ -12,7 +12,9 @@ if __name__ == '__main__':
     config['path_parscit_section'] = "/Users/lwheng/Downloads/fyp/parscitsectionxml"
     config['path_pickles'] = "/Users/lwheng/Downloads/fyp/Pickles"
   elif option == "wing":
-    print
+    config['path_parscit'] = "/home/lwheng/fypsource/parscitxml"
+    config['path_parscit_section'] = "/home/lwheng/fypsource/parscitsectionxml"
+    config['path_pickles'] = "/home/lwheng/fypsource/Pickles"
   elif option == "citweb":
     print
   pickle.dump(config, open("Config.pickle", "wb"))
