@@ -63,7 +63,7 @@ if __name__ == '__main__':
       citation = None
     else:
       citation = citations[best_index]
-    this_contexts = citation.getElementByTagName('context')
+    this_contexts = citation.getElementsByTagName('context')
     contexts[hash_key] = this_contexts
 
   # Dump pickle
