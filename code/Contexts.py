@@ -1,8 +1,11 @@
 import cPickle as pickle
 import os
 import re
+import Utils
 
 if __name__ == '__main__':
+  # Input
+  dist = Utils.dist()
   # Output
   contexts = {}
 
