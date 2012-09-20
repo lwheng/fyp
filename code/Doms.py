@@ -10,6 +10,7 @@ if __name__ == "__main__":
   config = pickle.load(open('Config.pickle','r'))
   path_parscit = config['path_parscit']
   path_parscit_section = config['path_parscit_section']
+  path_pickles = config['path_pickles']
 
   # Load Filtered pickle
   filtered = pickle.load(open(os.path.join(path_pickles,'Filtered.pickle'),'r'))
@@ -48,4 +49,4 @@ if __name__ == "__main__":
     doms.append((dom_parscit_citing, dom_parscit_section_citing, dom_parscit_cited, dom_parscit_section_cited))
 
     # Dump pickle
-    pickle.dump(doms, open('Doms.pickle','wb'))
+    pickle.dump(doms, open(os.path.join(path_pickles,'Doms.pickle'),'wb'))
