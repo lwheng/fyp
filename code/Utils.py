@@ -7,6 +7,7 @@ import os
 import math
 import numpy as np
 import cPickle as pickle
+from sets import Set
 from nltk.corpus import stopwords
 from nltk.tokenize.punkt import PunktSentenceTokenizer
 from nltk.metrics import distance
@@ -45,22 +46,6 @@ class tools:
         return i
     # Cannot find, return the mid of the chunk
     return int(len(lines)/2)
-
-  def annotationToRanges(self, a):
-    ranges = []
-    if a == "-":
-      return [(-1,-1)]
-    else:
-      temp = a.split("!")
-      for t in temp:
-        if t:
-          top = t.split("-")[0]
-          bottom = t.split("-")[1]
-          ranges.append((int(top),int(bottom)))
-    return ranges
-
-  def inRange(self, toCheck, annotation):
-    return
 
 class weight:
   def __init__(self):
@@ -383,6 +368,7 @@ class dataset_tools:
     self.parscitPath = pickler.pathParscit
     self.parscitSectionPath = pickler.pathParscitSection
     self.tools = tools
+    self.LAMBDA_ANNOTATION_MATCH = 0.5
 
   def fetchExperiment(self, raw):
     experiment = []
@@ -491,7 +477,7 @@ class dataset_tools:
     forannotation = []
     dataset = []
     keys = []
-    target = []
+    targets = []
     indexAnnotations = 0
     indexInstances = 0
 
@@ -505,14 +491,13 @@ class dataset_tools:
       for c in contexts:
         currentAnnotation = annotations[indexAnnotations]
         indexAnnotations += 1
-        currentRanges = self.tools.annotationToRanges(currentAnnotation)
-
         x = run.extractFeatures(e, c, citing_col)
         forannotation.append((e, c))
         instances = []
         featuresLessCosSim = x[:-1]
         for i in x[-1]:
-          chunkRange = self.tools.annotationToRanges(i[0])
+          target = self.prepTarget(currentAnnotation, i[0])
+          targets.append(target)
           temp = featuresLessCosSim[:]
           # i[1][1] is chunkAvgWeight
           temp.append(i[1][1])
@@ -521,11 +506,9 @@ class dataset_tools:
           instances.append(temp)
           keys.append(e)
         dataset.extend(instances)
-        for i in instances:
-          print i
-      sys.exit()
     X = np.asarray(dataset)
-    return (forannotation, keys, X)
+    targets = np.asarray(targets)
+    return (forannotation, keys, X, targets)
 
   def prepDatasetCFS(self, run, raw, experiment):
     forannotation = []
@@ -587,6 +570,37 @@ class dataset_tools:
   def prepModel(self, classifier, dataset, target):
     classifier.fit(dataset, target)
     return classifier
+
+  def prepTarget(self, annotation, chunk):
+    # General - 0
+    # Specific - Yes - 1
+    # Specific - No - 2
+    # Undetermined - 3
+    if annotation == "-":
+      return 0
+    elif annotation == "?":
+      return 3
+    else:
+      ranges = []
+      temp = annotation.split("!")
+      for t in temp:
+        if t:
+          top = t.split("-")[0]
+          bottom = t.split("-")[1]
+          ranges.append((int(top),int(bottom)))
+
+      temp = chunk.split("-")
+      top = int(temp[0])
+      bottom = int(temp[1])
+      chunkRange = range(top, bottom+1)
+      chunkRange_set = Set(chunkRange)
+      for r in ranges:
+        testRange = range(r[0], r[1]+1)
+        testRange_set = Set(testRange)
+        intersect_set = testRange_set & chunkRange_set
+        if float(len(list(intersect_set)))/float(len(list(testRange))) > self.LAMBDA_ANNOTATION_MATCH:
+          return 1
+      return 2
 
 class classifier:
   def __init__(self, classifier):

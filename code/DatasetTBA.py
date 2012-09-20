@@ -22,11 +22,11 @@ if __name__ == '__main__':
   annotations = pickler.loadPickle(pickler.pathAnnotations)
   experiment = dataset_tools.fetchExperiment(raw)
 
-  (forannotation, keys, X) = dataset_tools.prepDataset(run, raw, experiment, annotations)
-  sys.exit()
+  (forannotation, keys, X, targets) = dataset_tools.prepDataset(run, raw, experiment, annotations)
   pickler.dumpPickle(forannotation, "For_Annotation")
   pickler.dumpPickle(keys, "DatasetTBA_keys")
   pickler.dumpPickle(X, "DatasetTBA")
+  pickler.dumpPickle(targets, "Targets")
 
   #(forannotation, keys, X) = dataset_tools.prepDatasetCFS(run, raw, experiment)
   #pickler.dumpPickle(forannotation, "For_AnnotationCFS")
