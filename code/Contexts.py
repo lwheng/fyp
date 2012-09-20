@@ -30,6 +30,8 @@ if __name__ == '__main__':
     dom_parscit_citing = d[0]
     dom_parscit_section_cited = d[3]
 
+    title_to_match = dom_parscit_section_cited.getElementsByTagName('title')[0].firstChild.wholeText
+
     # Citations in citing
     citations = dom_parscit_citing.getElementsByTagName('citation')
     tags = ["title", "note", "booktitle", "journal", "tech", "author"]
