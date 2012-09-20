@@ -2,6 +2,7 @@ import cPickle as pickle
 import os
 import re
 import Utils
+import sys
 
 if __name__ == '__main__':
   # Input
@@ -30,7 +31,10 @@ if __name__ == '__main__':
     dom_parscit_citing = d[0]
     dom_parscit_section_cited = d[3]
 
-    title_to_match = dom_parscit_section_cited.getElementsByTagName('title')[0].firstChild.wholeText
+    title_to_match = dom_parscit_section_cited.getElementsByTagName('title')
+    if len(title_to_match) == 0:
+      print dom_parscit_section_cited.toxml()
+      sys.exit()
 
     # Citations in citing
     citations = dom_parscit_citing.getElementsByTagName('citation')
