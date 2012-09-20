@@ -35,6 +35,8 @@ if __name__ == '__main__':
     if len(title_to_match) == 0:
       print dom_parscit_section_cited.toxml()
       sys.exit()
+    else:
+      title_to_match = title_to_match[0].firstChild.wholeText
 
     # Citations in citing
     citations = dom_parscit_citing.getElementsByTagName('citation')
