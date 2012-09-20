@@ -20,6 +20,7 @@ if __name__ == "__main__":
   for f in filtered:
     citing = f['citing']
     cited = f['cited']
+    hash_key = citing + "==>" + cited
 
     # Open and parse citing
     path_parscit_citing = os.path.join(path_parscit, citing + "-parscit.xml")
@@ -48,7 +49,7 @@ if __name__ == "__main__":
     # Append to output
     print "No. left = " + str(num)
     num -= 1
-    doms[f] = (dom_parscit_citing, dom_parscit_section_citing, dom_parscit_cited, dom_parscit_section_cited)
+    doms[hash_key] = (dom_parscit_citing, dom_parscit_section_citing, dom_parscit_cited, dom_parscit_section_cited)
 
     # Dump pickle
     pickle.dump(doms, open(os.path.join(path_pickles,'Doms.pickle'),'wb'))
