@@ -17,7 +17,10 @@ if __name__ == '__main__':
   doms = pickle.load(open(os.path.join(path_pickles, "Doms.pickle"),'r'))
 
   for f in filtered:
-    d = doms[f]
+    citing = f['citing']
+    cited = f['cited']
+    hash_key = citing + "==>" + cited
+    d = doms[hash_key]
 
     # Take parscit_citing and parscit_section_cited
     dom_parscit_citing = d[0]
@@ -55,7 +58,7 @@ if __name__ == '__main__':
     else:
       citation = citations[best_index]
     this_contexts = citation.getElementByTagName('context')
-    contexts[f] = this_contexts
+    contexts[hash_key] = this_contexts
 
   # Dump pickle
   pickle.dump(contexts, open(os.path.join(path_pickles, "Contexts.pickle")))
