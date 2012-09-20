@@ -1,0 +1,5 @@
+Usage:
+
+Experiment.py : To generate list of cite_keys
+Raw.py : To generate 500 cite relations
+DatasetTBA.py : To generate unannotated dataset. |Dataset| >= |Raw| because 1 cite_key >= 1 context
