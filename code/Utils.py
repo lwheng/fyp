@@ -76,7 +76,7 @@ class weight:
     
   def title_overlap(self, dom_parscit_section_citing, dom_parscit_section_cited):
     if not dom_parscit_section_cited.getElementsByTagName('title'):
-      print dom_parscit_section_cited
+      print dom_parscit_section_cited.toxml('utf-8')
       sys.exit()
     title_citing = dom_parscit_section_citing.getElementsByTagName('title')[0].firstChild.wholeText
     title_cited = dom_parscit_section_cited.getElementsByTagName('title')[0].firstChild.wholeText
