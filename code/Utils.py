@@ -52,6 +52,7 @@ class weight:
     self.sentence_tokenizer = PunktSentenceTokenizer()
     self.dist = dist()
     self.nltk_tools = nltk_tools()
+    self.stopwords = self.nltk_tools.nltk_stopwords()
     self.LAMBDA_AUTHOR_MATCH = 0.8
     reg = []
     reg.append(r"\(\s?(\d{1,3})\s?\)")
