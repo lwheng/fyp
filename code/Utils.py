@@ -582,7 +582,9 @@ class extract_features:
 
   def extract_feature(self, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
     cit_str = context.getAttribute('citStr')
+    cit_str = unicode(cit_str.encode('ascii','ignore'), errors='ignore')
     query = context.firstChild.wholeText
+    query = unicode(query.encode('ascii','ignore'), errors='ignore')
 
     query_tokens = self.nltk_tools.nltk_word_tokenize(query.lower())
     query_text = self.nltk_tools.nltk_text(query_tokens)
