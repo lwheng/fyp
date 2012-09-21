@@ -22,6 +22,7 @@ if __name__ == '__main__':
   # Load Doms
   doms = pickle.load(open(os.path.join(path_pickles, "Doms.pickle"),'r'))
 
+  num = len(filtered)
   for f in filtered:
     citing = f['citing']
     cited = f['cited']
@@ -67,6 +68,8 @@ if __name__ == '__main__':
       citation = citations[best_index]
     this_contexts = citation.getElementsByTagName('context')
     contexts[hash_key] = this_contexts
+    num -= 1
+    print "No. left = " + str(num)
 
   # Dump pickle
   pickle.dump(contexts, open(os.path.join(path_pickles, "Contexts.pickle")))
