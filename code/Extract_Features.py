@@ -26,8 +26,8 @@ if __name__ == "__main__":
     cited = f['cited']
     hash_key = citing + "==>" + cited
 
-    f_contexts = contexts[f]
-    f_dom = doms[f]
+    f_contexts = contexts[hash_key]
+    f_dom = doms[hash_key]
     dom_parscit_citing = f_dom[0]
     dom_parscit_section_citing = f_dom[1]
     dom_parscit_cited = f_dom[2]
