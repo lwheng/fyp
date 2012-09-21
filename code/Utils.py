@@ -576,7 +576,7 @@ class extract_features:
     x = []
     
     # Citation Density
-    feature_cit_density = self.weight.cit_density(query, citStr)
+    feature_cit_density = self.weight.cit_density(query, cit_str)
     x.append(feature_cit_density)
 
     # Publishing Year Difference
