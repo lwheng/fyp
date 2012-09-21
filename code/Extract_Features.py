@@ -47,4 +47,4 @@ if __name__ == "__main__":
   big_X = np.asarray(big_X)
   
   # Dump pickle
-  pickle.dump(open(os.path.join(path_pickles,'Big_X.pickle'),'wb'))
+  pickle.dump(big_X, open(os.path.join(path_pickles,'Big_X.pickle'),'wb'))
