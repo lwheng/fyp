@@ -15,7 +15,8 @@ if __name__ == '__main__':
   path_parscit = config['path_parscit']
   path_parscit_section = config['path_parscit_section']
   path_pickles = config['path_pickles']
-
+  # Load Titles
+  titles = pickle.load(open(os.path.join(path_pickles, "Titles.pickle"),'r'))
   # Load Filtered
   filtered = pickle.load(open(os.path.join(path_pickles, "Filtered.pickle"),'r'))
   # Load Doms
@@ -31,7 +32,7 @@ if __name__ == '__main__':
     dom_parscit_citing = d[0]
     dom_parscit_section_cited = d[3]
 
-    title_to_match = dom_parscit_section_cited.getElementsByTagName('title')
+    title_to_match = titles[cited]
     if len(title_to_match) == 0:
       print dom_parscit_section_cited.toxml()
       sys.exit()
