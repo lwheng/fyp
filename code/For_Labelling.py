@@ -21,6 +21,7 @@ if __name__ == "__main__":
   # Load Contexts
   contexts = pickle.load(open(os.path.join(path_pickles,'Contexts.pickle'),'r'))
 
+  num = len(filtered)
   for f in filtered:
     citing = f['citing']
     cited = f['cited']
@@ -30,7 +31,7 @@ if __name__ == "__main__":
     this_context = contexts[hash_key]
 
     # Get dom tuple
-    this_dom_tuple = doms[hash_key]
+    dom_tuple = doms[hash_key]
     dom_parscit_section_cited = dom_tuple[3]
     bodyTexts = dom_parscit_section_cited.getElementsByTagName('bodyText')
 
@@ -41,6 +42,8 @@ if __name__ == "__main__":
         for_labelling_file.append(line)
         for_labelling.append((hash_key, c, b))
         index += 1
+    num -= 1
+    print "No. left = " + str(num)
 
   # Dump pickle
   pickle.dump(for_labelling, open(os.path.join(path_pickles, "For_Labelling.pickle")))
