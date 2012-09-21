@@ -7,6 +7,7 @@ if __name__ == "__main__":
   # Output
   big_X = []
   extract_features = Utils.extract_features()
+  nltk_tools = Utils.nltk_tools()
 
   # Load Config.pickle
   config = pickle.load(open('Config.pickle','r'))
@@ -32,8 +33,13 @@ if __name__ == "__main__":
     dom_parscit_section_citing = f_dom[1]
     dom_parscit_cited = f_dom[2]
     dom_parscit_section_cited = f_dom[3]
+    context_list = []
     for c in f_contexts:
-      X = extract_features.extract_feature(c, dom_parscit_section_citing, dom_parscit_section_cited)
+      value = c.firstChild.wholeText
+      context_list.append(nltk_tools.nltk_text(nltk_tools.nltk_word_tokenize(value)))
+    citing_col = nltk_tools.nltk_text_collection(context_list)
+    for c in f_contexts:
+      X = extract_features.extract_feature(c, citing_col, dom_parscit_section_citing, dom_parscit_section_cited)
       big_X.extend(X)
     num -= 1
     print "No. left = " + str(num)

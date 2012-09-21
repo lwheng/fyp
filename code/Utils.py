@@ -577,7 +577,7 @@ class extract_features:
     self.nltk_tools = nltk_tools()
     self.weight = weight()
 
-  def extract_feature(self, context, dom_parscit_section_citing, dom_parscit_section_cited):
+  def extract_feature(self, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
     cit_str = context.getAttribute('citStr')
     query = context.firstChild.wholeText
 
