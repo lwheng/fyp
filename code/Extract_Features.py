@@ -1,50 +1,41 @@
 import cPickle as pickle
 import Utils
 import os
+import numpy as np
 
-class Extract_Features:
-  def __init__(self):
-    print
+if __name__ == "__main__":
+  # Output
+  big_X = []
+  extract_features = Utils.extract_features()
 
-  def extract_feature(self, context, dom_parscit_section_citing, dom_parscit_section_cited)
-    cit_str = context.getAttribute('citStr')
-    cit_str = self.tools.normalize(cit_str)
-    query = context.firstChild.wholeText
-    query = self.tools.normalize(query)
+  # Load Config.pickle
+  config = pickle.load(open('Config.pickle','r'))
+  path_parscit = config['path_parscit']
+  path_parscit_section = config['path_parscit_section']
+  path_pickles = config['path_pickles']
 
-    query_tokens = self.nltk_Tools.nltkWordTokenize(query.lower())
-    query_text = self.nltk_Tools.nltkText(query_tokens)
-    query_col = self.nltk_Tools.nltkTextCollection([query_text])
+  # Load Filtered pickle
+  filtered = pickle.load(open(os.path.join(path_pickles,'Filtered.pickle'),'r'))
+  # Load Contexts pickle
+  contexts = pickle.load(open(os.path.join(path_pickles,'Contexts.pickle'),'r'))
+  # Load Doms pickle
+  doms = pickle.load(open(os.path.join(path_pickles,'Doms.pickle'),'r'))
 
-    # Extract Features
-    X = []
-    x = []
-    
-    # Citation Density
-    feature_citDensity = self.weight.citDensity(query, citStr)
-    x.append(feature_citDensity)
+  for f in filtered:
+    citing = f['citing']
+    cited = f['cited'
+    hash_key = citing + "==>" + cited
 
-    # Publishing Year Difference
-    feature_publishYear = self.dist.publishYear(dom_parscit_section_citing, dom_parscit_section_cited)
-    x.append(feature_publishYear)
-
-    # Title Overlap
-    feature_titleOverlap = self.weight.titleOverlap(dom_parscit_section_citing, dom_parscit_section_cited)
-    x.append(feature_titleOverlap)
-
-    # Authors Overlap
-    feature_authorOverlap = self.weight.authorOverlap(dom_parscit_section_citing, dom_parscit_section_cited)
-    x.append(feature_authorOverlap)
-
-    # Context's Average TF-IDF Weight
-    feature_queryWeight = self.weight.chunkAverageWeight(query_text, citing_col)
-    x.append(feature_queryWeight)
-
-    # Location of Citing Sentence
-    feature_locationCitSent = self.dist.citSentLocation(citStr, query, dom_parscit_section_citing)
-    x.extend(feature_locationCitSent)
-
-    # Cosine Similarity
-    feature_cosineSimilarity = self.cosineSimilarity(cite_key, query_tokens, query_col, self.pickler.pathPDFBox)
-    x.append(feature_cosineSimilarity)
-    return x
+    f_contexts = contexts[f]
+    f_dom = doms[f]
+    dom_parscit_citing = f_dom[0]
+    dom_parscit_section_citing = f_dom[1]
+    dom_parscit_cited = f_dom[2]
+    dom_parscit_section_cited = f_dom[3]
+    for c in f_contexts:
+      X = extract_features.extract_feature(c, dom_parscit_section_citing, dom_parscit_section_cited):
+      big_X.extend(X)
+  big_X = np.asarray(big_X)
+  
+  # Dump pickle
+  pickle.dump(open(os.path.join(path_pickles,'Big_X.pickle'),'wb'))

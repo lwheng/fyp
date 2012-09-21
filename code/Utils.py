@@ -14,19 +14,19 @@ from nltk.metrics import distance
 import sys
 
 class nltk_tools:
-  def nltkWordTokenize(self, text):
+  def nltk_word_tokenize(self, text):
     return nltk.word_tokenize(text)
 
-  def nltkText(self, tokens):
+  def nltk_text(self, tokens):
     return nltk.Text(tokens)
 
-  def nltkTextCollection(self, documents):
+  def nltk_text_collection(self, documents):
     return nltk.TextCollection(documents)
 
-  def nltkStopwords(self):
+  def nltk_stopwords(self):
     return stopwords.words('english')
 
-  def nltkCosineDistance(self, u, v):
+  def nltk_cosine_distance(self, u, v):
     return nltk.cluster.util.cosine_distance(u,v)
 
 class tools:
@@ -39,7 +39,7 @@ class tools:
       return text
     return unicodedata.normalize('NFKD', text).encode('ascii','ignore')
 
-  def searchTermInLines(self, term, lines):
+  def search_term_in_lines(self, term, lines):
     for i in range(len(lines)):
       l = lines[i]
       if term in l:
@@ -49,7 +49,7 @@ class tools:
 
 class weight:
   def __init__(self):
-    self.sentenceTokenizer = PunktSentenceTokenizer()
+    self.sentence_tokenizer = PunktSentenceTokenizer()
     self.dist = dist()
     self.LAMBDA_AUTHOR_MATCH = 0.8
     reg = []
@@ -66,69 +66,117 @@ class weight:
       self.regex += reg[i] + "|"
     self.regex = re.compile(self.regex[:-1])
 
-  def chunkAverageWeight(self, chunk, collection):
-    tempWeight = 0
+  def chunk_average_weight(self, chunk, collection):
+    temp_weight = 0
     if len(chunk.tokens) == 0:
       return 0
     for t in chunk.tokens:
-      tempWeight += collection.tf_idf(t.lower(), chunk)
-    return float(tempWeight) / float(len(chunk.tokens))
+      temp_weight += collection.tf_idf(t.lower(), chunk)
+    return float(temp_weight) / float(len(chunk.tokens))
     
-  def titleOverlap(self, cite_key, titles):
-    return self.dist.jaccard(titles[cite_key['citing']], titles[cite_key['cited']])
-
-  def titleOverlapCFS(self, title_citing, title_cited):
+  def title_overlap(self, dom_parscit_section_citing, dom_parscit_section_cited):
+    title_citing = dom_parscit_section_citing.getElementsByTagName('title')[0].firstChild.wholeText
+    title_cited = dom_parscit_section_cited.getElementsByTagName('title')[0].firstChild.wholeText
     return self.dist.jaccard(title_citing, title_cited)
 
-  def authorOverlap(self, cite_key, authors):
-    citing = cite_key['citing']
-    cited = cite_key['cited']
+  def author_overlap(self, dom_parscit_section_citing, dom_parscit_section_cited):
+    dom_authors_citing = dom_parscit_section_citing.getElementsByTagName('authors')
+    dom_authors_citing = dom_authors_citing.getElementsByTagName('author')
+    authors_citing = []
+    for a in dom_authors_citing:
+      authors_citing.append(a.firstChild.wholeText)
+    
+    dom_authors_cited = dom_parscit_section_cited.getElementsByTagName('authors')
+    dom_authors_cited = dom_authors_cited.getElementsByTagName('author')
+    authors_cited = []
+    for a in dom_authors_cited:
+      authors_cited.append(a.firstChild.wholeText)
+   
     # Adapting the Jaccard idea
     matches = 0
-    uniqueNames = len(authors[citing]) + len(authors[cited])
-    for citingAuthor in authors[citing]:
-      for citedAuthor in authors[cited]:
-        ratio = self.dist.levenshteinRatio(citingAuthor, citedAuthor)
+    unique_names = len(authors_citing) + len(authors_cited)
+    for citing_author in authors_citing:
+      for cited_author in authors_cited:
+        ratio = self.dist.levenshtein_ratio(citing_author, cited_author)
         if ratio > self.LAMBDA_AUTHOR_MATCH:
           matches += 1
-          uniqueNames -= 1
-    if uniqueNames == 0:
+          unique_names -= 1
+    if unique_names == 0:
       return 1.0
-    return float(matches) / float(uniqueNames)
+    return float(matches) / float(unique_names)
 
-  def authorOverlapCFS(self, authors_citing, authors_cited):
-    matches = 0
-    uniqueNames = len(authors_citing) + len(authors_cited)
-    for citingAuthor in authors_citing:
-      for citedAuthor in authors_cited:
-        ratio = self.dist.levenshteinRatio(citingAuthor, citedAuthor)
-        if ratio > self.LAMBDA_AUTHOR_MATCH:
-          matches += 1
-          uniqueNames -= 1
-    if uniqueNames == 0:
-      return 1.0
-    return float(matches) / float(uniqueNames)
-
-  def citDensity(self, context_lines, context_citStr):
+  def cit_density(self, context_lines, cit_str):
     # Process citStr
-    if "et al." in context_citStr:
-      context_citStr = context_citStr.replace("et al.", "et al")
+    if "et al." in cit_str:
+      cit_str = cit_str.replace("et al.", "et al")
     # Process context
     if "et al." in context_lines:
       context_lines = context_lines.replace("et al.", "et al")
-    query_lines = self.sentenceTokenizer.tokenize(context_lines)
-    citationCount = 0
+    query_lines = self.sentence_tokenizer.tokenize(context_lines)
+    citation_count = 0
     for l in query_lines:
       obj = re.findall(self.regex, l)
-      citationCount += len(obj)
-    avgDensity = float(citationCount) / float(len(query_lines))
-    return avgDensity
+      citation_count += len(obj)
+    avg_density = float(citation_count) / float(len(query_lines))
+    return avg_density
+
+  def cosine_similarity(self, query_tokens, query_col, dom_parscit_section_cited):
+    docs = []
+    body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
+    for body_text in body_texts:
+      whole_text = body_text.firstChild.wholeText
+      whole_text = whole_text.lower()
+      text = self.nltk_tools.nltk_text(self.nltk_tools.nltk_word_tokenize(whole_text.lower()))
+      docs.append(text)
+    docs_col = self.nltk_tools.nltk_text_collection(docs)
+    
+    # Vocab
+    vocab = list(set(query_col) | set(docs_col))
+    vocab = map(lambda x: x.lower(), vocab)
+    vocab = [w for w in vocab if not w in self.stopwords]
+    vocab = [w for w in vocab if not w in self.punctuation]
+
+    # Prep Vectors
+    results = []
+    for i in range(0, len(docs)):
+      # Cited Chunk's Average TF-IDF Weight
+      chunk_avg_weight = self.weight.chunk_average_weight(docs[i], docs_col)
+
+      u = []
+      v = []
+      temp_query = map(lambda x: x.lower(), query_tokens)
+      temp_query = [w for w in temp_query if not w in self.stopwords]
+      temp_query = [w for w in temp_query if not w in self.punctuation]
+      temp_doc = map(lambda x: x.lower(), docs[i])
+      temp_doc = [w for w in temp_doc if not w in self.stopwords]
+      temp_doc = [w for w in temp_doc if not w in self.punctuation]
+      for term in vocab:
+        if term in temp_query:
+          try:
+            u.append(docs_col.tf_idf(term, temp_doc))
+          except:
+            u.append(0)
+        else:
+          u.append(0)
+        if term in temp_doc:
+          v.append(docs_col.tf_idf(term, temp_doc))
+        else:
+          v.append(0)
+      if math.sqrt(np.dot(u, u)) == 0.0:
+        results.append((np.float64(0.0), 0.0))
+      else:
+        r = self.nltk_tools.nltk_cosine_distance(u,v)
+        results.append((chunk_avg_weight,r))
+    feature = []
+    for i in range(len(results)):
+      feature.append((docs[i],results[i]))
+    return feature
 
 class dist:
   def __init__(self):
-    self.sentenceTokenizer = PunktSentenceTokenizer()
+    self.sentence_tokenizer = PunktSentenceTokenizer()
     self.tools = tools()
-    self.genericHeader = ['abstract',
+    self.generic_header = ['abstract',
                           'acknowledgements',
                           'background',
                           'categories and subject descriptors',
@@ -147,7 +195,7 @@ class dist:
   def levenshtein(self, a, b):
     return distance.edit_distance(a, b)
 
-  def levenshteinRatio(self, a, b):
+  def levenshtein_ratio(self, a, b):
     lensum = float(len(a) + len(b))
     if lensum == 0.0:
       return 1.0
@@ -165,167 +213,57 @@ class dist:
     b = b.lower()
     return distance.masi_distance(set(a.split()), set(b.split()))
 
-  def publishYear(self, cite_key):
-    citing = cite_key['citing']
-    cited = cite_key['cited']
-
-    citingYear = int(citing[1:3])
-    citedYear = int(cited[1:3])
-
-    if citingYear > 50:
-      citingYear = 1900 + citingYear
-    else:
-      citingYear = 2000 + citingYear
-
-    if citedYear > 50:
-      citedYear = 1900 + citedYear
-    else:
-      citedYear = 2000 + citedYear
-    return (citingYear-citedYear)
-
-  def publishYearCFS(self, cite_key):
-    citing = cite_key['citing']
-    cited = cite_key['cited']
-
-    citingYear = int(citing[1:3])
-    citedYear = int(cited[1:3])
-
-    if citingYear > 50:
-      citingYear = 1900 + citingYear
-    else:
-      citingYear = 2000 + citingYear
-
-    if citedYear > 50:
-      citedYear = 1900 + citedYear
-    else:
-      citedYear = 2000 + citedYear
-    return (citingYear-citedYear)
-
-  def citSentLocation(self, cite_key, context_citStr, context, pathParscitSection):
-    citing = cite_key['citing']
-    citingFile = os.path.join(pathParscitSection, citing + "-parscit-section.xml")
+  def cit_sent_location(self, cit_str, query, dom_parscit_section_citing):
     vector = []
-    if os.path.exists(citingFile):
-      # Using context_citStr, first determine which is the citing sentence
-      # We replace "et al." by "et al" so the sentence tokenizer doesn't split it up
-      context_citStr = context_citStr.replace("et al.", "et al")
-      context = context.replace("et al.", "et al")
+    cit_str = cit_str.replace("et al.", "et al")
+    query = query.replace("et al.", "et al")
 
-      context_lines = self.sentenceTokenizer.tokenize(context)
-      citSent = self.tools.searchTermInLines(context_citStr, context_lines)
-      openfile = open(citingFile, 'r')
-      data = openfile.read()
-      openfile.close()
-      dom = parseString(data)
-      target = None
-      bodyTexts = dom.getElementsByTagName('bodyText')
-      regex = r"\<.*\>(.*)\<.*\>"
-      tool = tools()
-
-      minDistance = 314159265358979323846264338327950288419716939937510
-      for i in range(len(bodyTexts)):
-        b = bodyTexts[i]
-        #text = tool.normalize(b.toxml().replace("\n", " ").replace("- ", "").strip())
-        text = b.toxml().replace("\n", " ").replace("- ", "").strip()
-        obj = re.findall(regex, text)
-        tempDist = self.jaccard(context_lines[citSent], text)
-        if tempDist < minDistance:
-          minDistance = tempDist
-          target = b
-      
-      if target:
-        searching = True
-        sectionHeaderNode = None
-        target = target.previousSibling
-        while target:
-          if target.nodeType == Node.ELEMENT_NODE:
-            if target.nodeName == 'sectionHeader':
-              sectionHeaderNode = target
-              break
-          target = target.previousSibling
-        if target == None:
-          for h in (self.genericHeader):
-            vector.append(0)
-          vector[-1] = 1 # Setting 'None' to 1
-          return vector
-        if sectionHeaderNode.attributes.has_key('genericHeader'):
-          header = sectionHeaderNode.attributes['genericHeader'].value
-        elif sectionHeaderNode.attributes.has_key('genericheader'):
-          header = sectionHeaderNode.attributes['genericheader'].value
-        for h in (self.genericHeader):
-          if header == h:
-            vector.append(1)
-          else:
-            vector.append(0)
-        return vector
-        #return tool.normalize(sectionHeaderNode.attributes['genericHeader'].value)
-      else:
-        # Not found
-        for h in (self.genericHeader):
-          vector.append(0)
-        vector[-1] = 1 # Setting 'None' to 1
-        return vector
-    else:
-      # No section file
-      for h in (self.genericHeader):
-        vector.append(0)
-      vector[-1] = 1 # Setting 'None' to 1
-      return vector
-
-  def citSentLocationCFS(self, context_citStr, context, dom_citing_parscit_section):
-    vector = []
-    # Using context_citStr, first determine which is the citing sentence
-    # We replace "et al." by "et al" so the sentence tokenizer doesn't split it up
-    context_citStr = context_citStr.replace("et al.", "et al")
-    context = context.replace("et al.", "et al")
-
-    context_lines = self.sentenceTokenizer.tokenize(context)
-    citSent = self.tools.searchTermInLines(context_citStr, context_lines)
-    dom = dom_citing_parscit_section
+    context_lines = self.sentence_tokenizer.tokenize(context)
+    citSent = self.tools.search_term_in_lines(cit_str, context_lines)
     target = None
-    bodyTexts = dom.getElementsByTagName('bodyText')
+    body_texts = dom.getElementsByTagName('bodyText')
     regex = r"\<.*\>(.*)\<.*\>"
     tool = tools()
 
-    minDistance = 314159265358979323846264338327950288419716939937510
-    for i in range(len(bodyTexts)):
-      b = bodyTexts[i]
+    min_distance = 314159265358979323846264338327950288419716939937510
+    for i in range(len(body_texts)):
+      b = body_texts[i]
+      #text = tool.normalize(b.toxml().replace("\n", " ").replace("- ", "").strip())
       text = b.toxml().replace("\n", " ").replace("- ", "").strip()
       obj = re.findall(regex, text)
       tempDist = self.jaccard(context_lines[citSent], text)
-      if tempDist < minDistance:
-        minDistance = tempDist
+      if tempDist < min_distance:
+        min_distance = tempDist
         target = b
     
     if target:
       searching = True
-      sectionHeaderNode = None
+      section_header_node = None
       target = target.previousSibling
       while target:
         if target.nodeType == Node.ELEMENT_NODE:
           if target.nodeName == 'sectionHeader':
-            sectionHeaderNode = target
+            section_header_node = target
             break
         target = target.previousSibling
       if target == None:
-        for h in (self.genericHeader):
+        for h in (self.generic_header):
           vector.append(0)
         vector[-1] = 1 # Setting 'None' to 1
         return vector
-      if sectionHeaderNode.attributes.has_key('genericHeader'):
-        header = sectionHeaderNode.attributes['genericHeader'].value
-      elif sectionHeaderNode.attributes.has_key('genericheader'):
-        header = sectionHeaderNode.attributes['genericheader'].value
-      for h in (self.genericHeader):
+      if section_header_node.attributes.has_key('genericHeader'):
+        header = section_header_node.attributes['genericHeader'].value
+      elif section_header_node.attributes.has_key('genericheader'):
+        header = section_header_node.attributes['genericheader'].value
+      for h in (self.generic_header):
         if header == h:
           vector.append(1)
         else:
           vector.append(0)
       return vector
-      #return tool.normalize(sectionHeaderNode.attributes['genericHeader'].value)
     else:
       # Not found
-      for h in (self.genericHeader):
+      for h in (self.generic_header):
         vector.append(0)
       vector[-1] = 1 # Setting 'None' to 1
       return vector
@@ -362,9 +300,9 @@ class pickler:
     pickle.dump(data, open(filename+".pickle", "wb"))
 
 class dataset_tools:
-  def __init__(self, dist, nltk_Tools, pickler, tools):
+  def __init__(self, dist, nltk_tools, pickler, tools):
     self.dist = dist
-    self.nltk_Tools = nltk_Tools
+    self.nltk_tools = nltk_tools
     self.parscitPath = pickler.pathParscit
     self.parscitSectionPath = pickler.pathParscitSection
     self.tools = tools
@@ -392,35 +330,35 @@ class dataset_tools:
     dom = tools.parseXML(data)
     citations = dom.getElementsByTagName('citation')
     tags = ["title", "note", "booktitle", "journal", "tech", "author"]
-    titleTag = []
+    title_tag = []
     index = 0
-    bestIndex = -1
-    minDistance = 314159265358979323846264338327950288419716939937510
+    best_index = -1
+    min_distance = 314159265358979323846264338327950288419716939937510
     for i in range(len(citations)):
       c = citations[i]
       #valid = c.getAttribute('valid')
       #if valid == "true":
-      titleTag = []
+      title_tag = []
       for index in range(len(tags)):
-        titleTag = c.getElementsByTagName(tags[index])
-        if titleTag:
+        title_tag = c.getElementsByTagName(tags[index])
+        if title_tag:
           break
-      if titleTag == [] or titleTag[0].firstChild == None:
+      if title_tag == [] or titleTag[0].firstChild == None:
         continue
-      title = titleTag[0].firstChild.data
+      title = title_tag[0].firstChild.data
       if not type(title) == unicode:
         title = tools.normalize(title)
       if re.search("Computational Linguistics,$", title):
         title = title.replace("Computational Linguistics,", "")
-      levenshteinDistance = dist.levenshtein(title.lower(), titleToMatch.lower())
-      masiDistance = dist.masi(title, titleToMatch)
-      thisDistance = levenshteinDistance*masiDistance
-      if thisDistance < minDistance:
-        minDistance = thisDistance
-        bestIndex = i
-    if bestIndex == -1:
+      levenshtein_distance = dist.levenshtein(title.lower(), titleToMatch.lower())
+      masi_distance = dist.masi(title, titleToMatch)
+      this_distance = levenshtein_distance*masi_distance
+      if this_distance < min_distance:
+        min_distance = this_distance
+        best_index = i
+    if best_index == -1:
       return None
-    return citations[bestIndex]
+    return citations[best_index]
 
   def prepContextsCFS(self, dist, tools, title_citing, title_cited, dom_citing_parscit):
     titleToMatch = title_cited
@@ -428,33 +366,33 @@ class dataset_tools:
 
     citations = dom.getElementsByTagName('citation')
     tags = ["title", "note", "booktitle", "journal", "tech", "author"]
-    titleTag = []
+    title_tag = []
     index = 0
-    bestIndex = -1
-    minDistance = 314159265358979323846264338327950288419716939937510
+    best_index = -1
+    min_distance = 314159265358979323846264338327950288419716939937510
     for i in range(len(citations)):
       c = citations[i]
-      titleTag = []
+      title_tag = []
       for index in range(len(tags)):
-        titleTag = c.getElementsByTagName(tags[index])
-        if titleTag:
+        title_tag = c.getElementsByTagName(tags[index])
+        if title_tag:
           break
-      if titleTag == [] or titleTag[0].firstChild == None:
+      if title_tag == [] or titleTag[0].firstChild == None:
         continue
-      title = titleTag[0].firstChild.data
+      title = title_tag[0].firstChild.data
       if not type(title) == unicode:
         title = tools.normalize(title)
       if re.search("Computational Linguistics,$", title):
         title = title.replace("Computational Linguistics,", "")
-      levenshteinDistance = dist.levenshtein(title.lower(), titleToMatch.lower())
-      masiDistance = dist.masi(title, titleToMatch)
-      thisDistance = levenshteinDistance*masiDistance
-      if thisDistance < minDistance:
-        minDistance = thisDistance
-        bestIndex = i
-    if bestIndex == -1:
+      levenshtein_distance = dist.levenshtein(title.lower(), titleToMatch.lower())
+      masi_distance = dist.masi(title, titleToMatch)
+      this_distance = levenshtein_distance*masi_distance
+      if this_distance < min_distance:
+        min_distance = this_distance
+        best_index = i
+    if best_index == -1:
       return None
-    return citations[bestIndex]
+    return citations[best_index]
 
   def prepRaw(self, authors, experiment, titles):
     raw = {}
@@ -486,8 +424,8 @@ class dataset_tools:
       context_list = []
       for c in contexts:
         value = self.tools.normalize(c.firstChild.data).lower()
-        context_list.append(self.nltk_Tools.nltkText(self.nltk_Tools.nltkWordTokenize(value)))
-      citing_col = self.nltk_Tools.nltkTextCollection(context_list)
+        context_list.append(self.nltk_tools.nltk_text(self.nltk_tools.nltk_word_tokenize(value)))
+      citing_col = self.nltk_tools.nltk_text_collection(context_list)
       for c in contexts:
         currentAnnotation = annotations[indexAnnotations]
         indexAnnotations += 1
@@ -499,9 +437,9 @@ class dataset_tools:
           target = self.prepTarget(currentAnnotation, i[0])
           targets.append(target)
           temp = featuresLessCosSim[:]
-          # i[1][1] is chunkAvgWeight
+          # i[1][1] is chunk_avg_weight
           temp.append(i[1][1])
-          # i[1][0] is cosineSim
+          # i[1][0] is cosine_sim
           temp.append(i[1][0].item())
           instances.append(temp)
           keys.append(e)
@@ -520,8 +458,8 @@ class dataset_tools:
       for c in contexts:
         value = c.firstChild.data.lower()
         value = unicodedata.normalize('NFKD', value).encode('utf-8','ignore')
-        context_list.append(self.nltk_Tools.nltkText(self.nltk_Tools.nltkWordTokenize(value)))
-      citing_col = self.nltk_Tools.nltkTextCollection(context_list)
+        context_list.append(self.nltk_tools.nltk_text(self.nltk_tools.nltk_word_tokenize(value)))
+      citing_col = self.nltk_tools.nltk_text_collection(context_list)
       for c in contexts:
         x = run.extractFeaturesCFS(e, c, citing_col)
         forannotation.append((e, c))
@@ -540,8 +478,8 @@ class dataset_tools:
       for c in contexts:
         value = c.firstChild.data.lower()
         value = unicodedata.normalize('NFKD', value).encode('utf-8','ignore')
-        context_list.append(self.nltk_Tools.nltkText(self.nltk_Tools.nltkWordTokenize(value)))
-      citing_col = self.nltk_Tools.nltkTextCollection(context_list)
+        context_list.append(self.nltk_tools.nltk_text(self.nltk_tools.nltk_word_tokenize(value)))
+      citing_col = self.nltk_tools.nltk_text_collection(context_list)
       for c in contexts:
         x = run.extractFeaturesCFS(e, c, citing_col)
         forannotation.append((e, c))
@@ -619,3 +557,56 @@ class classifier:
     # Takes in an observation and returns a prediction
     return self.clf.predict(observation)
 
+class extract_features:
+  def __init__(self):
+    self.dist = dist()
+    self.nltk_tools = tools()
+    self.weight = weight()
+
+  def extract_feature(self, context, dom_parscit_section_citing, dom_parscit_section_cited):
+    cit_str = context.getAttribute('citStr')
+    query = context.firstChild.wholeText
+
+    query_tokens = self.nltk_tools.nltkWordTokenize(query.lower())
+    query_text = self.nltk_tools.nltkText(query_tokens)
+    query_col = self.nltk_tools.nltkTextCollection([query_text])
+
+    # Extract Features
+    X = []
+    x = []
+    
+    # Citation Density
+    feature_citDensity = self.weight.citDensity(query, citStr)
+    x.append(feature_citDensity)
+
+    # Publishing Year Difference
+    #feature_publish_year = self.dist.publish_year(dom_parscit_section_citing, dom_parscit_section_cited)
+    #x.append(feature_publish_year)
+
+    # Title Overlap
+    feature_title_overlap = self.weight.title_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
+    x.append(feature_title_overlap)
+
+    # Authors Overlap
+    feature_author_overlap = self.weight.author_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
+    x.append(feature_author_overlap)
+
+    # Context's Average TF-IDF Weight
+    feature_query_weight = self.weight.chunk_average_weight(query_text, citing_col)
+    x.append(feature_query_weight)
+
+    # Location of Citing Sentence
+    feature_cit_sent_location = self.dist.cit_sent_location(cit_str, query, dom_parscit_section_citing)
+    x.extend(feature_cit_sent_location)
+
+    # Cosine Similarity
+    feature_cosine_similarity = self.weight.cosine_similarity(query_tokens, query_col, dom_parscit_section_cited)
+    for i in feature_cosine_similarity:
+      cosine_tuple = i[1]
+      chunk_avg_weight = cosine_tuple[0]
+      cosine_sim = cosine_tuple[1]
+      temp = x[:]
+      temp.append(chunk_avg_weight)
+      temp.append(cosine_sim)
+      X.append(temp)
+    return X
