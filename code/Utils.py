@@ -232,8 +232,8 @@ class dist:
     cit_str = cit_str.replace("et al.", "et al")
     query = query.replace("et al.", "et al")
 
-    context_lines = self.sentence_tokenizer.tokenize(context)
-    citSent = self.tools.search_term_in_lines(cit_str, context_lines)
+    context_lines = self.sentence_tokenizer.tokenize(query)
+    cit_sent = self.tools.search_term_in_lines(cit_str, context_lines)
     target = None
     body_texts = dom.getElementsByTagName('bodyText')
     regex = r"\<.*\>(.*)\<.*\>"
