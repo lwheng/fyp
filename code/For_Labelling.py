@@ -39,6 +39,7 @@ if __name__ == "__main__":
     for c in range(len(this_context)):
       for b in range(len(body_texts)):
         line = str(index).rjust(3,'0') + "\t" + hash_key + "\t" + "c"+str(c) + "\t" + "bt"+str(b) + "\t:"
+        print line
         for_labelling_file.append(line)
         for_labelling.append((hash_key, c, b))
         index += 1
@@ -47,6 +48,3 @@ if __name__ == "__main__":
 
   # Dump pickle
   pickle.dump(for_labelling, open(os.path.join(path_pickles, "For_Labelling.pickle"),'wb'))
-
-  for l in for_labelling_file:
-    print l
