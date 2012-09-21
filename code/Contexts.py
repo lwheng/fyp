@@ -72,4 +72,4 @@ if __name__ == '__main__':
     print "No. left = " + str(num)
 
   # Dump pickle
-  pickle.dump(contexts, open(os.path.join(path_pickles, "Contexts.pickle")))
+  pickle.dump(contexts, open(os.path.join(path_pickles, "Contexts.pickle"),'wb'))
