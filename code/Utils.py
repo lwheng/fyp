@@ -142,7 +142,7 @@ class weight:
     body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
     for body_text in body_texts:
       whole_text = body_text.firstChild.wholeText
-      whole_text = whole_text.lower()
+      whole_text = unicode(str(whole_text.lower()), errors='ignore')
       text = self.nltk_tools.nltk_text(self.nltk_tools.nltk_word_tokenize(whole_text.lower()))
       docs.append(text)
     docs_col = self.nltk_tools.nltk_text_collection(docs)
