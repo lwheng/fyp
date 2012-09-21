@@ -75,6 +75,9 @@ class weight:
     return float(temp_weight) / float(len(chunk.tokens))
     
   def title_overlap(self, dom_parscit_section_citing, dom_parscit_section_cited):
+    if not dom_parscit_section_cited.getElementsByTagName('title'):
+      print dom_parscit_section_cited.toxml()
+      sys.exit()
     title_citing = dom_parscit_section_citing.getElementsByTagName('title')[0].firstChild.wholeText
     title_cited = dom_parscit_section_cited.getElementsByTagName('title')[0].firstChild.wholeText
     return self.dist.jaccard(title_citing, title_cited)
