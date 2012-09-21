@@ -46,7 +46,7 @@ if __name__ == "__main__":
     print "No. left = " + str(num)
 
   # Dump pickle
-  pickle.dump(for_labelling, open(os.path.join(path_pickles, "For_Labelling.pickle")))
+  pickle.dump(for_labelling, open(os.path.join(path_pickles, "For_Labelling.pickle"),'wb'))
 
   for l in for_labelling_file:
     print l
