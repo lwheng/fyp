@@ -567,17 +567,17 @@ class extract_features:
     cit_str = context.getAttribute('citStr')
     query = context.firstChild.wholeText
 
-    query_tokens = self.nltk_tools.nltkWordTokenize(query.lower())
-    query_text = self.nltk_tools.nltkText(query_tokens)
-    query_col = self.nltk_tools.nltkTextCollection([query_text])
+    query_tokens = self.nltk_tools.nltk_word_tokenize(query.lower())
+    query_text = self.nltk_tools.nltk_text(query_tokens)
+    query_col = self.nltk_tools.nltk_text_collection([query_text])
 
     # Extract Features
     X = []
     x = []
     
     # Citation Density
-    feature_citDensity = self.weight.citDensity(query, citStr)
-    x.append(feature_citDensity)
+    feature_cit_density = self.weight.cit_density(query, citStr)
+    x.append(feature_cit_density)
 
     # Publishing Year Difference
     #feature_publish_year = self.dist.publish_year(dom_parscit_section_citing, dom_parscit_section_cited)
