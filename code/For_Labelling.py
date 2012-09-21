@@ -48,5 +48,4 @@ if __name__ == "__main__":
   # Dump pickle
   pickle.dump(for_labelling, open(os.path.join(path_pickles, "For_Labelling.pickle"),'wb'))
 
-  for l in for_labelling_file:
-    print l
+  print len(for_labelling)
