@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
   for f in filtered:
     citing = f['citing']
-    cited = f['cited'
+    cited = f['cited']
     hash_key = citing + "==>" + cited
 
     f_contexts = contexts[f]
