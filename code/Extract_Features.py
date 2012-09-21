@@ -33,10 +33,7 @@ if __name__ == "__main__":
     dom_parscit_cited = f_dom[2]
     dom_parscit_section_cited = f_dom[3]
     for c in f_contexts:
-      try:
-        X = extract_features.extract_feature(c, dom_parscit_section_citing, dom_parscit_section_cited)
-      except:
-        print f
+      X = extract_features.extract_feature(c, dom_parscit_section_citing, dom_parscit_section_cited)
       big_X.extend(X)
     num -= 1
     print "No. left = " + str(num)

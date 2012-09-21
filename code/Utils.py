@@ -75,11 +75,22 @@ class weight:
     return float(temp_weight) / float(len(chunk.tokens))
     
   def title_overlap(self, dom_parscit_section_citing, dom_parscit_section_cited):
-    if not dom_parscit_section_cited.getElementsByTagName('title'):
-      print dom_parscit_section_cited.toxml('utf-8')
-      sys.exit()
-    title_citing = dom_parscit_section_citing.getElementsByTagName('title')[0].firstChild.wholeText
-    title_cited = dom_parscit_section_cited.getElementsByTagName('title')[0].firstChild.wholeText
+    tags = ["title", "note", "booktitle", "journal", "tech", "author"]
+    title_citing_tag = []
+    for tag in tags:
+      title_citing_tag = dom_parscit_section_citing.getElementsByTagName(tag)
+      if title_citing_tag:
+        break
+    
+    title_cited_tag = []
+    for tag in tags:
+      title_cited_tag = dom_parscit_section_cited.getElementsByTagName(tag)
+      if title_cited_tag:
+        break
+    title_citing = title_citing_tag[0].firstChild.wholeText
+    title_cited = title_cited_tag[0].firstChild.wholeText
+    #title_citing = dom_parscit_section_citing.getElementsByTagName('title')[0].firstChild.wholeText
+    #title_cited = dom_parscit_section_cited.getElementsByTagName('title')[0].firstChild.wholeText
     return self.dist.jaccard(title_citing, title_cited)
 
   def author_overlap(self, dom_parscit_section_citing, dom_parscit_section_cited):
