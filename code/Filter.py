@@ -13,7 +13,7 @@ def check_qualify(citing, cited, path_parscit, path_parscit_section):
   for p in paths:
     if not os.path.exists(p):
       return False
-    if not (os.path.getsize(p) > 19000):
+    if not (os.path.getsize(p) > 25000):
       return False
   return True
 
