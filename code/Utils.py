@@ -235,7 +235,7 @@ class dist:
     context_lines = self.sentence_tokenizer.tokenize(query)
     cit_sent = self.tools.search_term_in_lines(cit_str, context_lines)
     target = None
-    body_texts = dom.getElementsByTagName('bodyText')
+    body_texts = dom_parscit_section_citing.getElementsByTagName('bodyText')
     regex = r"\<.*\>(.*)\<.*\>"
     tool = tools()
 
