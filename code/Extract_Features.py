@@ -20,7 +20,7 @@ if __name__ == "__main__":
   contexts = pickle.load(open(os.path.join(path_pickles,'Contexts.pickle'),'r'))
   # Load Doms pickle
   doms = pickle.load(open(os.path.join(path_pickles,'Doms.pickle'),'r'))
-
+  num = len(filtered)
   for f in filtered:
     citing = f['citing']
     cited = f['cited']
@@ -35,6 +35,8 @@ if __name__ == "__main__":
     for c in f_contexts:
       X = extract_features.extract_feature(c, dom_parscit_section_citing, dom_parscit_section_cited)
       big_X.extend(X)
+    num -= 1
+    print "No. left = " + str(num)
   big_X = np.asarray(big_X)
   
   # Dump pickle
