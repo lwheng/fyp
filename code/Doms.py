@@ -25,11 +25,13 @@ if __name__ == "__main__":
     # Open and parse citing
     path_parscit_citing = os.path.join(path_parscit, citing + "-parscit.xml")
     path_parscit_section_citing = os.path.join(path_parscit_section, citing + "-parscit-section.xml")
+
     openfile = open(path_parscit_citing,'r')
     data = openfile.read()
     openfile.close()
     dom_parscit_citing = parseString(data)
-    openfile = open(path_parscit_citing,'r')
+
+    openfile = open(path_parscit_section_citing,'r')
     data = openfile.read()
     openfile.close()
     dom_parscit_section_citing = parseString(data)
@@ -37,11 +39,13 @@ if __name__ == "__main__":
     # Open and parse cited
     path_parscit_cited = os.path.join(path_parscit, cited + "-parscit.xml")
     path_parscit_section_cited = os.path.join(path_parscit_section, cited + "-parscit-section.xml")
+
     openfile = open(path_parscit_cited,'r')
     data = openfile.read()
     openfile.close()
     dom_parscit_cited = parseString(data)
-    openfile = open(path_parscit_cited,'r')
+
+    openfile = open(path_parscit_section_cited,'r')
     data = openfile.read()
     openfile.close()
     dom_parscit_section_cited = parseString(data)
