@@ -560,7 +560,7 @@ class classifier:
 class extract_features:
   def __init__(self):
     self.dist = dist()
-    self.nltk_tools = tools()
+    self.nltk_tools = nltk_tools()
     self.weight = weight()
 
   def extract_feature(self, context, dom_parscit_section_citing, dom_parscit_section_cited):
