@@ -35,11 +35,13 @@ if __name__ == "__main__":
     dom_parscit_section_cited = dom_tuple[3]
     body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
 
+    print this_context
+    print body_texts
+
     index = 0
     for c in range(len(this_context)):
       for b in range(len(body_texts)):
         line = str(index).rjust(3,'0') + "\t" + hash_key + "\t" + "c"+str(c) + "\t" + "bt"+str(b) + "\t:"
-        print line
         for_labelling_file.append(line)
         for_labelling.append((hash_key, c, b))
         index += 1
