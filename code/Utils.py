@@ -245,9 +245,9 @@ class dist:
       #text = tool.normalize(b.toxml().replace("\n", " ").replace("- ", "").strip())
       text = b.toxml().replace("\n", " ").replace("- ", "").strip()
       obj = re.findall(regex, text)
-      tempDist = self.jaccard(context_lines[citSent], text)
-      if tempDist < min_distance:
-        min_distance = tempDist
+      temp_dist = self.jaccard(context_lines[cit_sent], text)
+      if temp_dist < min_distance:
+        min_distance = temp_dist
         target = b
     
     if target:
