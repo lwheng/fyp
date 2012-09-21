@@ -36,6 +36,7 @@ if __name__ == "__main__":
     context_list = []
     for c in f_contexts:
       value = c.firstChild.wholeText
+      value = unicode(value.encode('ascii', 'ignore'), errors='ignore')
       context_list.append(nltk_tools.nltk_text(nltk_tools.nltk_word_tokenize(value)))
     citing_col = nltk_tools.nltk_text_collection(context_list)
     for c in f_contexts:
