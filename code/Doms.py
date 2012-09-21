@@ -1,6 +1,7 @@
 import cPickle as pickle
 import os
 from xml.dom.minidom import parseString
+import sys
 
 if __name__ == "__main__":
   # Output
@@ -53,7 +54,8 @@ if __name__ == "__main__":
     # Append to output
     print "No. left = " + str(num)
     num -= 1
-    doms[hash_key] = [dom_parscit_citing, dom_parscit_section_citing, dom_parscit_cited, dom_parscit_section_cited]
+    doms[hash_key] = (dom_parscit_citing, dom_parscit_section_citing, dom_parscit_cited, dom_parscit_section_cited)
 
   # Dump pickle
+  sys.setrecursionlimit(4000)
   pickle.dump(doms, open(os.path.join(path_pickles,'Doms.pickle'),'wb'))
