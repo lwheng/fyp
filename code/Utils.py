@@ -94,18 +94,18 @@ class weight:
     return self.dist.jaccard(title_citing, title_cited)
 
   def author_overlap(self, dom_parscit_section_citing, dom_parscit_section_cited):
-    dom_authors_citing = dom_parscit_section_citing.getElementsByTagName('authors')
-    dom_authors_citing = dom_authors_citing.getElementsByTagName('author')
+    dom_authors_citing = dom_parscit_section_citing.getElementsByTagName('author')
     authors_citing = []
     for a in dom_authors_citing:
       authors_citing.append(a.firstChild.wholeText)
+    authors_citing = list(Set(authors_citing))
     
-    dom_authors_cited = dom_parscit_section_cited.getElementsByTagName('authors')
-    dom_authors_cited = dom_authors_cited.getElementsByTagName('author')
+    dom_authors_cited = dom_parscit_section_cited.getElementsByTagName('author')
     authors_cited = []
     for a in dom_authors_cited:
       authors_cited.append(a.firstChild.wholeText)
-   
+    authors_cited = list(Set(authors_cited))
+
     # Adapting the Jaccard idea
     matches = 0
     unique_names = len(authors_citing) + len(authors_cited)
