@@ -157,7 +157,7 @@ class weight:
     results = []
     for i in range(0, len(docs)):
       # Cited Chunk's Average TF-IDF Weight
-      chunk_avg_weight = self.weight.chunk_average_weight(docs[i], docs_col)
+      chunk_avg_weight = self.chunk_average_weight(docs[i], docs_col)
 
       u = []
       v = []
