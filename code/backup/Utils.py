@@ -471,9 +471,6 @@ class dataset_tools:
     return raw
 
   def prepDataset(self, run, raw, experiment, annotations):
-    # Raw has 500
-    # Experiment has 500
-    # Annotations has 757
     forannotation = []
     dataset = []
     keys = []

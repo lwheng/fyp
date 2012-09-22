@@ -12,11 +12,13 @@ path_parscit_section = config['path_parscit_section']
 path_pickles = config['path_pickles']
 
 # Load Contexts
-#contexts = pickle.load(open(os.path.join(path_pickles,'Contexts.pickle'),'r'))
+contexts = pickle.load(open(os.path.join(path_pickles,'Contexts.pickle'),'r'))
+# Load Doms
+#doms = pickle.load(open(os.path.join(path_pickles,'Doms.pickle'),'r'))
 # Load Filtered
-#filtered = pickle.load(open(os.path.join(path_pickles,'Filtered.pickle'),'r'))
+filtered = pickle.load(open(os.path.join(path_pickles,'Filtered.pickle'),'r'))
 # Load For_Labelling
-#for_labelling = pickle.load(open(os.path.join(path_pickles,'Filtered.pickle'),'r'))
+for_labelling = pickle.load(open(os.path.join(path_pickles,'For_Labelling.pickle'),'r'))
 
 def printer(self, citing, cited, citStr, wholeText, citedLines):
   display = "<div style='width:100%'>"
@@ -43,16 +45,27 @@ def hello():
 
 @app.route("/<int:item_id>/<int:context_id>")
 def show(item_id, context_id):
-  item = for_labelling[item_id]
-  hash_key = item[0]
-  cited = hash_key.split("==>")[1]
-  this_contexts = contexts[hash_key]
-  c = this_contexts[context_id]
+  t = for_labelling[item_id]
+  cite_key = t[0]
+  citing = cite_key.split("==>")[0]
+  cited = cite_key.split("==>")[1]
 
-  data = open(os.path.join(path_parscit_section, 'cited'+'-parscit-section.xml'),'r').read()
-  dom = parseString(data)
-  bodyTexts = dom.getElementsByTagName('bodyText')
-  return printer(hash_key, c, bodyTexts)
+  c_list = contexts[cite_key]
+  if c_list:
+    # Has contexts
+    c = c_list[context_id]
+
+    # Get dom_parscit_section_cited
+    path_parscit_section_cited = os.path.join(path_parscit_section, cited + "-parscit-section.xml")
+    openfile = open(path_parscit_section_cited,'r')
+    data = openfile.read()
+    openfile.close()
+    dom_parscit_section_cited = parseString(data)
+    body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
+    return body_texts[0].firstChild.wholeText
+  else:
+    # No contexts
+    return "No Contexts"
 
 if __name__ == '__main__':
   app.run() 
