@@ -20,13 +20,14 @@ filtered = pickle.load(open(os.path.join(path_pickles,'Filtered.pickle'),'r'))
 # Load For_Labelling
 for_labelling = pickle.load(open(os.path.join(path_pickles,'For_Labelling.pickle'),'r'))
 
-def printer(citing, cited, cit_str, context, body_texts):
+def printer(citing, cited, num_contexts, cit_str, context, body_texts):
   display = "<div style='width:100%'>"
   display += "<h2>" + citing + " cites " + cited + "</h2>"
   display += "<a href='http://aclweb.org/anthology/" + citing[0] + "/" + citing[0:3] + "/" + citing + ".pdf'>citing</a>"
   display += "<p>"
   display += "<a href='http://aclweb.org/anthology/" + cited[0] + "/" + cited[0:3] + "/" + cited+ ".pdf'>cited</a>"
   display += "<h2>citStr = " + cit_str + "</h2>"
+  display += "<h3>No. contexts = " + str(num_contexts) + ", No. bodyText = " + str(len(body_texts)) + "</h3>"
   display += "<div style='float:left; display:inline-block; width:40%; overflow:auto' class='div1'>"
   display += context
   display += "</div>"
@@ -58,6 +59,7 @@ def show(item_id, context_id):
   if c_list:
     # Has contexts
     c = c_list[context_id]
+    num_contexts = len(c_list)
     cit_str = c.getAttribute('citStr')
     context = c.firstChild.wholeText
 
@@ -68,7 +70,7 @@ def show(item_id, context_id):
     openfile.close()
     dom_parscit_section_cited = parseString(data)
     body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
-    return printer(citing, cited, cit_str, context, body_texts)
+    return printer(citing, cited, num_contexts, cit_str, context, body_texts)
   else:
     # No contexts
     return "No Contexts"
