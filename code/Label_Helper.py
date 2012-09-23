@@ -20,20 +20,24 @@ filtered = pickle.load(open(os.path.join(path_pickles,'Filtered.pickle'),'r'))
 # Load For_Labelling
 for_labelling = pickle.load(open(os.path.join(path_pickles,'For_Labelling.pickle'),'r'))
 
-def printer(self, citing, cited, citStr, wholeText, citedLines):
+def printer(citing, cited, cit_str, context, body_texts):
   display = "<div style='width:100%'>"
   display += "<h2>" + citing + " cites " + cited + "</h2>"
   display += "<a href='http://aclweb.org/anthology/" + citing[0] + "/" + citing[0:3] + "/" + citing + ".pdf'>citing</a>"
   display += "<p>"
   display += "<a href='http://aclweb.org/anthology/" + cited[0] + "/" + cited[0:3] + "/" + cited+ ".pdf'>cited</a>"
-  display += "<h2>citStr = " + citStr + "</h2>"
+  display += "<h2>citStr = " + cit_str + "</h2>"
   display += "<div style='float:left; display:inline-block; width:40%; overflow:auto' class='div1'>"
-  display += wholeText
+  display += context
   display += "</div>"
   display += "<div style='float:right; display:inline-block; width:50%; height:400px; overflow:auto' class='div2'>"
-  for i in range(len(citedLines)):
-    l = citedLines[i]
-    display += "<div>" + str(i+1) + ". " + l + "</div>"
+  for i in range(len(body_texts)):
+    b = body_texts[i]
+    whole_text = b.firstChild.wholeText
+    display += "<div>" + "<strong>Body Text Index = " + str(i) + "</strong></div>"
+    display += "<div>" + whole_text + "</div>"
+    display += "<p>"
+    display += "<p>"
   display += "</div>"
   display += "</div>"
   return display
@@ -54,6 +58,8 @@ def show(item_id, context_id):
   if c_list:
     # Has contexts
     c = c_list[context_id]
+    cit_str = c.getAttribute('citStr')
+    context = c.firstChild.wholeText
 
     # Get dom_parscit_section_cited
     path_parscit_section_cited = os.path.join(path_parscit_section, cited + "-parscit-section.xml")
@@ -62,7 +68,7 @@ def show(item_id, context_id):
     openfile.close()
     dom_parscit_section_cited = parseString(data)
     body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
-    return body_texts[0].firstChild.wholeText
+    return printer(citing, cited, cit_str, context, body_texts)
   else:
     # No contexts
     return "No Contexts"
