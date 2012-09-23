@@ -73,7 +73,7 @@ def show(item_id, context_id):
     return printer(citing, cited, num_contexts, cit_str, context, body_texts)
   else:
     # No contexts
-    return "No Contexts"
+    return citing + " cites " + cited + " has no contexts"
 
 if __name__ == '__main__':
   app.run() 
