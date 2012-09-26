@@ -230,6 +230,24 @@ class dist:
     b = b.lower()
     return distance.masi_distance(set(a.split()), set(b.split()))
 
+  def publish_year(self, cite_key):
+    citing = cite_key['citing']
+    cited = cite_key['cited']
+
+    citing_year = int(citing[1:3])
+    cited_year = int(cited[1:3])
+
+    if citing_year > 50:
+      citing_year = 1900 + citing_year
+    else:
+      citing_year = 2000 + citing_year
+
+    if cited_year > 50:
+      cited_year = 1900 + cited_year
+    else:
+      cited_year = 2000 + cited_year
+    return (citing_year-cited_year)
+
   def cit_sent_location(self, cit_str, query, dom_parscit_section_citing):
     vector = []
     cit_str = cit_str.replace("et al.", "et al")
@@ -580,7 +598,7 @@ class extract_features:
     self.nltk_tools = nltk_tools()
     self.weight = weight()
 
-  def extract_feature(self, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
+  def extract_feature(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
     cit_str = context.getAttribute('citStr')
     cit_str = unicode(cit_str.encode('ascii','ignore'), errors='ignore')
     query = context.firstChild.wholeText
@@ -599,8 +617,8 @@ class extract_features:
     x.append(feature_cit_density)
 
     # Publishing Year Difference
-    #feature_publish_year = self.dist.publish_year(dom_parscit_section_citing, dom_parscit_section_cited)
-    #x.append(feature_publish_year)
+    feature_publish_year = self.dist.publish_year(f)
+    x.append(feature_publish_year)
 
     # Title Overlap
     feature_title_overlap = self.weight.title_overlap(dom_parscit_section_citing, dom_parscit_section_cited)

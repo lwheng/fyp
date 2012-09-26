@@ -40,7 +40,7 @@ if __name__ == "__main__":
       context_list.append(nltk_tools.nltk_text(nltk_tools.nltk_word_tokenize(value)))
     citing_col = nltk_tools.nltk_text_collection(context_list)
     for c in f_contexts:
-      X = extract_features.extract_feature(c, citing_col, dom_parscit_section_citing, dom_parscit_section_cited)
+      X = extract_features.extract_feature(f, c, citing_col, dom_parscit_section_citing, dom_parscit_section_cited)
       big_X.extend(X)
     num -= 1
     print "No. left = " + str(num)
