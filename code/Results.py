@@ -41,10 +41,20 @@ if __name__ == "__main__":
   X = X[0:num_of_labelled_data_points]
 
   X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.1, random_state=0)
+  clf = svm.SVC()
+  clf.fit(X_train, y_train)
+  expected = y_test
+  predicted = clf.predict(X_test)
   print "X_train" + str(X_train.shape)
   print "X_test" + str(X_test.shape)
   print "y_train" + str(y_train.shape)
   print "y_test" + str(y_test.shape)
+  print
+  print "In y:"
+  print "Count(general) = " + str(len(y[y == 0]))
+  print "Count(yes) = " + str(len(y[y == 1]))
+  print "Count(no) = " + str(len(y[y == 2]))
+  print "Count(undetermined) = " + str(len(y[y == 3]))
   print
   print "In y_test:"
   print "Count(general) = " + str(len(y_test[y_test == 0]))
@@ -52,11 +62,6 @@ if __name__ == "__main__":
   print "Count(no) = " + str(len(y_test[y_test == 2]))
   print "Count(undetermined) = " + str(len(y_test[y_test == 3]))
   print
-  #clf = LogisticRegression()
-  clf = svm.SVC()
-  clf.fit(X_train, y_train)
-  expected = y_test
-  predicted = clf.predict(X_test)
   print "In predicted:"
   print "Count(general) = " + str(len(predicted[predicted == 0]))
   print "Count(yes) = " + str(len(predicted[predicted == 1]))
@@ -73,20 +78,15 @@ if __name__ == "__main__":
   print
 
   print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
+  print
 
-  #for i in range(X_test.shape[0]):
-  #  x = X_test[i]
-  #  prediction = clf.predict_proba(x)
-  #  print "Predicted " + str(prediction) + " " + interpret_prediction(prediction) + " for Answer: " + interpret_label(y_test[i])
-  #print
-  #print y_test.shape
-
-  #clf = svm.SVC(kernel='linear', C=1)
-  #n_samples = X.shape[0]
-  #cv = cross_validation.ShuffleSplit(n_samples, n_iterations=10, test_size=0.1, random_state=0)
-  #print cv
-  #print cross_validation.cross_val_score(clf, X, y, cv=cv)
-  #print
+  clf = svm.SVC(kernel='linear', C=1)
+  n_samples = X.shape[0]
+  cv = cross_validation.ShuffleSplit(n_samples, n_iterations=10, test_size=0.1, random_state=0)
+  print cv
+  results = cross_validation.cross_val_score(clf, X, y, cv=cv)
+  print results
+  print
 
 #Parameters
 #----------
