@@ -48,8 +48,9 @@ def printer(citing, cited, num_contexts, cit_str, context, body_texts):
 def hello():
   return "<h1>Hello, Low Wee. Welcome to annotating.</h1>"
 
+@app.route("/<int:item_id>")
 @app.route("/<int:item_id>/<int:context_id>")
-def show(item_id, context_id):
+def show(item_id, context_id=0):
   t = for_labelling[item_id]
   cite_key = t[0]
   citing = cite_key.split("==>")[0]
