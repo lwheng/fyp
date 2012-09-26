@@ -5,7 +5,14 @@ import re
 import numpy as np
 
 if __name__ == '__main__':
+  # Output
   y = []
+
+  # Init
+  general = 0
+  spec_yes = 1
+  spec_no = 2
+  undetermined = 3
 
   # Load Config.pickle
   config = pickle.load(open('Config.pickle','r'))
@@ -26,13 +33,15 @@ if __name__ == '__main__':
       body_text_id = int(obj[0][2])
       annotation = obj[0][3]
       if annotation == 'g':
-        y.append(0)
+        y.append(general)
       elif annotation == 'y':
-        y.append(1)
+        y.append(spec_yes)
       elif annotation == 'n':
-        y.append(2)
+        y.append(spec_no)
+        #y.append(general)
       elif annotation == 'u':
-        y.append(3)
+        #y.append(undetermined)
+        y.append(general) # Setting undetermined to general
 
   y = np.asarray(y)
   pickle.dump(y, open(os.path.join(path_pickles,'Y.pickle'),'wb'))
