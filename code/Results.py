@@ -6,6 +6,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.cross_validation import KFold
 from sklearn.cross_validation import LeaveOneOut
 from sklearn.cross_validation import LeavePOut
+from sklearn.feature_selection import RFE
 
 def interpret_prediction(output):
   arr = output[0]
@@ -31,7 +32,8 @@ if __name__ == "__main__":
   path_pickles = config['path_pickles']
 
   # Load Big_X
-  X = pickle.load(open(os.path.join(path_pickles, 'Big_X.pickle'),'r'))
+  #X = pickle.load(open(os.path.join(path_pickles, 'Big_X.pickle'),'r'))
+  X = pickle.load(open(os.path.join(path_pickles, 'Big_X_With_Publish_Year.pickle'),'r'))
 
   # Load y
   y = pickle.load(open(os.path.join(path_pickles, 'Y.pickle'),'r'))
@@ -41,10 +43,18 @@ if __name__ == "__main__":
   X = X[0:num_of_labelled_data_points]
 
   X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.1, random_state=0)
-  clf = svm.SVC()
+  clf = svm.SVC(kernel="linear")
   clf.fit(X_train, y_train)
   expected = y_test
   predicted = clf.predict(X_test)
+  print clf
+  print
+  #print "Feature Ranking with Recursive Feature Elimination"
+  #selector = RFE(clf, 5, step=1)
+  #selector = selector.fit(X, y)
+  #print selector.support_
+  #print selector.ranking_
+  print
   print "X_train" + str(X_train.shape)
   print "X_test" + str(X_test.shape)
   print "y_train" + str(y_train.shape)

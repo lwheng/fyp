@@ -92,8 +92,6 @@ class weight:
         break
     title_citing = title_citing_tag[0].firstChild.wholeText
     title_cited = title_cited_tag[0].firstChild.wholeText
-    #title_citing = dom_parscit_section_citing.getElementsByTagName('title')[0].firstChild.wholeText
-    #title_cited = dom_parscit_section_cited.getElementsByTagName('title')[0].firstChild.wholeText
     return self.dist.jaccard(title_citing, title_cited)
 
   def author_overlap(self, dom_parscit_section_citing, dom_parscit_section_cited):

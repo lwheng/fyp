@@ -40,8 +40,19 @@ if __name__ == '__main__':
         y.append(spec_no)
         #y.append(general)
       elif annotation == 'u':
-        #y.append(undetermined)
-        y.append(general) # Setting undetermined to general
+        y.append(undetermined)
+        #y.append(general) # Setting undetermined to general
 
   y = np.asarray(y)
+  print "Stats for y:"
+  total_records = y.shape[0]
+  print "Total number of records - " + str(total_records)
+  general_records = float(y[y==0].shape[0])/(total_records)
+  specific_yes_records = float(y[y==1].shape[0])/(total_records)
+  specific_no_records = float(y[y==2].shape[0])/(total_records)
+  undetermined_records = float(y[y==3].shape[0])/(total_records)
+  print "General - " + str(general_records*100) + "%"
+  print "Specific-Yes - " + str(specific_yes_records*100) + "%"
+  print "Specific-No - " + str(specific_no_records*100) + "%"
+  print "Undetermined - " + str(undetermined_records*100) + "%"
   pickle.dump(y, open(os.path.join(path_pickles,'Y.pickle'),'wb'))
