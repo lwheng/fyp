@@ -15,6 +15,8 @@ if __name__ == "__main__":
   path_parscit = config['path_parscit']
   path_parscit_section = config['path_parscit_section']
   path_pickles = config['path_pickles']
+  labels = ['g', 'y', 'n', 'u']
+  reverse_labels = {'g':0, 'y':1, 'n':2, 'u':3}
 
   # Load Big_X
   #X = pickle.load(open(os.path.join(path_pickles, 'Big_X.pickle'),'r'))
@@ -24,8 +26,6 @@ if __name__ == "__main__":
   y_raw = pickle.load(open(os.path.join(path_pickles, 'Y.pickle'),'r'))
   y_info_raw = pickle.load(open(os.path.join(path_pickles, 'Y_Info.pickle'),'r'))
 
-  labels = ['g', 'y', 'n', 'u']
-  reverse_labels = {'g':0, 'y':1, 'n':2, 'u':3}
   # Filter X_raw, y_raw and y_info_raw
   X = []
   y = []
@@ -50,41 +50,34 @@ if __name__ == "__main__":
   num_of_labelled_data_points = y.shape[0]
 
   X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.1, random_state=0)
-  #clf = svm.SVC(kernel="linear")
-  clf = svm.SVC()
+  clf = svm.SVC(kernel='linear')
   clf.fit(X_train, y_train)
   expected = y_test
   predicted = clf.predict(X_test)
-  print clf
-  print
-  #print "Feature Ranking with Recursive Feature Elimination"
-  #selector = RFE(clf, 5, step=1)
-  #selector = selector.fit(X, y)
-  #print selector.support_
-  #print selector.ranking_
-  print
+  print "Feature Ranking with Recursive Feature Elimination"
+  selector = RFE(clf, 1, step=1)
+  selector = selector.fit(X, y)
+  print selector.support_
+  print selector.ranking_
   print "X_train" + str(X_train.shape)
   print "X_test" + str(X_test.shape)
   print "y_train" + str(y_train.shape)
   print "y_test" + str(y_test.shape)
+
+  products = ("y", "y_test", "predicted")
+  quantity = ([len(y[y == 0]),len(y[y == 1]),len(y[y == 2]),len(y[y == 3])],
+              [len(y_test[y_test == 0]),len(y_test[y_test == 1]),len(y_test[y_test == 2]),len(y_test[y_test == 3])],
+              [len(predicted[predicted == 0]),len(predicted[predicted == 1]),len(predicted[predicted == 2]),len(predicted[predicted == 3])])
+  fw = 12
   print
-  print "In y:"
-  print "Count(general) = " + str(len(y[y == 0]))
-  print "Count(yes) = " + str(len(y[y == 1]))
-  print "Count(no) = " + str(len(y[y == 2]))
-  print "Count(undetermined) = " + str(len(y[y == 3]))
-  print
-  print "In y_test:"
-  print "Count(general) = " + str(len(y_test[y_test == 0]))
-  print "Count(yes) = " + str(len(y_test[y_test == 1]))
-  print "Count(no) = " + str(len(y_test[y_test == 2]))
-  print "Count(undetermined) = " + str(len(y_test[y_test == 3]))
-  print
-  print "In predicted:"
-  print "Count(general) = " + str(len(predicted[predicted == 0]))
-  print "Count(yes) = " + str(len(predicted[predicted == 1]))
-  print "Count(no) = " + str(len(predicted[predicted == 2]))
-  print "Count(undetermined) = " + str(len(predicted[predicted == 3]))
+  print ''.join([s.center(fw) for s in \
+                 ('', 'C(general)', 'C(yes)', 'C(no)', 'C(undetermined)')])
+  for i in range(len(products)):
+    line = [products[i]]
+    q = quantity[i]
+    for j in range(0,4):
+      line.append(q[j])
+    print ''.join([str(s).center(fw) for s in line])
   print
 
   print "Classification report for classifier %s:\n%s\n" % (clf, metrics.classification_report(expected, predicted))
@@ -98,8 +91,7 @@ if __name__ == "__main__":
   print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
   print
 
-  #clf = svm.SVC(kernel='linear')
-  clf = svm.SVC()
+  clf = svm.SVC(kernel='linear')
   n_samples = X.shape[0]
   cv = cross_validation.ShuffleSplit(n_samples, n_iterations=10, test_size=0.1, random_state=0)
   print cv

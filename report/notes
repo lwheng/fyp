@@ -1,0 +1,5 @@
+started with cosine sim
+old annotation scheme; used number range to annotate for plain text file; annotation framework; attempted to collect annotations online; too difficult a task
+started adding features; list various features; explain rationale
+new annotation scheme; used parscit output's, used blocks of text; used 4 labels; reduced to 2: general and specific-yes; binary classification
+initial testing; poor results; unable to predict any specific; number of 'yes' instances too little; features not useful 
