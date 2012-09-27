@@ -33,21 +33,16 @@ if __name__ == '__main__':
       context_id = obj[0][1]
       body_text_id = int(obj[0][2])
       annotation = obj[0][3]
-
-      if annotation != 'u':
-        y_info.append((cite_key, context_id, body_text_id, annotation))
+      y_info.append((cite_key, context_id, body_text_id))
 
       if annotation == 'g':
         y.append(general)
       elif annotation == 'y':
         y.append(spec_yes)
       elif annotation == 'n':
-        #y.append(spec_no)
-        y.append(general)
+        y.append(spec_no)
       elif annotation == 'u':
-        print
-        #y.append(undetermined)
-        #y.append(general) # Setting undetermined to general
+        y.append(undetermined)
 
   y = np.asarray(y)
   print "Stats for y:"

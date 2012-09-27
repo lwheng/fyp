@@ -49,6 +49,12 @@ if __name__ == "__main__":
   y_info = np.asarray(y_info)
   num_of_labelled_data_points = y.shape[0]
 
+  temp_X = []
+  for i in X:
+    temp_X.append([i[-1]])
+  temp_X = np.asarray(temp_X)
+  X = temp_X
+
   X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.1, random_state=0)
   #clf = svm.SVC(kernel="linear")
   clf = svm.SVC()
