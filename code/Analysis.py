@@ -1,5 +1,5 @@
 import cPickle as pickle
-import os
+import os, sys
 from sklearn import svm, metrics
 from sklearn import cross_validation
 from sklearn.linear_model import LogisticRegression
@@ -30,6 +30,7 @@ if __name__ == "__main__":
   path_parscit = config['path_parscit']
   path_parscit_section = config['path_parscit_section']
   path_pickles = config['path_pickles']
+  labels = ['g', 'y', 'n', 'u']
 
   # Load Big_X
   #X = pickle.load(open(os.path.join(path_pickles, 'Big_X.pickle'),'r'))
@@ -42,19 +43,17 @@ if __name__ == "__main__":
   # Set size of X to size of y
   X = X[0:num_of_labelled_data_points]
 
-  X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.1, random_state=0)
-  clf = svm.SVC(kernel="linear")
-  #clf = svm.SVC()
+  train = int(0.9 * num_of_labelled_data_points)
+  X_train = X[0:train]
+  X_test = X[train:]
+  y_train = y[0:train]
+  y_test = y[train:]
+
+  clf = svm.SVC()
   clf.fit(X_train, y_train)
   expected = y_test
   predicted = clf.predict(X_test)
   print clf
-  print
-  #print "Feature Ranking with Recursive Feature Elimination"
-  #selector = RFE(clf, 5, step=1)
-  #selector = selector.fit(X, y)
-  #print selector.support_
-  #print selector.ranking_
   print
   print "X_train" + str(X_train.shape)
   print "X_test" + str(X_test.shape)
@@ -91,48 +90,24 @@ if __name__ == "__main__":
   print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
   print
 
-  clf = svm.SVC(kernel='linear')
-  #clf = svm.SVC()
-  n_samples = X.shape[0]
-  cv = cross_validation.ShuffleSplit(n_samples, n_iterations=10, test_size=0.1, random_state=0)
-  print cv
-  results = cross_validation.cross_val_score(clf, X, y, cv=cv)
-  print results
-  print
-
-#Parameters
-#----------
-#n: int
-#Total number of elements
-#
-#k: int
-#Number of folds
-#
-#indices: boolean, optional (default True)
-#Return train/test split as arrays of indices, rather than a boolean
-#mask array. Integer indices are required when dealing with sparse
-#matrices, since those cannot be indexed by boolean masks.
-#
-#shuffle: boolean, optional
-#whether to shuffle the data before splitting into batches
-#
-#random_state: int or RandomState
-#Pseudo number generator state used for random sampling.
-
-  #kf = KFold(len(y), 10, indices=False, shuffle=True)
-  #print kf
-  #for train, test in kf:
-  #  print train, test
-  #print
-
-  #loo = LeaveOneOut(len(y))
-  #print loo
-  #for train, test in loo:
-  #  print train, test
-  #print
-
-  #lpo = LeavePOut(len(y), 2)
-  #print lpo
-  #for train, test in lpo:
-  #  print train, test
-  #print
+  print "Comparing prediction with answers"
+  print "Printing only wrong predictions:"
+  info = {}
+  info[labels[0]+"-"+labels[1]] = []
+  info[labels[0]+"-"+labels[2]] = []
+  info[labels[0]+"-"+labels[3]] = []
+  info[labels[1]+"-"+labels[0]] = []
+  info[labels[1]+"-"+labels[2]] = []
+  info[labels[1]+"-"+labels[3]] = []
+  info[labels[2]+"-"+labels[0]] = []
+  info[labels[2]+"-"+labels[1]] = []
+  info[labels[2]+"-"+labels[3]] = []
+  info[labels[3]+"-"+labels[0]] = []
+  info[labels[3]+"-"+labels[1]] = []
+  info[labels[3]+"-"+labels[2]] = []
+  for i in xrange(train, len(y)):
+    if (y[i] != int(predicted[i-train])):
+      info[labels[y[i]] + "-" + labels[int(predicted[i-train])]].append(i)
+      print "#" + str(i) + ": Answers = " + labels[y[i]] + " Prediction = " + labels[int(predicted[i-train])] + " Correct? " + str(y[i] == int(predicted[i-train]))
+  for k in info.keys():
+    print "Count(" + k +") = " + str(len(info[k]))

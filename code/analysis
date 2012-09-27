@@ -1,0 +1,383 @@
+SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0, degree=3, gamma=0.0,
+  kernel=rbf, probability=False, shrinking=True, tol=0.001, verbose=False)
+
+X_train(5968, 21)
+X_test(664, 21)
+y_train(5968,)
+y_test(664,)
+
+In y:
+Count(general) = 4178
+Count(yes) = 207
+Count(no) = 2205
+Count(undetermined) = 42
+
+In y_test:
+Count(general) = 525
+Count(yes) = 10
+Count(no) = 129
+Count(undetermined) = 0
+
+In predicted:
+Count(general) = 482
+Count(yes) = 0
+Count(no) = 182
+Count(undetermined) = 0
+
+Classification report for classifier SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0, degree=3, gamma=0.0,
+  kernel=rbf, probability=False, shrinking=True, tol=0.001, verbose=False):
+             precision    recall  f1-score   support
+
+          0       0.71      0.65      0.68       525
+          1       0.00      0.00      0.00        10
+          2       0.00      0.00      0.00       129
+
+avg / total       0.56      0.52      0.54       664
+
+
+Legend:
+0 - General
+1 - Specific (Yes)
+2 - Specific (No)
+3 - Undetermined
+
+Confusion matrix:
+[[343   0 182]
+ [ 10   0   0]
+ [129   0   0]]
+
+Comparing prediction with answers
+Printing only wrong predictions:
+#5983: Answers = n Prediction = g Correct? False
+#5984: Answers = y Prediction = g Correct? False
+#6040: Answers = g Prediction = n Correct? False
+#6041: Answers = g Prediction = n Correct? False
+#6042: Answers = g Prediction = n Correct? False
+#6043: Answers = g Prediction = n Correct? False
+#6044: Answers = g Prediction = n Correct? False
+#6045: Answers = g Prediction = n Correct? False
+#6046: Answers = g Prediction = n Correct? False
+#6047: Answers = g Prediction = n Correct? False
+#6048: Answers = g Prediction = n Correct? False
+#6049: Answers = g Prediction = n Correct? False
+#6050: Answers = g Prediction = n Correct? False
+#6051: Answers = g Prediction = n Correct? False
+#6052: Answers = g Prediction = n Correct? False
+#6053: Answers = g Prediction = n Correct? False
+#6054: Answers = g Prediction = n Correct? False
+#6055: Answers = g Prediction = n Correct? False
+#6056: Answers = g Prediction = n Correct? False
+#6057: Answers = g Prediction = n Correct? False
+#6058: Answers = g Prediction = n Correct? False
+#6059: Answers = g Prediction = n Correct? False
+#6060: Answers = g Prediction = n Correct? False
+#6061: Answers = g Prediction = n Correct? False
+#6062: Answers = g Prediction = n Correct? False
+#6063: Answers = g Prediction = n Correct? False
+#6064: Answers = g Prediction = n Correct? False
+#6065: Answers = g Prediction = n Correct? False
+#6066: Answers = g Prediction = n Correct? False
+#6067: Answers = g Prediction = n Correct? False
+#6068: Answers = g Prediction = n Correct? False
+#6069: Answers = g Prediction = n Correct? False
+#6070: Answers = g Prediction = n Correct? False
+#6071: Answers = g Prediction = n Correct? False
+#6072: Answers = g Prediction = n Correct? False
+#6073: Answers = g Prediction = n Correct? False
+#6074: Answers = g Prediction = n Correct? False
+#6075: Answers = g Prediction = n Correct? False
+#6076: Answers = g Prediction = n Correct? False
+#6077: Answers = g Prediction = n Correct? False
+#6078: Answers = g Prediction = n Correct? False
+#6079: Answers = g Prediction = n Correct? False
+#6080: Answers = g Prediction = n Correct? False
+#6081: Answers = g Prediction = n Correct? False
+#6082: Answers = g Prediction = n Correct? False
+#6083: Answers = g Prediction = n Correct? False
+#6084: Answers = g Prediction = n Correct? False
+#6085: Answers = g Prediction = n Correct? False
+#6086: Answers = g Prediction = n Correct? False
+#6087: Answers = g Prediction = n Correct? False
+#6088: Answers = g Prediction = n Correct? False
+#6089: Answers = g Prediction = n Correct? False
+#6090: Answers = g Prediction = n Correct? False
+#6091: Answers = g Prediction = n Correct? False
+#6092: Answers = g Prediction = n Correct? False
+#6093: Answers = g Prediction = n Correct? False
+#6094: Answers = g Prediction = n Correct? False
+#6095: Answers = g Prediction = n Correct? False
+#6096: Answers = g Prediction = n Correct? False
+#6097: Answers = g Prediction = n Correct? False
+#6098: Answers = g Prediction = n Correct? False
+#6099: Answers = g Prediction = n Correct? False
+#6100: Answers = g Prediction = n Correct? False
+#6101: Answers = g Prediction = n Correct? False
+#6102: Answers = g Prediction = n Correct? False
+#6103: Answers = g Prediction = n Correct? False
+#6104: Answers = g Prediction = n Correct? False
+#6105: Answers = g Prediction = n Correct? False
+#6106: Answers = g Prediction = n Correct? False
+#6107: Answers = g Prediction = n Correct? False
+#6108: Answers = g Prediction = n Correct? False
+#6109: Answers = g Prediction = n Correct? False
+#6110: Answers = g Prediction = n Correct? False
+#6111: Answers = g Prediction = n Correct? False
+#6112: Answers = g Prediction = n Correct? False
+#6113: Answers = g Prediction = n Correct? False
+#6114: Answers = g Prediction = n Correct? False
+#6115: Answers = g Prediction = n Correct? False
+#6116: Answers = g Prediction = n Correct? False
+#6117: Answers = g Prediction = n Correct? False
+#6118: Answers = g Prediction = n Correct? False
+#6119: Answers = g Prediction = n Correct? False
+#6120: Answers = g Prediction = n Correct? False
+#6121: Answers = g Prediction = n Correct? False
+#6122: Answers = g Prediction = n Correct? False
+#6123: Answers = g Prediction = n Correct? False
+#6124: Answers = g Prediction = n Correct? False
+#6125: Answers = g Prediction = n Correct? False
+#6126: Answers = g Prediction = n Correct? False
+#6127: Answers = g Prediction = n Correct? False
+#6128: Answers = g Prediction = n Correct? False
+#6129: Answers = g Prediction = n Correct? False
+#6130: Answers = g Prediction = n Correct? False
+#6131: Answers = g Prediction = n Correct? False
+#6132: Answers = g Prediction = n Correct? False
+#6133: Answers = g Prediction = n Correct? False
+#6134: Answers = g Prediction = n Correct? False
+#6135: Answers = g Prediction = n Correct? False
+#6136: Answers = g Prediction = n Correct? False
+#6137: Answers = g Prediction = n Correct? False
+#6138: Answers = g Prediction = n Correct? False
+#6139: Answers = g Prediction = n Correct? False
+#6140: Answers = g Prediction = n Correct? False
+#6141: Answers = g Prediction = n Correct? False
+#6142: Answers = g Prediction = n Correct? False
+#6143: Answers = g Prediction = n Correct? False
+#6144: Answers = g Prediction = n Correct? False
+#6145: Answers = g Prediction = n Correct? False
+#6146: Answers = g Prediction = n Correct? False
+#6147: Answers = g Prediction = n Correct? False
+#6148: Answers = g Prediction = n Correct? False
+#6149: Answers = g Prediction = n Correct? False
+#6150: Answers = g Prediction = n Correct? False
+#6151: Answers = g Prediction = n Correct? False
+#6152: Answers = g Prediction = n Correct? False
+#6153: Answers = g Prediction = n Correct? False
+#6154: Answers = g Prediction = n Correct? False
+#6155: Answers = g Prediction = n Correct? False
+#6156: Answers = g Prediction = n Correct? False
+#6157: Answers = g Prediction = n Correct? False
+#6158: Answers = g Prediction = n Correct? False
+#6159: Answers = g Prediction = n Correct? False
+#6160: Answers = g Prediction = n Correct? False
+#6161: Answers = g Prediction = n Correct? False
+#6162: Answers = g Prediction = n Correct? False
+#6163: Answers = g Prediction = n Correct? False
+#6164: Answers = g Prediction = n Correct? False
+#6165: Answers = g Prediction = n Correct? False
+#6166: Answers = g Prediction = n Correct? False
+#6167: Answers = g Prediction = n Correct? False
+#6168: Answers = g Prediction = n Correct? False
+#6169: Answers = g Prediction = n Correct? False
+#6170: Answers = g Prediction = n Correct? False
+#6171: Answers = g Prediction = n Correct? False
+#6172: Answers = g Prediction = n Correct? False
+#6173: Answers = g Prediction = n Correct? False
+#6174: Answers = g Prediction = n Correct? False
+#6175: Answers = g Prediction = n Correct? False
+#6176: Answers = g Prediction = n Correct? False
+#6177: Answers = g Prediction = n Correct? False
+#6178: Answers = g Prediction = n Correct? False
+#6179: Answers = g Prediction = n Correct? False
+#6180: Answers = g Prediction = n Correct? False
+#6181: Answers = g Prediction = n Correct? False
+#6182: Answers = g Prediction = n Correct? False
+#6183: Answers = g Prediction = n Correct? False
+#6184: Answers = g Prediction = n Correct? False
+#6185: Answers = g Prediction = n Correct? False
+#6186: Answers = g Prediction = n Correct? False
+#6187: Answers = g Prediction = n Correct? False
+#6188: Answers = g Prediction = n Correct? False
+#6189: Answers = g Prediction = n Correct? False
+#6190: Answers = g Prediction = n Correct? False
+#6191: Answers = g Prediction = n Correct? False
+#6192: Answers = g Prediction = n Correct? False
+#6193: Answers = g Prediction = n Correct? False
+#6194: Answers = g Prediction = n Correct? False
+#6195: Answers = g Prediction = n Correct? False
+#6196: Answers = g Prediction = n Correct? False
+#6197: Answers = g Prediction = n Correct? False
+#6198: Answers = g Prediction = n Correct? False
+#6199: Answers = g Prediction = n Correct? False
+#6200: Answers = g Prediction = n Correct? False
+#6201: Answers = g Prediction = n Correct? False
+#6202: Answers = g Prediction = n Correct? False
+#6203: Answers = g Prediction = n Correct? False
+#6204: Answers = g Prediction = n Correct? False
+#6205: Answers = g Prediction = n Correct? False
+#6206: Answers = g Prediction = n Correct? False
+#6207: Answers = g Prediction = n Correct? False
+#6208: Answers = g Prediction = n Correct? False
+#6209: Answers = g Prediction = n Correct? False
+#6210: Answers = g Prediction = n Correct? False
+#6211: Answers = g Prediction = n Correct? False
+#6212: Answers = g Prediction = n Correct? False
+#6213: Answers = g Prediction = n Correct? False
+#6214: Answers = g Prediction = n Correct? False
+#6215: Answers = g Prediction = n Correct? False
+#6216: Answers = g Prediction = n Correct? False
+#6217: Answers = g Prediction = n Correct? False
+#6218: Answers = g Prediction = n Correct? False
+#6219: Answers = g Prediction = n Correct? False
+#6220: Answers = g Prediction = n Correct? False
+#6221: Answers = g Prediction = n Correct? False
+#6409: Answers = n Prediction = g Correct? False
+#6410: Answers = n Prediction = g Correct? False
+#6411: Answers = n Prediction = g Correct? False
+#6412: Answers = n Prediction = g Correct? False
+#6413: Answers = y Prediction = g Correct? False
+#6414: Answers = y Prediction = g Correct? False
+#6415: Answers = y Prediction = g Correct? False
+#6416: Answers = n Prediction = g Correct? False
+#6417: Answers = n Prediction = g Correct? False
+#6418: Answers = n Prediction = g Correct? False
+#6419: Answers = n Prediction = g Correct? False
+#6420: Answers = n Prediction = g Correct? False
+#6421: Answers = n Prediction = g Correct? False
+#6422: Answers = n Prediction = g Correct? False
+#6423: Answers = n Prediction = g Correct? False
+#6424: Answers = n Prediction = g Correct? False
+#6425: Answers = n Prediction = g Correct? False
+#6426: Answers = n Prediction = g Correct? False
+#6427: Answers = n Prediction = g Correct? False
+#6428: Answers = n Prediction = g Correct? False
+#6429: Answers = n Prediction = g Correct? False
+#6430: Answers = n Prediction = g Correct? False
+#6431: Answers = n Prediction = g Correct? False
+#6432: Answers = n Prediction = g Correct? False
+#6433: Answers = n Prediction = g Correct? False
+#6434: Answers = n Prediction = g Correct? False
+#6435: Answers = n Prediction = g Correct? False
+#6436: Answers = n Prediction = g Correct? False
+#6437: Answers = n Prediction = g Correct? False
+#6438: Answers = n Prediction = g Correct? False
+#6439: Answers = n Prediction = g Correct? False
+#6440: Answers = n Prediction = g Correct? False
+#6441: Answers = n Prediction = g Correct? False
+#6442: Answers = n Prediction = g Correct? False
+#6443: Answers = n Prediction = g Correct? False
+#6444: Answers = n Prediction = g Correct? False
+#6445: Answers = n Prediction = g Correct? False
+#6532: Answers = n Prediction = g Correct? False
+#6533: Answers = n Prediction = g Correct? False
+#6534: Answers = y Prediction = g Correct? False
+#6535: Answers = n Prediction = g Correct? False
+#6536: Answers = n Prediction = g Correct? False
+#6537: Answers = n Prediction = g Correct? False
+#6538: Answers = n Prediction = g Correct? False
+#6539: Answers = n Prediction = g Correct? False
+#6540: Answers = n Prediction = g Correct? False
+#6541: Answers = n Prediction = g Correct? False
+#6542: Answers = n Prediction = g Correct? False
+#6543: Answers = n Prediction = g Correct? False
+#6544: Answers = n Prediction = g Correct? False
+#6545: Answers = n Prediction = g Correct? False
+#6546: Answers = n Prediction = g Correct? False
+#6547: Answers = n Prediction = g Correct? False
+#6548: Answers = n Prediction = g Correct? False
+#6549: Answers = n Prediction = g Correct? False
+#6550: Answers = y Prediction = g Correct? False
+#6551: Answers = y Prediction = g Correct? False
+#6552: Answers = y Prediction = g Correct? False
+#6553: Answers = n Prediction = g Correct? False
+#6554: Answers = n Prediction = g Correct? False
+#6555: Answers = n Prediction = g Correct? False
+#6556: Answers = n Prediction = g Correct? False
+#6557: Answers = n Prediction = g Correct? False
+#6558: Answers = n Prediction = g Correct? False
+#6559: Answers = n Prediction = g Correct? False
+#6560: Answers = n Prediction = g Correct? False
+#6561: Answers = n Prediction = g Correct? False
+#6562: Answers = n Prediction = g Correct? False
+#6563: Answers = n Prediction = g Correct? False
+#6564: Answers = n Prediction = g Correct? False
+#6565: Answers = n Prediction = g Correct? False
+#6566: Answers = n Prediction = g Correct? False
+#6567: Answers = n Prediction = g Correct? False
+#6568: Answers = n Prediction = g Correct? False
+#6569: Answers = n Prediction = g Correct? False
+#6570: Answers = n Prediction = g Correct? False
+#6571: Answers = n Prediction = g Correct? False
+#6572: Answers = n Prediction = g Correct? False
+#6573: Answers = n Prediction = g Correct? False
+#6574: Answers = n Prediction = g Correct? False
+#6575: Answers = n Prediction = g Correct? False
+#6576: Answers = n Prediction = g Correct? False
+#6577: Answers = n Prediction = g Correct? False
+#6578: Answers = n Prediction = g Correct? False
+#6579: Answers = n Prediction = g Correct? False
+#6580: Answers = n Prediction = g Correct? False
+#6581: Answers = n Prediction = g Correct? False
+#6582: Answers = n Prediction = g Correct? False
+#6583: Answers = n Prediction = g Correct? False
+#6584: Answers = n Prediction = g Correct? False
+#6585: Answers = n Prediction = g Correct? False
+#6586: Answers = n Prediction = g Correct? False
+#6587: Answers = n Prediction = g Correct? False
+#6588: Answers = n Prediction = g Correct? False
+#6589: Answers = n Prediction = g Correct? False
+#6590: Answers = n Prediction = g Correct? False
+#6591: Answers = n Prediction = g Correct? False
+#6592: Answers = n Prediction = g Correct? False
+#6593: Answers = n Prediction = g Correct? False
+#6594: Answers = n Prediction = g Correct? False
+#6595: Answers = n Prediction = g Correct? False
+#6596: Answers = n Prediction = g Correct? False
+#6597: Answers = n Prediction = g Correct? False
+#6598: Answers = n Prediction = g Correct? False
+#6599: Answers = n Prediction = g Correct? False
+#6600: Answers = n Prediction = g Correct? False
+#6601: Answers = n Prediction = g Correct? False
+#6602: Answers = n Prediction = g Correct? False
+#6603: Answers = n Prediction = g Correct? False
+#6604: Answers = n Prediction = g Correct? False
+#6605: Answers = n Prediction = g Correct? False
+#6606: Answers = n Prediction = g Correct? False
+#6607: Answers = n Prediction = g Correct? False
+#6608: Answers = n Prediction = g Correct? False
+#6609: Answers = n Prediction = g Correct? False
+#6610: Answers = n Prediction = g Correct? False
+#6611: Answers = n Prediction = g Correct? False
+#6612: Answers = n Prediction = g Correct? False
+#6613: Answers = n Prediction = g Correct? False
+#6614: Answers = n Prediction = g Correct? False
+#6615: Answers = n Prediction = g Correct? False
+#6616: Answers = n Prediction = g Correct? False
+#6617: Answers = n Prediction = g Correct? False
+#6618: Answers = n Prediction = g Correct? False
+#6619: Answers = n Prediction = g Correct? False
+#6620: Answers = n Prediction = g Correct? False
+#6621: Answers = n Prediction = g Correct? False
+#6622: Answers = n Prediction = g Correct? False
+#6623: Answers = y Prediction = g Correct? False
+#6624: Answers = y Prediction = g Correct? False
+#6625: Answers = n Prediction = g Correct? False
+#6626: Answers = n Prediction = g Correct? False
+#6627: Answers = n Prediction = g Correct? False
+#6628: Answers = n Prediction = g Correct? False
+#6629: Answers = n Prediction = g Correct? False
+#6630: Answers = n Prediction = g Correct? False
+#6631: Answers = n Prediction = g Correct? False
+Count(n-u) = 0
+Count(y-u) = 0
+Count(g-n) = 182
+Count(u-y) = 0
+Count(u-g) = 0
+Count(n-y) = 0
+Count(n-g) = 129
+Count(g-y) = 0
+Count(y-g) = 10
+Count(u-n) = 0
+Count(g-u) = 0
+Count(y-n) = 0

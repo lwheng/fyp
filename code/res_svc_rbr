@@ -1,0 +1,55 @@
+SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0, degree=3, gamma=0.0,
+  kernel=rbf, probability=False, shrinking=True, tol=0.001, verbose=False)
+
+
+X_train(5968, 21)
+X_test(664, 21)
+y_train(5968,)
+y_test(664,)
+
+In y:
+Count(general) = 4178
+Count(yes) = 207
+Count(no) = 2205
+Count(undetermined) = 42
+
+In y_test:
+Count(general) = 411
+Count(yes) = 21
+Count(no) = 227
+Count(undetermined) = 5
+
+In predicted:
+Count(general) = 524
+Count(yes) = 0
+Count(no) = 140
+Count(undetermined) = 0
+
+Classification report for classifier SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0, degree=3, gamma=0.0,
+  kernel=rbf, probability=False, shrinking=True, tol=0.001, verbose=False):
+             precision    recall  f1-score   support
+
+          0       0.74      0.95      0.83       411
+          1       0.00      0.00      0.00        21
+          2       0.76      0.47      0.58       227
+          3       0.00      0.00      0.00         5
+
+avg / total       0.72      0.75      0.71       664
+
+
+Legend:
+0 - General
+1 - Specific (Yes)
+2 - Specific (No)
+3 - Undetermined
+
+Confusion matrix:
+[[389   0  22   0]
+ [  9   0  12   0]
+ [121   0 106   0]
+ [  5   0   0   0]]
+
+ShuffleSplit(6632, n_iterations=10, test_size=0.1, indices=True, random_state=0)
+[ 0.74548193  0.72590361  0.69277108  0.68373494  0.69427711  0.74096386
+  0.72439759  0.70180723  0.68975904  0.71686747]
+
