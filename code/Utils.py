@@ -11,6 +11,7 @@ from sets import Set
 from nltk.corpus import stopwords
 from nltk.tokenize.punkt import PunktSentenceTokenizer
 from nltk.metrics import distance
+from collections import Counter
 import sys
 
 class nltk_tools:
@@ -28,6 +29,16 @@ class nltk_tools:
 
   def nltk_cosine_distance(self, u, v):
     return nltk.cluster.util.cosine_distance(u,v)
+
+  def nltk_pos_tag(self, text):
+    return nltk.pos_tag(text)
+
+  def nltk_pos_count_normalized(self, text):
+    tagged = nltk.pos_tag(text)
+    counts = Counter(tag for word,tag in tagged)
+    total = sum(counts.values())
+    dict_tag = dict((word, float(count)/total) for word,count in counts.items())
+    return dict_tag
 
 class tools:
   def parseXML(self, data):
