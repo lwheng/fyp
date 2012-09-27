@@ -43,8 +43,8 @@ if __name__ == "__main__":
   X = X[0:num_of_labelled_data_points]
 
   X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.1, random_state=0)
-  clf = svm.SVC(kernel="linear")
-  #clf = svm.SVC()
+  #clf = svm.SVC(kernel="linear")
+  clf = svm.SVC()
   clf.fit(X_train, y_train)
   expected = y_test
   predicted = clf.predict(X_test)
@@ -91,8 +91,8 @@ if __name__ == "__main__":
   print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
   print
 
-  clf = svm.SVC(kernel='linear')
-  #clf = svm.SVC()
+  #clf = svm.SVC(kernel='linear')
+  clf = svm.SVC()
   n_samples = X.shape[0]
   cv = cross_validation.ShuffleSplit(n_samples, n_iterations=10, test_size=0.1, random_state=0)
   print cv

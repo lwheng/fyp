@@ -38,6 +38,7 @@ if __name__ == "__main__":
 
   # Load y
   y = pickle.load(open(os.path.join(path_pickles, 'Y.pickle'),'r'))
+  y_info = pickle.load(open(os.path.join(path_pickles, 'Y_Info.pickle'),'r'))
   num_of_labelled_data_points = y.shape[0]
 
   # Set size of X to size of y
@@ -105,9 +106,12 @@ if __name__ == "__main__":
   info[labels[3]+"-"+labels[0]] = []
   info[labels[3]+"-"+labels[1]] = []
   info[labels[3]+"-"+labels[2]] = []
-  for i in xrange(train, len(y)):
-    if (y[i] != int(predicted[i-train])):
-      info[labels[y[i]] + "-" + labels[int(predicted[i-train])]].append(i)
-      print "#" + str(i) + ": Answers = " + labels[y[i]] + " Prediction = " + labels[int(predicted[i-train])] + " Correct? " + str(y[i] == int(predicted[i-train]))
-  for k in info.keys():
-    print "Count(" + k +") = " + str(len(info[k]))
+
+  for i in range(len(expected)):
+    index = i+train
+    e = expected[i]
+    e = labels[e]
+    p = int(predicted[i])
+    p = labels[p]
+    if (e!=p):
+      print y_info[index][0] + "  " + y_info[index][1] + "  " + str(y_info[index][2]).rjust(3, '0') + ": Expected-> " + str(e) + "-" + str(p) + " <-Predicted"

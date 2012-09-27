@@ -7,6 +7,7 @@ import numpy as np
 if __name__ == '__main__':
   # Output
   y = []
+  y_info = []
 
   # Init
   general = 0
@@ -32,15 +33,20 @@ if __name__ == '__main__':
       context_id = obj[0][1]
       body_text_id = int(obj[0][2])
       annotation = obj[0][3]
+
+      if annotation != 'u':
+        y_info.append((cite_key, context_id, body_text_id, annotation))
+
       if annotation == 'g':
         y.append(general)
       elif annotation == 'y':
         y.append(spec_yes)
       elif annotation == 'n':
-        y.append(spec_no)
-        #y.append(general)
+        #y.append(spec_no)
+        y.append(general)
       elif annotation == 'u':
-        y.append(undetermined)
+        print
+        #y.append(undetermined)
         #y.append(general) # Setting undetermined to general
 
   y = np.asarray(y)
@@ -56,3 +62,4 @@ if __name__ == '__main__':
   print "Specific-No - " + str(specific_no_records*100) + "%"
   print "Undetermined - " + str(undetermined_records*100) + "%"
   pickle.dump(y, open(os.path.join(path_pickles,'Y.pickle'),'wb'))
+  pickle.dump(y_info, open(os.path.join(path_pickles,'Y_Info.pickle'),'wb'))
