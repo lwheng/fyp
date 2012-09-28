@@ -1,5 +1,6 @@
 import cPickle as pickle
 import os, sys
+import operator
 import numpy as np
 import pylab as pl
 from sklearn import svm, metrics
@@ -48,7 +49,8 @@ if __name__ == "__main__":
       y.append(reverse_labels['g'])
     elif labels[temp_y] == 'u':
       continue
-    X.append(temp_x)
+    X.append(list(operator.itemgetter(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)(temp_x)))
+    #X.append([operator.itemgetter(4)(temp_x)]) # Only one feature
     y_info.append(temp_y_info)
   X = np.asarray(X)
   y = np.asarray(y)
@@ -65,7 +67,7 @@ if __name__ == "__main__":
   print "Feature Ranking with Recursive Feature Elimination"
   selector = RFE(clf, 1, step=1)
   selector = selector.fit(X, y)
-  print selector.support_
+  #print selector.support_
   print selector.ranking_
   print
 
