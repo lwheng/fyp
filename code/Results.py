@@ -42,15 +42,16 @@ if __name__ == "__main__":
     temp_y = y_raw[i]
     temp_y_info = y_info_raw[i]
     if labels[temp_y] == 'g':
-      y.append(temp_y)
+      #y.append(temp_y)
+      continue
     elif labels[temp_y] == 'y':
       y.append(temp_y)
     elif labels[temp_y] == 'n':
-      y.append(reverse_labels['g'])
+      #y.append(reverse_labels['g'])
+      y.append(temp_y)
     elif labels[temp_y] == 'u':
       continue
-    X.append(list(operator.itemgetter(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20)(temp_x)))
-    #X.append([operator.itemgetter(4)(temp_x)]) # Only one feature
+    X.append(temp_x)
     y_info.append(temp_y_info)
   X = np.asarray(X)
   y = np.asarray(y)
