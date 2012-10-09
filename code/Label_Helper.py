@@ -32,6 +32,7 @@ def printer(citing, cited, num_contexts, cit_str, context, body_texts):
   display += context
   display += "</div>"
   display += "<div style='float:right; display:inline-block; width:50%; height:400px; overflow:auto' class='div2'>"
+  index = 0
   for i in range(len(body_texts)):
     b = body_texts[i]
     whole_text = b.firstChild.wholeText
@@ -39,6 +40,7 @@ def printer(citing, cited, num_contexts, cit_str, context, body_texts):
     display += "<div>" + whole_text + "</div>"
     display += "<p>"
     display += "<p>"
+    index += 1
   display += "</div>"
   display += "</div>"
   return display
