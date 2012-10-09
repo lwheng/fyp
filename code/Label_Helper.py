@@ -22,7 +22,7 @@ for_labelling = pickle.load(open(os.path.join(path_pickles,'For_Labelling.pickle
 
 def printer(citing, cited, num_contexts, cit_str, context, body_texts):
   display = "<div style='width:100%'>"
-  display += "<h2>" + citing + " cites " + cited + "</h2>"
+  display += "<h2>" + citing + "==>" + cited + "</h2>"
   display += "<a href='http://aclweb.org/anthology/" + citing[0] + "/" + citing[0:3] + "/" + citing + ".pdf'>citing</a>"
   display += "<p>"
   display += "<a href='http://aclweb.org/anthology/" + cited[0] + "/" + cited[0:3] + "/" + cited+ ".pdf'>cited</a>"
