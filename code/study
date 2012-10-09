@@ -1,0 +1,72 @@
+P06-2089==>C04-1010
+Citing (Related Work)
+That algorithm, in turn, is similar to the dependency parsing algorithm of Nivre and Scholz (2004), but it builds a constituent tree and a dependency tree simultaneously. The algorithm considers only trees with unary and binary productions.
+Cited (genericHeader="method", 2 Deterministic Dependency Parsing)
+Body Text Index = 5
+For a more detailed discussion of dependency graphs and well-formedness conditions, the reader is referred to Nivre (2003). The parsing algorithm used here was first de- fined for unlabeled dependency parsing in Nivre (2003) and subsequently extended to labeled graphs in Nivre et al. (2004). Parser configurations are rep- resented by triples (S, I, A), where S is the stack (represented as a list), I is the list of (remaining) input tokens, and A is the (current) arc relation for the dependency graph. (Since in a dependency graph the set of nodes is given by the input to- kens, only the arcs need to be represented explic- itly.) Given an input string W, the parser is initial- ized to (nil, W, 0)2 and terminates when it reaches a configuration (S, nil, A) (for any list S and set of arcs A). The input string W is accepted if the de- pendency graph D = (W, A) given at termination is well-formed; otherwise W is rejected. Given an arbitrary configuration of the parser, there are four possible transitions to the next configuration (where t is the token on top of the stack, n is the next input token, w is any word, and r, r' E R):
+
+
+P06-2066==>P98-1106
+Citing (Related Work)
+The non-projective dependency grammar of Kahane et al. (1998) is based on an operation on dependency trees called lifting: a ‘lift’ of a tree T is the new tree that is obtained when one replaces one 2We use the term edge degree instead of the original simple term degree from Nivre (2006) to mark the distinction from the notion of gap degree. or more edges (i, k) in T by edges (j, k), where j !* i. The exact conditions under which a certain lifting may take place are specified in the rules of the grammar.
+Cited (genericHeader="keywords", 2.3 Pseudo-Projectivity)
+Body Text Index = 6
+The non projective structures found in linguistics represent a small subset of the potential non projective structures. We will define a property (more exactly a family of properties), weaker than projectivity, called pseudo-projectivity, which describes a subset of the set of ordered dependency trees, containing the non-projective linguistic struc- tures. In order to define pseudo-projectivity, we in- troduce an operation on dependency trees called lifting. When applied to a tree, this operation leads to the creation of a second tree, a lift of the first one. An ordered tree T' is a lift of the ordered tree T if and only if T and T' have the same nodes in the same order and for ev- ery node X, X+T
+
+
+C04-1201==>J03-3001
+Citing (genericHeader="method", 3 Learning Question Classifiers)
+3.1 Using Internet As Kilgarriff and Grefenstette wrote, the Internet is a fabulous linguists’ playground (Kilgarriff and Grefenstette, 2003)
+Cited (abstract)
+Body Text Index = 0
+The Web, teeming as it is with language data, of all manner of varieties and languages, in vast quantity and freely available, is a fabulous linguists’ playground. This special issue of Computational Linguistics explores ways in which this dream is being explored.
+
+Citing (genericHeader="method", experiments)
+Estimates reported in (Kilgarriff and Grefenstette, 2003) show that for Italian the web size in words is 1,845,026,000; while for English and Spanish the web sizes are 76,598,718,000 and 2,658,631,000 respectively. 
+Cited
+<Table 3> (not in bodyTexts)
+
+
+H05-1119==>P05-1055
+Citing (genericHeader="introduction", 2 A System For Searching Conversations)
+For example, (Chelba and Acero, 2005) reports a lattice oracle error rate of 22% for lecture recordings at a top-1 word-error rate of 45%
+Cited (genericHeader="evaluation", 6.3.3 Why Would This Work?)
+Body Text Index = 30
+A legitimate question at this point is: why would anyone expect this to work when the 1-best ASR ac- curacy is so poor? In favor of our approach, the ASR lattice WER is much lower than the 1-best WER, and PSPL have even lower WER than the ASR lattices. As re- ported in Table 1, the PSPL WER for L01 was 22% whereas the 1-best WER was 45%. Consider matching a 2-gram in the PSPL —the average query length is indeed 2 wds so this is a representative sit- uation. A simple calculation reveals that it is twice — (1 − 0.22)2/(1 − 0.45)2 = 2 — more likely to find a query match in the PSPL than in the 1-best — if the query 2-gram was indeed spoken at that posi- tion. According to this heuristic argument one could expect a dramatic increase in Recall. Another aspect
+
+
+P06-1013==>J91-1002
+Citing (genericHeader="introduction", 2 The Disambiguation Algorithms)
+Lexical Chains Lexical cohesion is often represented via lexical chains, i.e., sequences of related words spanning a topical text unit (Morris and Hirst, 1991).
+Cited (introduction?, 1.1 Lexical Chains)
+Body Text Index = 3
+Often, lexical cohesion occurs not simply between pairs of words but over a succes- sion of a number of nearby related words spanning a topical unit of the text. These
+Body Text Index = 4
+sequences of related words will be called lexical chains. There is a distance relation be- tween each word in the chain, and the words co-occur within a given span. Lexical chains do not stop at sentence boundaries. They can connect a pair of adjacent words or range over an entire text. Lexical chains tend to delineate portions of text that have a strong unity of mean- ing. Consider this example (sentences 31-33 from the long example given in Sec- tion 4.2): Example 6 In front of me lay a virgin crescent cut out of pine bush. A dozen houses were going up, in various stages of construction, surrounded by hummocks of dry earth and stands of precariously tall trees nude halfway up their trunks. They were the kind of trees you might see in the mountains. A lexical chain spanning these three sentences is {virgin, pine, bush, trees, trunks, trees}. Section 3 will explain how such chains are formed. Section 4 is an analysis of the correspondence between lexical chains and the structure of the text.
+
+
+A00-1024==>J83-3005
+Citing (genericHeader="method", 6 Related Research)
+(Granger, 1983) uses expectations generated by scripts to analyze unknown words. The drawback of his system is that it lacks portability since it incorporates scripts that make use of world knowledge of the situation being described; in this case, naval ship-to-shore messages. 
+Cited (, 4.1. Recognizing and correcting surface errors)
+Body Text Index = 22
+ENEMY SCUDDED BOMBS AT US. Problem: Unknown word. The unknown word "scudded" is trivial to recognize as being unknown, since it is the only word without a dictionary entry. Once it has been recognized, NOMAD checks it to see if it could be (a) a misspelling, (b) an abbrevia- tion, or (c) a regular verb-tense of some known word. Solution: Use expectations to figure out word meaning from context. When the spelling checkers fail, a FOUL-UP mechanism is called that uses syn- tactic expectation (and some morphological analy- sis) to infer that 'scudded' is probably a verb, and then uses pragmatic knowledge of what actions can be done by an 'enemy' ACTOR, to a 'weapon' OBJECT, direct TO us. At this point, NOMAD uses a mechanism we term 'ACT-preference' (Granger 1977), which exploits both pragmatic knowledge of what enemies tend to do with weapons, and word- order knowledge that we have derived of how par- ticular triads of prepositions, noun-categories, and verb-categories tend to combine (for example, `BLAGHED AT ' will give rise to a different inference than `BLAGHED TO ', or `BLAGHED FOR ', etc.). This process, detailed in Granger (1977), arrives at an inference that the action is probably a 'PROPEL' (see Schank and Abelson 1977). Again, this is only an educated guess by the system, and may have to be corrected later on the basis of further information (see Gran- ger 1980, 1981b). Finally, NOMAD produces an interpretation of the input, which the user may or may not confirm. In the event that the user does not confirm NOMAD's initial interpretation, a number of alter- native interpretations are produced (see Granger 1981a, 1982c) until one is confirmed, or the proc- ess fails. In this and the following examples, NOMAD's 'preferred' interpretation is confirmed by the user. NOMAD OUTPUT: An enemy ship fired bombs at our ship.
+
+
+J98-3005==>A97-1033
+Citing (genericHeader="method", 5. Generating Descriptions)
+If the summarization system can find the needed information in other on-line sources, then it can produce an improved summary by merging information extracted from the input articles with information from the other sources (Radev and McKeown 1997).
+Cited (genericHeader="introduction", 1 Introduction)
+Body Text Index = 1
+In our work to date on news summarization at Columbia University (McKeown and Radev, 1995; Radev, 1996), information is extracted from a se- ries of input news articles (MUC, 1992; Grishman et al., 1992) and is analyzed by a generation com- ponent to produce a summary that shows how per- ception of the event has changed over time. In this summarization paradigm, problems arise when in- formation needed for the summary is either miss- ing from the input article(s) or not extracted by the information extraction system. In such cases, the information may be readily available in other current news stories, in past news, or in online databases. If the summarization system can find the needed information in other online sources, then it can produce an improved summary by merging information from multiple sources with information extracted from the input articles. In the news domain, a summary needs to refer to people, places, and organizations and provide descriptions that clearly identify the entity for the reader. Such descriptions may not be present in the original text that is being summarized. For ex- ample, the American pilot Scott O'Grady, downed in Bosnia in June of 1995, was unheard of by the American public prior to the incident. If a reader tuned into news on this event days later, descrip- tions from the initial articles may be more useful. A summarizer that has access to different descrip- tions will be able to select the description that best suits both the reader and the series of articles be- ing summarized. In this paper, we describe a system called PROFILE that tracks prior references to a given entity by extracting descriptions for later use in summarization. In contrast with previous work on information extraction, our work has the following features:
+
+
+P05-1049==>J04-1001
+Citing (genericHeader="evaluation", 4.2 Experiment 1: LP vs. SVM)
+Table 2: Accuracies from (Li and Li, 2004) and average accuracies of LP with c x b labeled examples on “interest” and “line” corpora. Major is a baseline method in which they always choose the most frequent sense. MB-D denotes monolingual bootstrapping with decision list as base classifier, MB-B represents monolingual bootstrapping with ensemble of Naive Bayes as base classifier, and BB is bilingual bootstrapping with ensemble of Naive Bayes as base classifier.
+Cited (genericHeader="method", 4.4 Experiment 2: Yarowsky’s Words)
+Words Major (%) MB-D (%) MB-B (%) BB (%)
+interest 54.6 54.7 69.3 75.5
+line 53.5 55.6 54.1 62.7
+ 
+
