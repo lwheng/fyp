@@ -35,8 +35,11 @@ def printer(citing, cited, num_contexts, cit_str, context, body_texts):
   index = 0
   for i in range(len(body_texts)):
     b = body_texts[i]
+    if b.nodeType == b.TEXT_NODE:
+      continue
     whole_text = b.firstChild.wholeText
-    display += "<div>" + "<strong>Body Text Index = " + str(i) + "</strong></div>"
+    #display += "<div>" + "<strong>Body Text Index = " + str(i) + "</strong></div>"
+    display += "<div>" + str(index).rjust(3,'0') + " <strong>" + b.nodeName + "</strong></div>"
     display += "<div>" + whole_text + "</div>"
     display += "<p>"
     display += "<p>"
@@ -72,7 +75,8 @@ def show(item_id, context_id=0):
     data = openfile.read()
     openfile.close()
     dom_parscit_section_cited = parseString(data)
-    body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
+    #body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
+    body_texts = dom_parscit_section_cited.getElementsByTagName('variant')[0].childNodes
     return printer(citing, cited, num_contexts, cit_str, context, body_texts)
   else:
     # No contexts

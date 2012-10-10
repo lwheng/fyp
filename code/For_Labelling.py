@@ -33,15 +33,22 @@ if __name__ == "__main__":
     # Get dom tuple
     dom_tuple = doms[hash_key]
     dom_parscit_section_cited = dom_tuple[3]
-    body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
+    #body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
+    body_texts = dom_parscit_section_cited.getElementsByTagName('variant')[0].childNodes
 
     index = 0
     for c in range(len(this_context)):
+      bindex = 0
       for b in range(len(body_texts)):
+        temp = body_texts[b]
+        if temp.nodeType == temp.TEXT_NODE:
+          continue
         line = str(index).rjust(3,'0') + "\t" + hash_key + "\t" + "c"+str(c) + "\t" + "bt"+str(b) + "\t:"
         for_labelling_file.append(line)
-        for_labelling.append((hash_key, c, b))
+        #for_labelling.append((hash_key, c, b))
+        for_labelling.append((hash_key, c, bindex))
         index += 1
+        bindex += 1
     num -= 1
     print "No. left = " + str(num)
 

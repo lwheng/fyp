@@ -48,4 +48,5 @@ if __name__ == "__main__":
   
   # Dump pickle
   #pickle.dump(big_X, open(os.path.join(path_pickles,'Big_X.pickle'),'wb'))
-  pickle.dump(big_X, open(os.path.join(path_pickles,'Big_X_With_Publish_Year.pickle'),'wb'))
+  #pickle.dump(big_X, open(os.path.join(path_pickles,'Big_X_With_Publish_Year.pickle'),'wb'))
+  pickle.dump(big_X, open(os.path.join(path_pickles,'Big_X_Body_Text_PlusPlus.pickle'),'wb'))

@@ -137,8 +137,11 @@ class weight:
 
   def cosine_similarity(self, query_tokens, query_col, dom_parscit_section_cited):
     docs = []
-    body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
+    #body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
+    body_texts = dom_parscit_section_cited.getElementsByTagName('variant')[0].childNodes
     for body_text in body_texts:
+      if body_text.nodeType == body_text.TEXT_NODE:
+        continue
       whole_text = body_text.firstChild.wholeText.lower()
       whole_text = unicode(whole_text.encode('ascii', 'ignore'), errors='ignore')
       text = self.nltk_tools.nltk_text(self.nltk_tools.nltk_word_tokenize(whole_text.lower()))
