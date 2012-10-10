@@ -18,20 +18,23 @@ contexts = pickle.load(open(os.path.join(path_pickles,'Contexts.pickle'),'r'))
 # Load Filtered
 filtered = pickle.load(open(os.path.join(path_pickles,'Filtered.pickle'),'r'))
 # Load For_Labelling
-for_labelling = pickle.load(open(os.path.join(path_pickles,'For_Labelling.pickle'),'r'))
+#for_labelling = pickle.load(open(os.path.join(path_pickles,'For_Labelling.pickle'),'r'))
+for_labelling = pickle.load(open(os.path.join(path_pickles,'For_Labelling_Plus.pickle'),'r'))
 
 def printer(citing, cited, num_contexts, cit_str, context, body_texts):
   display = "<div style='width:100%'>"
   display += "<h2>" + citing + "==>" + cited + "</h2>"
   display += "<a href='http://aclweb.org/anthology/" + citing[0] + "/" + citing[0:3] + "/" + citing + ".pdf'>citing</a>"
-  display += "<p>"
+  display += "   "
   display += "<a href='http://aclweb.org/anthology/" + cited[0] + "/" + cited[0:3] + "/" + cited+ ".pdf'>cited</a>"
-  display += "<h2>citStr = " + cit_str + "</h2>"
-  display += "<h3>No. contexts = " + str(num_contexts) + ", No. bodyText = " + str(len(body_texts)) + "</h3>"
+  display += "<p>"
+  display += "   <strong>citStr = " + cit_str + "</strong> ,  "
+  display += "<strong>No. contexts = " + str(num_contexts) + ", No. bodyText = " + str(len(body_texts)) + "</strong>"
+  display += "<p>"
   display += "<div style='float:left; display:inline-block; width:40%; overflow:auto' class='div1'>"
-  display += context
+  display += context.replace(cit_str, "<strong>"+cit_str+"</strong>")
   display += "</div>"
-  display += "<div style='float:right; display:inline-block; width:50%; height:400px; overflow:auto' class='div2'>"
+  display += "<div style='float:right; display:inline-block; width:50%; height:100%; overflow:auto' class='div2'>"
   index = 0
   for i in range(len(body_texts)):
     b = body_texts[i]
