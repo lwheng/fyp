@@ -12,7 +12,8 @@ if __name__ == '__main__':
   path_pickles = config['path_pickles']
 
   # Load For_Labelling.pickle
-  for_labelling = pickle.load(open(os.path.join(path_pickles, 'For_Labelling.pickle'), 'r'))
+  #for_labelling = pickle.load(open(os.path.join(path_pickles, 'For_Labelling.pickle'), 'r'))
+  for_labelling = pickle.load(open(os.path.join(path_pickles, 'For_Labelling_Plus.pickle'), 'r'))
 
   for i in range(len(for_labelling)):
     f = for_labelling[i]
