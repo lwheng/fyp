@@ -27,7 +27,8 @@ if __name__ == "__main__":
 
   # Load Big_X
   #X = pickle.load(open(os.path.join(path_pickles, 'Big_X.pickle'),'r'))
-  X_raw = pickle.load(open(os.path.join(path_pickles, 'Big_X_With_Publish_Year.pickle'),'r'))
+  #X_raw = pickle.load(open(os.path.join(path_pickles, 'Big_X_With_Publish_Year.pickle'),'r'))
+  X_raw = pickle.load(open(os.path.join(path_pickles, 'Big_X_Body_Text_PlusPlus.pickle'),'r'))
 
   # Load y
   y_raw = pickle.load(open(os.path.join(path_pickles, 'Y.pickle'),'r'))
