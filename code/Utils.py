@@ -190,6 +190,18 @@ class weight:
       feature.append((docs[i],results[i]))
     return feature
 
+  def referToNumbers(self, cit_str, context):
+    print
+
+  def referToDefinition(self, cit_str, context):
+    print
+
+  def referToQuote(self, cit_str, context):
+    print
+
+  def referToMethod(self, cit_str, context):
+    print
+
 class dist:
   def __init__(self):
     self.sentence_tokenizer = PunktSentenceTokenizer()
