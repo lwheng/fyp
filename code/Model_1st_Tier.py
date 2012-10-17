@@ -75,6 +75,8 @@ if __name__ == "__main__":
       context_list.append(nltk_tools.nltk_text(nltk_tools.nltk_word_tokenize(value)))
     citing_col = nltk_tools.nltk_text_collection(context_list)
     for i in range(len(f_contexts)):
+      if y_hash_1st_tier[hash_key][i] == 'u':
+        continue
       c = f_contexts[i]
       x = feature_extractor.extract_feature_1st_tier(f, c, citing_col, doms[hash_key][1], doms[hash_key][3])
       X.append(x)
