@@ -62,7 +62,6 @@ if __name__ == "__main__":
   X = []
   y = []
   # Extract Features
-  num = len(filtered)
   for f in filtered:
     citing = f['citing']
     cited = f['cited']
@@ -82,10 +81,11 @@ if __name__ == "__main__":
         x = feature_extractor.extract_feature_1st_tier(f, c, citing_col, doms[hash_key][1], doms[hash_key][3])
         X.append(x)
         y.append(labels_to_index[y_hash_1st_tier[hash_key][i]])
-      num -= 1
-      print "No. of filtered left = " + str(num)
   X = np.asarray(X)
   y = np.asarray(y)
+
+  print X.shape
+  print y.shape
 
   ## Fit the Model
   string = "Fitting Model"
