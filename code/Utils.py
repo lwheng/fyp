@@ -229,13 +229,13 @@ class weight:
     v2 = []
     for w in V:
       if w in v1:
+        v1.append(100)
+      else:
         v1.append(1)
-      else:
-        v1.append(0)
       if w in v2:
-        v2.append(1)
+        v2.append(100)
       else:
-        v2.append(0)
+        v2.append(1)
     return self.nltk_tools.nltk_cosine_distance(v1,v2)
 
   def referToDefinition(self, cit_str, context):
