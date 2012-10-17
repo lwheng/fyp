@@ -84,8 +84,10 @@ if __name__ == "__main__":
   X = np.asarray(X)
   y = np.asarray(y)
 
-  print X.shape
-  print y.shape
+  print X
+  print "X = " + str(X.shape)
+  print y
+  print "y = " + str(y.shape)
 
   ## Fit the Model
   string = "Fitting Model"
