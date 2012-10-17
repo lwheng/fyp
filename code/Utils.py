@@ -71,6 +71,7 @@ class weight:
     self.nltk_tools = nltk_tools()
     self.punctuation = "~`!@#$%^&*()-_+={}[]|\\:;\"\'<>,.?/"
     self.stopwords = self.nltk_tools.nltk_stopwords()
+    self.tools = tools()
     self.LAMBDA_AUTHOR_MATCH = 0.8
     reg = []
     reg.append(r"\(\s?(\d{1,3})\s?\)")
@@ -156,7 +157,7 @@ class weight:
     tokens = query.split()
     num_of_digits = 0
     for t in tokens:
-      if check_if_number(t):
+      if self.tools.check_if_number(t):
         num_of_digits += 1
     return float(num_of_digits) / float(len(tokens))
 
