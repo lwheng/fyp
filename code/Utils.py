@@ -11,6 +11,7 @@ from sets import Set
 from nltk.corpus import stopwords
 from nltk.tokenize.punkt import PunktSentenceTokenizer
 from nltk.metrics import distance
+from nltk import SnowballStemmer
 import sys
 
 class printer:
@@ -21,6 +22,8 @@ class printer:
     return output
 
 class nltk_tools:
+  self.stemmer = SnowballStemmer("english")
+
   def nltk_word_tokenize(self, text):
     return nltk.word_tokenize(text)
 
@@ -35,6 +38,9 @@ class nltk_tools:
 
   def nltk_cosine_distance(self, u, v):
     return nltk.cluster.util.cosine_distance(u,v)
+
+  def nltk_stemmer(self, input_string):
+    return self.stemmer.stem(input_string)
 
 class tools:
   def parseXML(self, data):
@@ -53,6 +59,9 @@ class tools:
         return i
     # Cannot find, return the mid of the chunk
     return int(len(lines)/2)
+
+  def check_if_number(self, term):
+    return term.replace(',','').replace(',','').replace('%','').isdigit()
 
 class weight:
   def __init__(self):
@@ -142,6 +151,14 @@ class weight:
     avg_density = float(citation_count) / float(len(query_lines))
     return avg_density
 
+  def number_density(self, query):
+    tokens = query.split()
+    num_of_digits = 0
+    for t in tokens:
+      if check_if_number(t):
+        num_of_digits += 1
+    return float(num_of_digits) / float(len(tokens))
+
   def cosine_similarity(self, query_tokens, query_col, dom_parscit_section_cited):
     docs = []
     #body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
@@ -197,8 +214,27 @@ class weight:
       feature.append((docs[i],results[i]))
     return feature
 
-  def referToNumbers(self, cit_str, context):
-    print
+  def referToNumbers(self, cit_str, query):
+    # Define cue words. These cue words are stemmed
+    cue = ['obtain', 'score', 'high', 'F-score', 'accuraci',
+          'result', 'achiev', 'promis', 'estim', 'report',
+          'probabl', 'precis', 'recal', 'peak', 'experi',
+          'experiment'
+          ]
+    tokens = query.lower().split()
+    V = Set(tokens) | Set(cue)
+    v1 = []
+    v2 = []
+    for w in V:
+      if w in v1:
+        v1.append(1)
+      else:
+        v1.append(0)
+      if w in v2:
+        v2.append(1)
+      else:
+        v2.append(0)
+    return self.nltk_tools.nltk_cosine_distance(v1,v2)
 
   def referToDefinition(self, cit_str, context):
     print
@@ -635,6 +671,10 @@ class extract_features:
     feature_cit_density = self.weight.cit_density(query, cit_str)
     x.append(feature_cit_density)
 
+    # Number Density
+    feature_num_density = self.weight.number_density(query)
+    x.append(feature_num_density)
+
     # Publishing Year Difference
     feature_publish_year = self.dist.publish_year(f)
     x.append(feature_publish_year)
@@ -654,6 +694,10 @@ class extract_features:
     # Location of Citing Sentence
     feature_cit_sent_location = self.dist.cit_sent_location(cit_str, query, dom_parscit_section_citing)
     x.extend(feature_cit_sent_location)
+
+    # Refer To Numbers. Detect Cue Words
+    feature_refer_to_numbers = self.weight.referToNumbers(cit_str, query)
+    x.append(feature_refer_to_numbers)
 
     return x
 
