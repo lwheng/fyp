@@ -8,6 +8,7 @@ if __name__ == '__main__':
   # Output
   y = []
   y_info = []
+  y_hash_1st_tier = {}
 
   # Init
   general = 0
@@ -30,10 +31,17 @@ if __name__ == '__main__':
     obj = re.findall(regex,l.strip())
     if obj:
       cite_key = obj[0][0].strip()
-      context_id = obj[0][1]
+      context_id = int(obj[0][1])
       body_text_id = int(obj[0][2])
       annotation = obj[0][3]
-      y_info.append((cite_key, context_id, body_text_id))
+      y_info.append((cite_key, context_id, body_text_id, annotation))
+      if cite_key in y_hash_1st_tier:
+        if context_id not in y_hash_1st_tier[cite_key]:
+          y_hash_1st_tier[cite_key][context_id] = annotation
+      else:
+        temphash = {}
+        temphash[context_id] = annotation
+        y_hash_1st_tier[cite_key] = temphash
 
       if annotation == 'g':
         y.append(general)
@@ -58,3 +66,4 @@ if __name__ == '__main__':
   print "Undetermined - " + str(undetermined_records*100) + "%"
   pickle.dump(y, open(os.path.join(path_pickles,'Y.pickle'),'wb'))
   pickle.dump(y_info, open(os.path.join(path_pickles,'Y_Info.pickle'),'wb'))
+  pickle.dump(y_hash_1st_tier, open(os.path.join(path_pickles,'Y_Hash_1st_Tier.pickle'),'wb'))

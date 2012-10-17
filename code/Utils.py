@@ -13,6 +13,13 @@ from nltk.tokenize.punkt import PunktSentenceTokenizer
 from nltk.metrics import distance
 import sys
 
+class printer:
+  def line_printer(self, length, character):
+    output = ""
+    for i in range(length):
+      output += character
+    return output
+
 class nltk_tools:
   def nltk_word_tokenize(self, text):
     return nltk.word_tokenize(text)
@@ -610,6 +617,45 @@ class extract_features:
     self.dist = dist()
     self.nltk_tools = nltk_tools()
     self.weight = weight()
+
+  def extract_feature_1st_tier(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
+    cit_str = context.getAttribute('citStr')
+    cit_str = unicode(cit_str.encode('ascii','ignore'), errors='ignore')
+    query = context.firstChild.wholeText
+    query = unicode(query.encode('ascii','ignore'), errors='ignore')
+
+    query_tokens = self.nltk_tools.nltk_word_tokenize(query.lower())
+    query_text = self.nltk_tools.nltk_text(query_tokens)
+    query_col = self.nltk_tools.nltk_text_collection([query_text])
+
+    # Extract Features
+    x = []
+    
+    # Citation Density
+    feature_cit_density = self.weight.cit_density(query, cit_str)
+    x.append(feature_cit_density)
+
+    # Publishing Year Difference
+    feature_publish_year = self.dist.publish_year(f)
+    x.append(feature_publish_year)
+
+    # Title Overlap
+    feature_title_overlap = self.weight.title_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
+    x.append(feature_title_overlap)
+
+    # Authors Overlap
+    feature_author_overlap = self.weight.author_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
+    x.append(feature_author_overlap)
+
+    # Context's Average TF-IDF Weight
+    feature_query_weight = self.weight.chunk_average_weight(query_text, citing_col)
+    x.append(feature_query_weight)
+
+    # Location of Citing Sentence
+    feature_cit_sent_location = self.dist.cit_sent_location(cit_str, query, dom_parscit_section_citing)
+    x.extend(feature_cit_sent_location)
+
+    return x
 
   def extract_feature(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
     cit_str = context.getAttribute('citStr')

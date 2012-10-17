@@ -2,11 +2,18 @@ execfile("Utils.py")
 import Utils
 import cPickle as pickle
 import os
+import sys
+import numpy as np
+from sklearn import svm
 
 if __name__ == "__main__":
-  print "#######################"
-  print "Building 1st Tier Model"
-  print "#######################"
+  labels_to_index = {'g':0, 'y':1, 'n':1}
+  nltk_tools = Utils.nltk_tools()
+  printer = Utils.printer()
+  string = "Building 1st Tier Model"
+  print printer.line_printer(len(string), "#")
+  print string
+  print printer.line_printer(len(string), "#")
 
   # Load Config.pickle
   config = pickle.load(open('Config.pickle','r'))
@@ -15,40 +22,81 @@ if __name__ == "__main__":
   path_pickles = config['path_pickles']
 
   ## Input To Model
-  # Contexts
-  print "----------------"
-  print "Loading Contexts"
-  print "----------------"
-  contexts = pickle.load(open(os.path.join(path_pickles,'Contexts.pickle'),'r'))
-  print "---------------------------------"
-  print "Loaded Contexts. Extract Features"
-  print "---------------------------------"
-  feature_extractor = Utils.extract_features()
-
   # Annotations
-  print "-------------------"
-  print "Loading Annotations"
-  print "-------------------"
+  string = "Loading Annotations"
+  print printer.line_printer(len(string), "-")
+  print string
+  print printer.line_printer(len(string), "-")
   # Run Targets.py to generate Y.pickle from Labels.txt
   execfile("Targets.py")
-  # Load y_raw
-  y_raw = pickle.load(open(os.path.join(path_pickles, 'Y.pickle'),'r'))
-  y_info_raw = pickle.load(open(os.path.join(path_pickles, 'Y_Info.pickle'),'r'))
-  print "------------------"
-  print "Loaded Annotations"
-  print "------------------"
+  # Load y_hash_1st_tier
+  y_hash_1st_tier = pickle.load(open(os.path.join(path_pickles, 'Y_Hash_1st_Tier.pickle'),'r'))
+  string = "Loaded Annotations"
+  print printer.line_printer(len(string), "-")
+  print string
+  print printer.line_printer(len(string), "-")
 
-  # Pre-processing on X and y
+  # Doms
+  string = "Loading Doms"
+  print printer.line_printer(len(string), "-")
+  print string
+  print printer.line_printer(len(string), "-")
+  doms = pickle.load(open(os.path.join(path_pickles, "Doms.pickle"),'r'))
+  string = "Loaded Doms"
+  print printer.line_printer(len(string), "-")
+  print string
+  print printer.line_printer(len(string), "-")
+
+  # Contexts
+  string = "Loading Contexts"
+  print printer.line_printer(len(string), "-")
+  print string
+  print printer.line_printer(len(string), "-")
+  contexts = pickle.load(open(os.path.join(path_pickles,'Contexts.pickle'),'r'))
+  filtered = pickle.load(open(os.path.join(path_pickles, "Filtered.pickle"),'r'))
+  string = "Loaded Contexts. Extract Features"
+  print printer.line_printer(len(string), "-")
+  print string
+  print printer.line_printer(len(string), "-")
+  feature_extractor = Utils.extract_features()
+  X = []
+  y = []
+  # Extract Features
+  num = len(filtered)
+  for f in filtered:
+    citing = f['citing']
+    cited = f['cited']
+    hash_key = citing+"==>"+cited
+    f_contexts = contexts[hash_key]
+    context_list = []
+    for c in f_contexts:
+      value = c.firstChild.wholeText
+      value = unicode(value.encode('ascii', 'ignore'), errors='ignore')
+      context_list.append(nltk_tools.nltk_text(nltk_tools.nltk_word_tokenize(value)))
+    citing_col = nltk_tools.nltk_text_collection(context_list)
+    for i in range(len(f_contexts)):
+      c = f_contexts[i]
+      x = feature_extractor.extract_feature_1st_tier(f, c, citing_col, doms[hash_key][1], doms[hash_key][3])
+      X.append(x)
+      y.append(labels_to_index[y_hash_1st_tier[hash_key][i]])
+    num -= 1
+    print "No. of filtered left = " + str(num)
+  X = np.asarray(X)
+  y = np.asarray(y)
 
   ## Fit the Model
-  print "-----------------"
-  print "Fitting the Model"
-  print "-----------------"
+  string = "Fitting Model"
+  print printer.line_printer(len(string), "-")
+  print string
+  print printer.line_printer(len(string), "-")
   # Select Classifier
+  clf = svm.SVC(kernel='linear')
+  clf.fit(X[0:len(y)], y)
   # Fit X and y
-  print "-----------------------------"
-  print "Model Fitted. Writing out now"
-  print "-----------------------------"
+  string = "Fitted Model. Writing Out Now"
+  print printer.line_printer(len(string), "-")
+  print string
+  print printer.line_printer(len(string), "-")
 
   ## Write out the Model
   pickle.dump(model, open(os.path.join(path_pickles, 'Model_1st_Tier.pickle'),'wb'))
