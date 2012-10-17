@@ -22,7 +22,8 @@ class printer:
     return output
 
 class nltk_tools:
-  self.stemmer = SnowballStemmer("english")
+  def __init__(self):
+    self.stemmer = SnowballStemmer("english")
 
   def nltk_word_tokenize(self, text):
     return nltk.word_tokenize(text)
