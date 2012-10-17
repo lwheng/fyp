@@ -5,6 +5,7 @@ import os
 import sys
 import numpy as np
 from sklearn import svm
+from sklearn import cross_validation
 
 if __name__ == "__main__":
   labels_to_index = {'g':0, 'y':1, 'n':1}
@@ -105,3 +106,11 @@ if __name__ == "__main__":
 
   ## Write out the Model
   pickle.dump(model, open(os.path.join(path_pickles, 'Model_1st_Tier.pickle'),'wb'))
+
+  # Prediction
+  X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.1, random_state=0)
+  clf = svm.SVC(kernel='linear')
+  clf.fit(X_train, y_train)
+  expected = y_test
+  predicted = clf.predict(X_test)
+  print predicted
