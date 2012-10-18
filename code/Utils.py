@@ -154,9 +154,8 @@ class weight:
       citation_count += len(obj)
     avg_density = float(citation_count) / float(len(query_lines))
     if avg_density > 1:
-      print context_lines
-      print cit_str
-      print
+      print citation_count
+      print len(query_lines)
     return avg_density
 
   def number_density(self, query):
