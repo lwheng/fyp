@@ -131,6 +131,6 @@ if __name__ == "__main__":
   print X_train
   print y_train
   clf = svm.SVC(kernel='linear')
-  clf.fit(X_train, y_train)
+  clf.fit(X, y)
   predicted = clf.predict(X_train)
   print predicted
