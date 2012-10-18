@@ -4,7 +4,7 @@ import cPickle as pickle
 import os
 import sys
 import numpy as np
-from sklearn import svm
+from sklearn import svm, metrics
 from sklearn import cross_validation
 
 if __name__ == "__main__":
@@ -134,4 +134,6 @@ if __name__ == "__main__":
   clf = svm.SVC(kernel='linear')
   clf.fit(X_train, y_train)
   predicted = clf.predict(X_train)
-  print predicted
+  expected = y_train
+  print "Classification report for classifier %s:\n%s\n" % (clf, metrics.classification_report(expected, predicted))
+  print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
