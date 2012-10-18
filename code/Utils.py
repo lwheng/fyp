@@ -150,7 +150,11 @@ class weight:
     cit_sent = context_lines[cit_sent]
     
     # Location
-    location = self.dist.cit_sent_location(cit_str, context, dom_parscit_section_citing)
+    location_vector = self.dist.cit_sent_location(cit_str, context, dom_parscit_section_citing)
+    location = len(location_vector)-1
+    for i in range(len(location_vector)):
+      if location_vector[i] == 1:
+        location = i
 
     # Popularity
     popularity = 0
