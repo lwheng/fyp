@@ -673,8 +673,8 @@ class extract_features:
     x = []
     
     # Citation Density
-    #feature_cit_density = self.weight.cit_density(query, cit_str)
-    #x.append(feature_cit_density)
+    feature_cit_density = self.weight.cit_density(query, cit_str)
+    x.append(feature_cit_density)
 
     # Number Density
     #feature_num_density = self.weight.number_density(query)
