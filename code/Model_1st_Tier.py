@@ -108,25 +108,32 @@ if __name__ == "__main__":
   pickle.dump(model, open(os.path.join(path_pickles, 'Model_1st_Tier.pickle'),'wb'))
 
   # Prediction
-  X_train = []
-  X_test = []
-  y_train = []
-  y_test = []
+  X_g = []
+  y_g = []
+  X_s = []
+  y_s = []
   for i in range(y.shape[0]):
     temp_x = list(X[i])
     temp_y = int(y[i])
     if temp_y == 1:
-      X_train.append(temp_x)
-      y_train.append(temp_y)
-  X_temp = np.asarray(X_train)
-  y_temp = np.asarray(y_train)
-  print X_temp
-  print y_temp
-  X_train, X_test, y_train, y_test = cross_validation.train_test_split(X_temp, y_temp, test_size=0.1, random_state=0)
+      X_s.append(temp_x)
+      y_s.append(temp_y)
+    else:
+      X_g.append(temp_x)
+      y_g.append(temp_y)
+  X_train = []
+  y_train = []
+  X_test = []
+  y_test = []
+  X_train.append(X_g[0])
+  y_train.append(y_g[0])
+  X_train.append(X_s[0])
+  y_train.append(y_s[0])
+  X_train = np.asarray(X_train)
+  y_train = np.asarray(y_train)
   print X_train
   print y_train
   clf = svm.SVC(kernel='linear')
   clf.fit(X_train, y_train)
-  expected = y_test
-  predicted = clf.predict(X_test)
+  predicted = clf.predict(X_train)
   print predicted
