@@ -224,7 +224,7 @@ class weight:
           'experiment'
           ]
     tokens = query.lower().split()
-    tokens_stemmed = map(lambda x: nltk_tools.nltk_stemmer(x), tokens)
+    tokens_stemmed = map(lambda x: self.nltk_tools.nltk_stemmer(x), tokens)
     V = Set(tokens_stemmed) | Set(cue)
     v1 = []
     v2 = []
