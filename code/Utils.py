@@ -707,13 +707,13 @@ class extract_features:
     x = []
     
     # Citation Density
-    feature_cit_density = self.weight.cit_density(query, cit_str)
-    x.append(feature_cit_density)
+    #feature_cit_density = self.weight.cit_density(query, cit_str)
+    #x.append(feature_cit_density)
 
     # Physical Features
     feature_physical = self.weight.physical_features(cit_str, query, dom_parscit_section_citing)
-    print feature_physical
-    print
+    for f in feature_physical:
+      x.append(f)
 
     # Number Density
     feature_num_density = self.weight.number_density(query)
