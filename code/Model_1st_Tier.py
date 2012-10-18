@@ -142,4 +142,6 @@ if __name__ == "__main__":
   predicted = clf.predict(X)
   print X
   print y
+  print y[y==0].shape
+  print y[y==1].shape
   print predicted
