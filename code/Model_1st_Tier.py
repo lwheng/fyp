@@ -128,8 +128,8 @@ if __name__ == "__main__":
 
   X_train = np.asarray(X_train)
   y_train = np.asarray(y_train)
-  #print X_train
-  #print y_train
+  print X_train
+  print y_train
   clf = svm.SVC(kernel='linear')
   clf.fit(X, y)
   predicted = clf.predict(X)
