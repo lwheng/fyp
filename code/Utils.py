@@ -152,6 +152,7 @@ class weight:
       obj = re.findall(self.regex, l)
       if len(obj) == 0:
         print l
+        print
       citation_count += len(obj)
     avg_density = float(citation_count) / float(len(query_lines))
     return avg_density
