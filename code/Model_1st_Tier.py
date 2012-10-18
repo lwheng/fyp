@@ -108,7 +108,17 @@ if __name__ == "__main__":
   pickle.dump(model, open(os.path.join(path_pickles, 'Model_1st_Tier.pickle'),'wb'))
 
   # Prediction
-  X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.1, random_state=0)
+  X_train = []
+  X_test = []
+  y_train = []
+  y_test = []
+  for i in range(y.shape[0]):
+    temp_x = X[i]
+    temp_y = y[i]
+    if temp_y == 1:
+      X_train.append(temp_x)
+      y_train.append(temp_y)
+  X_train, X_test, y_train, y_test = cross_validation.train_test_split(X_train, y_train, test_size=0.1, random_state=0)
   clf = svm.SVC(kernel='linear')
   clf.fit(X_train, y_train)
   expected = y_test
