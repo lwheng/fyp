@@ -140,10 +140,4 @@ if __name__ == "__main__":
   clf = svm.SVC(kernel='linear')
   clf.fit(X, y)
   predicted = clf.predict(X)
-  print X
-  print X.shape
-  print y
-  print y.shape
-  print y[y==0].shape
-  print y[y==1].shape
   print predicted
