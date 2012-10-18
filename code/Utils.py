@@ -697,8 +697,8 @@ class extract_features:
     x.append(feature_query_weight)
 
     # Location of Citing Sentence
-    #feature_cit_sent_location = self.dist.cit_sent_location(cit_str, query, dom_parscit_section_citing)
-    #x.extend(feature_cit_sent_location)
+    feature_cit_sent_location = self.dist.cit_sent_location(cit_str, query, dom_parscit_section_citing)
+    x.extend(feature_cit_sent_location)
 
     # Refer To Numbers. Detect Cue Words
     feature_refer_to_numbers = self.weight.referToNumbers(cit_str, query)
