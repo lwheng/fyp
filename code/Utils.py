@@ -673,12 +673,12 @@ class extract_features:
     x = []
     
     # Citation Density
-    feature_cit_density = self.weight.cit_density(query, cit_str)
-    x.append(feature_cit_density)
+    #feature_cit_density = self.weight.cit_density(query, cit_str)
+    #x.append(feature_cit_density)
 
     # Number Density
-    #feature_num_density = self.weight.number_density(query)
-    #x.append(feature_num_density)
+    feature_num_density = self.weight.number_density(query)
+    x.append(feature_num_density)
 
     # Publishing Year Difference
     #feature_publish_year = self.dist.publish_year(f)
@@ -701,8 +701,8 @@ class extract_features:
     #x.extend(feature_cit_sent_location)
 
     # Refer To Numbers. Detect Cue Words
-    feature_refer_to_numbers = self.weight.referToNumbers(cit_str, query)
-    x.append(feature_refer_to_numbers)
+    #feature_refer_to_numbers = self.weight.referToNumbers(cit_str, query)
+    #x.append(feature_refer_to_numbers)
 
     return x
 
