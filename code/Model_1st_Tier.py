@@ -118,6 +118,9 @@ if __name__ == "__main__":
     if int(temp_y) == 1:
       X_train.append(temp_x)
       y_train.append(temp_y)
+  print X_train
+  print y_train
+  sys.exit()
   X_temp = np.asarray(X_train)
   y_temp = np.asarray(y_train)
   X_train, X_test, y_train, y_test = cross_validation.train_test_split(X_temp, y_temp, test_size=0.1, random_state=0)
