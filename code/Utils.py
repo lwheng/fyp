@@ -677,32 +677,32 @@ class extract_features:
     x.append(feature_cit_density)
 
     # Number Density
-    #feature_num_density = self.weight.number_density(query)
-    #x.append(feature_num_density)
+    feature_num_density = self.weight.number_density(query)
+    x.append(feature_num_density)
 
     # Publishing Year Difference
     feature_publish_year = self.dist.publish_year(f)
     x.append(feature_publish_year)
 
     # Title Overlap
-    #feature_title_overlap = self.weight.title_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
-    #x.append(feature_title_overlap)
+    feature_title_overlap = self.weight.title_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
+    x.append(feature_title_overlap)
 
     # Authors Overlap
-    #feature_author_overlap = self.weight.author_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
-    #x.append(feature_author_overlap)
+    feature_author_overlap = self.weight.author_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
+    x.append(feature_author_overlap)
 
     # Context's Average TF-IDF Weight
     feature_query_weight = self.weight.chunk_average_weight(query_text, citing_col)
     x.append(feature_query_weight)
 
     # Location of Citing Sentence
-    #feature_cit_sent_location = self.dist.cit_sent_location(cit_str, query, dom_parscit_section_citing)
-    #x.extend(feature_cit_sent_location)
+    feature_cit_sent_location = self.dist.cit_sent_location(cit_str, query, dom_parscit_section_citing)
+    x.extend(feature_cit_sent_location)
 
     # Refer To Numbers. Detect Cue Words
-    #feature_refer_to_numbers = self.weight.referToNumbers(cit_str, query)
-    #x.append(feature_refer_to_numbers)
+    feature_refer_to_numbers = self.weight.referToNumbers(cit_str, query)
+    x.append(feature_refer_to_numbers)
 
     return x
 
