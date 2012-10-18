@@ -129,6 +129,10 @@ if __name__ == "__main__":
   y_train.append(y_g[0])
   X_train.append(X_s[0])
   y_train.append(y_s[0])
+  X_train.append(X_g[1])
+  y_train.append(y_g[1])
+  X_train.append(X_s[1])
+  y_train.append(y_s[1])
   X_train = np.asarray(X_train)
   y_train = np.asarray(y_train)
   print X_train
