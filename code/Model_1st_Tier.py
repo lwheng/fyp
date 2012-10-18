@@ -113,9 +113,9 @@ if __name__ == "__main__":
   y_train = []
   y_test = []
   for i in range(y.shape[0]):
-    temp_x = X[i]
-    temp_y = y[i]
-    if int(temp_y) == 1:
+    temp_x = list(X[i])
+    temp_y = int(y[i])
+    if temp_y == 1:
       X_train.append(temp_x)
       y_train.append(temp_y)
   print X_train
