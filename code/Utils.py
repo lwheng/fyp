@@ -681,8 +681,8 @@ class extract_features:
     x.append(feature_num_density)
 
     # Publishing Year Difference
-    #feature_publish_year = self.dist.publish_year(f)
-    #x.append(feature_publish_year)
+    feature_publish_year = self.dist.publish_year(f)
+    x.append(feature_publish_year)
 
     # Title Overlap
     #feature_title_overlap = self.weight.title_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
