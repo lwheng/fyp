@@ -158,6 +158,8 @@ class weight:
 
     # Popularity
     popularity = 0
+    print self.regex
+    print cit_sent
     obj = re.findall(self.regex, cit_sent)
     popularity += len(obj)
 
