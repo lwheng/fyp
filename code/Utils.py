@@ -677,8 +677,8 @@ class extract_features:
     x.append(feature_cit_density)
 
     # Number Density
-    #feature_num_density = self.weight.number_density(query)
-    #x.append(feature_num_density)
+    feature_num_density = self.weight.number_density(query)
+    x.append(feature_num_density)
 
     # Publishing Year Difference
     #feature_publish_year = self.dist.publish_year(f)
