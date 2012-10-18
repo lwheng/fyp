@@ -145,21 +145,15 @@ class weight:
     context = context.replace("et al.", "et al")
     context_lines = self.sentence_tokenizer.tokenize(context)
     cit_sent = self.tools.search_term_in_lines(cit_str, context_lines)
-    before = ""
-    after = ""
-    for i in range(len(context_lines)):
-      if cit_str in context_lines[i]:
-        before = context_lines[i-1]
-        after = context_lines[i+1]
-        break
-
+    before = context_lines[cit_sent-1]
+    after = context_lines[cit_sent+1]
+    cit_sent = context_lines[cit_sent]
+    
     # Location
     location = self.dist.cit_sent_location(cit_str, context, dom_parscit_section_citing)
 
     # Popularity
     popularity = 0
-    print self.regex
-    print cit_sent
     obj = re.findall(self.regex, cit_sent)
     popularity += len(obj)
 
