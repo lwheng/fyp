@@ -712,8 +712,8 @@ class extract_features:
 
     # Physical Features
     feature_physical = self.weight.physical_features(cit_str, query, dom_parscit_section_citing)
-    for f in feature_physical:
-      x.append(f)
+    for i in feature_physical:
+      x.append(i)
 
     # Number Density
     feature_num_density = self.weight.number_density(query)
