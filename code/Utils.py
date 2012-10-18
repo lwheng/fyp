@@ -685,12 +685,12 @@ class extract_features:
     x.append(feature_publish_year)
 
     # Title Overlap
-    #feature_title_overlap = self.weight.title_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
+    feature_title_overlap = self.weight.title_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
     #x.append(feature_title_overlap)
 
-    # Authors Overlap
+     Authors Overlap
     #feature_author_overlap = self.weight.author_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
-    #x.append(feature_author_overlap)
+    x.append(feature_author_overlap)
 
     # Context's Average TF-IDF Weight
     feature_query_weight = self.weight.chunk_average_weight(query_text, citing_col)
