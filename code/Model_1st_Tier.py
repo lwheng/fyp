@@ -121,15 +121,11 @@ if __name__ == "__main__":
     else:
       X_g.append(temp_x)
       y_g.append(temp_y)
-  print len(X_s)
-  print len(X_g)
-  print len(y_s)
-  print len(y_g)
-  sys.exit()
   X_train = X_s
   y_train = y_s
-  X_train.append(X_g[0])
-  y_train.append(y_g[0])
+  for i in range(y_train):
+    X_train.append(X_g[i])
+    y_train.append(y_g[i])
 
   X_train = np.asarray(X_train)
   y_train = np.asarray(y_train)
