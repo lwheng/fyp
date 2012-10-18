@@ -115,8 +115,7 @@ if __name__ == "__main__":
   for i in range(y.shape[0]):
     temp_x = X[i]
     temp_y = y[i]
-    print type(temp_y)
-    if temp_y == 1:
+    if int(temp_y) == 1:
       X_train.append(temp_x)
       y_train.append(temp_y)
   X_temp = np.asarray(X_train)
