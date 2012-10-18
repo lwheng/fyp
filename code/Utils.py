@@ -154,6 +154,7 @@ class weight:
       citation_count += len(obj)
     avg_density = float(citation_count) / float(len(query_lines))
     if avg_density > 1:
+      print context_lines
       print "citation_count = " + str(citation_count)
       print "len(query_lines) = " + str(len(query_lines))
       print
