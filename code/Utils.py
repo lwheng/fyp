@@ -693,7 +693,7 @@ class extract_features:
 
     # Context's Average TF-IDF Weight
     feature_query_weight = self.weight.chunk_average_weight(query_text, citing_col)
-    print query_test
+    print query_text
     print citing_col
     print
     x.append(feature_query_weight)
