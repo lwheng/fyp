@@ -145,8 +145,8 @@ class weight:
     context = context.replace("et al.", "et al")
     context_lines = self.sentence_tokenizer.tokenize(context)
     cit_sent = self.tools.search_term_in_lines(cit_str, context_lines)
-    before = context_lines[cit_sent-1]
-    after = context_lines[cit_sent+1]
+    before = context_lines[cit_sent-1] if (cit_sent-1 >= 0) else ""
+    after = context_lines[cit_sent+1] if (cit_sent+1 < len(context_lines)) else ""
     cit_sent = context_lines[cit_sent]
     
     # Location
