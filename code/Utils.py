@@ -140,6 +140,41 @@ class weight:
       return 1.0
     return float(matches) / float(unique_names)
 
+  def physical_features(self, cit_str, context, dom_parscit_section_citing):
+    cit_str = cit_str.replace("et al.", "et al")
+    context = context.replace("et al.", "et al")
+    context_lines = self.sentence_tokenizer.tokenize(context)
+    cit_sent = self.tools.search_term_in_lines(cit_str, context_lines)
+    before = ""
+    after = ""
+    for i in range(len(context_lines)):
+      if cit_str in context_lines[i]:
+        before = context_lines[i-1]
+        after = context_lines[i+1]
+        break
+
+    # Location
+    location = self.dist.cit_sent_location(cit_str, context, dom_parscit_section_citing)
+
+    # Popularity
+    popularity = 0
+    obj = re.findall(self.regex, cit_sent)
+    popularity += len(obj)
+
+    # Density
+    uniq_references = []
+    for l in [before, cit_sent, after]:
+      obj = re.findall(self.regex, l)
+      for o in obj:
+        if o not in uniq_references:
+          uniq_references.append(o)
+    density = len(uniq_references)
+
+    # AvgDens
+    avg_dens = float(density) / float(len([before, cit_sent, after]))
+
+    return (location, popularity, density, avg_dens)
+
   def cit_density(self, context_lines, cit_str):
     # Process citStr
     if "et al." in cit_str:
@@ -150,9 +185,6 @@ class weight:
     query_lines = self.sentence_tokenizer.tokenize(context_lines)
     citation_count = 0
     for l in query_lines:
-      if cit_str in l:
-        print cit_str + " : " + l
-        print
       obj = re.findall(self.regex, l)
       citation_count += len(obj)
     avg_density = float(citation_count) / float(len(query_lines))
@@ -321,15 +353,14 @@ class dist:
     cit_sent = self.tools.search_term_in_lines(cit_str, context_lines)
     target = None
     body_texts = dom_parscit_section_citing.getElementsByTagName('bodyText')
-    regex = r"\<.*\>(.*)\<.*\>"
-    tool = tools()
+    this_regex = r"\<.*\>(.*)\<.*\>"
 
     min_distance = 314159265358979323846264338327950288419716939937510
     for i in range(len(body_texts)):
       b = body_texts[i]
       #text = tool.normalize(b.toxml().replace("\n", " ").replace("- ", "").strip())
       text = b.toxml().replace("\n", " ").replace("- ", "").strip()
-      obj = re.findall(regex, text)
+      obj = re.findall(this_regex, text)
       temp_dist = self.jaccard(context_lines[cit_sent], text)
       if temp_dist < min_distance:
         min_distance = temp_dist
@@ -588,11 +619,11 @@ class dataset_tools:
     return (forannotation, keys, X)
 
   def prepAnnotations(self, annotationFile):
-    regex = r"\#(\d{3})\s+(.*)==>(.*),(.*)"
+    this_regex = r"\#(\d{3})\s+(.*)==>(.*),(.*)"
     target = []
     for l in open(annotationFile):
       l = l.strip()
-      obj = re.findall(regex, l)
+      obj = re.findall(this_regex, l)
       info = obj[0]
       index = int(info[0])
       cite_key = {'citing':info[1], 'cited':info[2]}
@@ -678,6 +709,11 @@ class extract_features:
     # Citation Density
     feature_cit_density = self.weight.cit_density(query, cit_str)
     x.append(feature_cit_density)
+
+    # Physical Features
+    feature_physical = self.weight.physical_features(cit_str, query, dom_parscit_section_citing)
+    print feature_physical
+    print
 
     # Number Density
     feature_num_density = self.weight.number_density(query)
