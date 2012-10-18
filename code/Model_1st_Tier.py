@@ -108,33 +108,26 @@ if __name__ == "__main__":
   pickle.dump(model, open(os.path.join(path_pickles, 'Model_1st_Tier.pickle'),'wb'))
 
   # Prediction
-  #X_g = []
-  #y_g = []
-  #X_s = []
-  #y_s = []
-  #for i in range(y.shape[0]):
-  #  temp_x = list(X[i])
-  #  temp_y = int(y[i])
-  #  if temp_y == 1:
-  #    X_s.append(temp_x)
-  #    y_s.append(temp_y)
-  #  else:
-  #    X_g.append(temp_x)
-  #    y_g.append(temp_y)
-  #X_train = []
-  #y_train = []
-  #X_test = []
-  #y_test = []
-  #X_train.append(X_g[0])
-  #y_train.append(y_g[0])
-  #X_train.append(X_s[0])
-  #y_train.append(y_s[0])
-  #X_train.append(X_g[1])
-  #y_train.append(y_g[1])
-  #X_train.append(X_s[1])
-  #y_train.append(y_s[1])
-  #X_train = np.asarray(X_train)
-  #y_train = np.asarray(y_train)
+  X_g = []
+  y_g = []
+  X_s = []
+  y_s = []
+  for i in range(y.shape[0]):
+    temp_x = list(X[i])
+    temp_y = int(y[i])
+    if temp_y == 1:
+      X_s.append(temp_x)
+      y_s.append(temp_y)
+    else:
+      X_g.append(temp_x)
+      y_g.append(temp_y)
+  X_train = X_s
+  y_train = y_s
+  X_train.append(X_g[0])
+  y_train.append(y_g[0]_
+
+  X_train = np.asarray(X_train)
+  y_train = np.asarray(y_train)
   #print X_train
   #print y_train
   clf = svm.SVC(kernel='linear')
