@@ -124,7 +124,7 @@ if __name__ == "__main__":
   X_train = X_s
   y_train = y_s
   X_train.append(X_g[0])
-  y_train.append(y_g[0]_
+  y_train.append(y_g[0])
 
   X_train = np.asarray(X_train)
   y_train = np.asarray(y_train)
