@@ -81,8 +81,9 @@ class weight:
     reg.append(r"\[\s?(\d{1,3}\s?,?\s?)+\s?\]")
     reg.append(r"\[\s?([\w-],?\s?)+\s?\]")
     reg.append(r"et al\.?,?")
-    #reg.append(r"([A-Z][A-Za-z-]+\s?,?\s?(\s(and|&)\s)?)+\s?,?\s?,?\s?(\(?(\d{4})\)?)")
-    #reg.append(r"([A-Z][A-Za-z-]+\s?,?\s?(\s(and|&)\s)?)+\s?,?\s?(et al\.?)?\s?,?\s?(\(?(\d{4})\)?)")
+    # Complex regex
+    reg.append(r"([A-Z][A-Za-z-]+\s?,?\s?(\s(and|&)\s)?)+\s?,?\s?,?\s?(\(?(\d{4})\)?)")
+    reg.append(r"([A-Z][A-Za-z-]+\s?,?\s?(\s(and|&)\s)?)+\s?,?\s?(et al\.?)?\s?,?\s?(\(?(\d{4})\)?)")
     self.regex = ""
     for i in range(len(reg)):
       self.regex += reg[i] + "|"
