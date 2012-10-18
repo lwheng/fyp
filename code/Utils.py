@@ -153,11 +153,6 @@ class weight:
       obj = re.findall(self.regex, l)
       citation_count += len(obj)
     avg_density = float(citation_count) / float(len(query_lines))
-    if avg_density > 1:
-      print query_lines
-      print "citation_count = " + str(citation_count)
-      print "len(query_lines) = " + str(len(query_lines))
-      print
     return avg_density
 
   def number_density(self, query):
@@ -682,8 +677,8 @@ class extract_features:
     x.append(feature_cit_density)
 
     # Number Density
-    #feature_num_density = self.weight.number_density(query)
-    #x.append(feature_num_density)
+    feature_num_density = self.weight.number_density(query)
+    x.append(feature_num_density)
 
     # Publishing Year Difference
     #feature_publish_year = self.dist.publish_year(f)
