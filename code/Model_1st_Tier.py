@@ -4,6 +4,7 @@ import cPickle as pickle
 import os
 import sys
 import numpy as np
+import random
 from sklearn import svm, metrics
 from sklearn import cross_validation
 
@@ -123,16 +124,17 @@ if __name__ == "__main__":
       y_g.append(temp_y)
   X_train = X_s
   y_train = y_s
-  for i in range(len(y_train)):
-    X_train.append(X_g[i])
-    y_train.append(y_g[i])
+  #for i in range(len(y_train)):
+  #  X_train.append(X_g[i])
+  #  y_train.append(y_g[i])
+  X_train.append(random.sample(X_g, len(y_train)*2)
+  y_train.append(random.sample(y_g, len(y_train)*2)
 
   X_train = np.asarray(X_train)
   y_train = np.asarray(y_train)
   print X_train.shape
   print y_train
   clf = svm.SVC(kernel='linear')
-  clf.fit(X_train, y_train)
   #clf.fit(X, y)
   #predicted = clf.predict(X_train)
   #expected = y_train
