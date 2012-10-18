@@ -122,7 +122,11 @@ if __name__ == "__main__":
   print y_train
   X_temp = np.asarray(X_train)
   y_temp = np.asarray(y_train)
+  print X_temp
+  print y_temp
   X_train, X_test, y_train, y_test = cross_validation.train_test_split(X_temp, y_temp, test_size=0.1, random_state=0)
+  print X_train
+  print y_train
   clf = svm.SVC(kernel='linear')
   clf.fit(X_train, y_train)
   expected = y_test
