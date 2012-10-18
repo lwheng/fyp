@@ -118,8 +118,6 @@ if __name__ == "__main__":
     if temp_y == 1:
       X_train.append(temp_x)
       y_train.append(temp_y)
-  print X_train
-  print y_train
   X_temp = np.asarray(X_train)
   y_temp = np.asarray(y_train)
   print X_temp
