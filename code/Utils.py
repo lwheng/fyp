@@ -151,7 +151,7 @@ class weight:
     citation_count = 0
     for l in query_lines:
       if cit_str in l:
-        print l
+        print cit_str + " : " + l
         print
       obj = re.findall(self.regex, l)
       citation_count += len(obj)
