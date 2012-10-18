@@ -700,8 +700,8 @@ class extract_features:
     #x.extend(feature_cit_sent_location)
 
     # Refer To Numbers. Detect Cue Words
-    feature_refer_to_numbers = self.weight.referToNumbers(cit_str, query)
-    x.append(feature_refer_to_numbers)
+    #feature_refer_to_numbers = self.weight.referToNumbers(cit_str, query)
+    #x.append(feature_refer_to_numbers)
 
     return x
 
