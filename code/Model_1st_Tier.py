@@ -127,8 +127,8 @@ if __name__ == "__main__":
   #for i in range(len(y_train)):
   #  X_train.append(X_g[i])
   #  y_train.append(y_g[i])
-  X_train.append(random.sample(X_g, len(y_train)*2)
-  y_train.append(random.sample(y_g, len(y_train)*2)
+  X_train.extend(random.sample(X_g, len(y_train)*2))
+  y_train.extend(random.sample(y_g, len(y_train)*2))
 
   X_train = np.asarray(X_train)
   y_train = np.asarray(y_train)
