@@ -217,7 +217,7 @@ class weight:
     # AvgDens
     avg_dens = float(density) / float(len([before, cit_sent, after]))
     if density > 0:
-      print query
+      print context 
       print
     return (popularity, density, avg_dens)
 
