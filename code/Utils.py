@@ -207,11 +207,12 @@ class weight:
 
     # Density
     uniq_numbers = []
+    this_regex = r"\d+\.\d+|(\d+,)+\d+|\d+\.?\d+%"
     for l in [before, cit_sent, after]:
-      for t in l.split():
-        if self.tools.check_if_number(t):
-          if t not in uniq_numbers:
-            uniq_numbers.append(t)
+      obj = re.findall(this_regex, l)
+      for o in obj:
+        if o not in uniq_numbers:
+          uniq_numbers.apppend(o)
     density = len(uniq_numbers)
 
     # AvgDens
