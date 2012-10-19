@@ -281,21 +281,51 @@ class weight:
           'probabl', 'precis', 'recal', 'peak', 'experi',
           'experiment'
           ]
-    tokens = query.lower().split()
-    tokens_stemmed = map(lambda x: self.nltk_tools.nltk_stemmer(x), tokens)
-    V = Set(tokens_stemmed) | Set(cue)
-    v1 = []
-    v2 = []
-    for w in V:
-      if w in v1:
-        v1.append(100)
-      else:
-        v1.append(1)
-      if w in v2:
-        v2.append(100)
-      else:
-        v2.append(1)
-    return self.nltk_tools.nltk_cosine_distance(v1,v2)
+    cit_str = cit_str.replace("et al.", "et al")
+    context = context.replace("et al.", "et al")
+    context_lines = self.sentence_tokenizer.tokenize(context)
+    cit_sent = self.tools.search_term_in_lines(cit_str, context_lines)
+    before = context_lines[cit_sent-1] if (cit_sent-1 >= 0) else ""
+    after = context_lines[cit_sent+1] if (cit_sent+1 < len(context_lines)) else ""
+    cit_sent = context_lines[cit_sent]
+
+    # Popularity
+    popularity = 0
+    cit_sent_stemmed = self.nltk_tools.nltk_stemmer(cit_sent)
+    for c in cue:
+      if c in cit_sent_stemmed:
+        popularity += 1
+
+    # Density
+    uniq_cue = []
+    for l in [before, cit_sent, after]:
+      l_stemmed = self.nltk_tools.nltk_stemmer(l)
+      for c in cue:
+        if c in l_stemmed:
+          if c not in uniq_cue:
+            uniq_cue.append(c)
+    density = len(uniq_cue)
+
+    # AvgDens
+    avg_dens = float(density) / float(len([before, cit_sent, after]))
+
+    return (popularity, density, avg_dens)
+
+    #tokens = query.lower().split()
+    #tokens_stemmed = map(lambda x: self.nltk_tools.nltk_stemmer(x), tokens)
+    #V = Set(tokens_stemmed) | Set(cue)
+    #v1 = []
+    #v2 = []
+    #for w in V:
+    #  if w in v1:
+    #    v1.append(100)
+    #  else:
+    #    v1.append(1)
+    #  if w in v2:
+    #    v2.append(100)
+    #  else:
+    #    v2.append(1)
+    #return self.nltk_tools.nltk_cosine_distance(v1,v2)
 
   def referToDefinition(self, cit_str, context):
     print
@@ -763,7 +793,8 @@ class extract_features:
 
     # Refer To Numbers. Detect Cue Words
     feature_refer_to_numbers = self.weight.referToNumbers(cit_str, query)
-    x.append(feature_refer_to_numbers)
+    for i in feature_refer_to_numbers:
+      x.append(i)
 
     return x
 
