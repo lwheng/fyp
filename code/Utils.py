@@ -822,7 +822,6 @@ class extract_features:
 
     # Trying out POS tagging
     feature_pos_tag = self.weight.pos_tag_distribution(cit_str, query)
-    pos_hash = sorted(feature_pos_tag.iteritems(), key=operator.itemgetter(1))
 
     return x
 
