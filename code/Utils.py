@@ -241,7 +241,6 @@ class weight:
     print context
     print sorted(pos_hash.iteritems(), key=operator.itemgetter(1))
     print cit_str
-    print
     return pos_hash
 
   def cosine_similarity(self, query_tokens, query_col, dom_parscit_section_cited):
