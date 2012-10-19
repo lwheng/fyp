@@ -738,7 +738,6 @@ class extract_features:
 
     # Number Density
     feature_num_density = self.weight.number_density(cit_str, query)
-    print feature_num_density
     for i in feature_num_density:
       x.append(i)
 
