@@ -807,7 +807,7 @@ class extract_features:
 
     # Cue Words
     feature_cue_words = self.weight.cue_words(cit_str, query)
-    for i in feature_refer_to_numbers:
+    for i in feature_cue_words:
       x.append(i)
 
     # Trying out POS tagging
