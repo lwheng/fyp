@@ -274,7 +274,7 @@ class weight:
       feature.append((docs[i],results[i]))
     return feature
 
-  def referToNumbers(self, cit_str, query):
+  def referToNumbers(self, cit_str, context):
     # Define cue words. These cue words are stemmed
     cue = ['obtain', 'score', 'high', 'F-score', 'accuraci',
           'result', 'achiev', 'promis', 'estim', 'report',
