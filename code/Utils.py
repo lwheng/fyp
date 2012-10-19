@@ -221,6 +221,24 @@ class weight:
     avg_dens = float(density) / float(len([before, cit_sent, after]))
     return (popularity, density, avg_dens)
 
+  def pos_tag_distribution(self, cit_str, context):
+    cit_str = cit_str.replace("et al.", "et al")
+    context = context.replace("et al.", "et al")
+    context_lines = self.sentence_tokenizer.tokenize(context)
+    cit_sent = self.tools.search_term_in_lines(cit_str, context_lines)
+    before = context_lines[cit_sent-1] if (cit_sent-1 >= 0) else ""
+    after = context_lines[cit_sent+1] if (cit_sent+1 < len(context_lines)) else ""
+    cit_sent = context_lines[cit_sent]
+
+    cit_sent_text = self.nltk_tools.nltk_word_tokenize(cit_sent)
+    cit_sent_pos = self.nltk_tools.nltk_pos(cit_sent_text)
+    pos_hash = {}
+    for (term, tag) in cit_sent_pos:
+      if tag not in pos_hash:
+        pos_hash[tag] = 0
+      pos_hash[tag] += 1
+    return pos_hash
+
   def cosine_similarity(self, query_tokens, query_col, dom_parscit_section_cited):
     docs = []
     #body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
@@ -797,6 +815,11 @@ class extract_features:
     feature_refer_to_numbers = self.weight.referToNumbers(cit_str, query)
     for i in feature_refer_to_numbers:
       x.append(i)
+
+    # Trying out POS tagging
+    feature_pos_tag = self.weight.pos_tag_distribution(cit_str, query)
+    print pos_hash
+    print
 
     return x
 
