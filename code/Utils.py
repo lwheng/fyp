@@ -207,7 +207,7 @@ class weight:
 
     # Density
     uniq_numbers = []
-    this_regex = r"\d+\.\d+|(\d+,)+\d+|\d+\.?\d+%"
+    this_regex = r"\d{2}\.\d+|(\d+,)+\d+|\d{2}\.?\d+%"
     for l in [before, cit_sent, after]:
       obj = re.findall(this_regex, l)
       for o in obj:
