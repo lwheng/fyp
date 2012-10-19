@@ -190,13 +190,33 @@ class weight:
     avg_density = float(citation_count) / float(len(query_lines))
     return avg_density
 
-  def number_density(self, query):
-    tokens = query.split()
-    num_of_digits = 0
-    for t in tokens:
+  def number_density(self, cit_str, context):
+    cit_str = cit_str.replace("et al.", "et al")
+    context = context.replace("et al.", "et al")
+    context_lines = self.sentence_tokenizer.tokenize(context)
+    cit_sent = self.tools.search_term_in_lines(cit_str, context_lines)
+    before = context_lines[cit_sent-1] if (cit_sent-1 >= 0) else ""
+    after = context_lines[cit_sent+1] if (cit_sent+1 < len(context_lines)) else ""
+
+    # Popularity
+    popularity = 0
+    for t in cit_sent.split():
       if self.tools.check_if_number(t):
-        num_of_digits += 1
-    return float(num_of_digits) / float(len(tokens))
+        popularity += 1
+
+    # Density
+    uniq_numbers = []
+    for l in [before, cit_sent, after]:
+      for t in l.split():
+        if self.tools.check_if_number(t):
+          if t not in uniq_numbers:
+            uniq_numbers.append(t)
+    density = len(uniq_numbers)
+
+    # AvgDens
+    avg_dens = float(density) / float(len([before, cit_sent, after]))
+
+    return (popularity, density, avg_dens)
 
   def cosine_similarity(self, query_tokens, query_col, dom_parscit_section_cited):
     docs = []
@@ -717,7 +737,8 @@ class extract_features:
 
     # Number Density
     feature_num_density = self.weight.number_density(query)
-    x.append(feature_num_density)
+    for i in feature_num_density:
+      x.append(i)
 
     # Publishing Year Difference
     #feature_publish_year = self.dist.publish_year(f)
