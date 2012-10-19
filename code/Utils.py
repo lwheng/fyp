@@ -299,13 +299,16 @@ class weight:
       feature.append((docs[i],results[i]))
     return feature
 
-  def referToNumbers(self, cit_str, context):
+  def cue_words(self, cit_str, context):
     # Define cue words. These cue words are stemmed
-    cue = ['obtain', 'score', 'high', 'F-score', 'accuraci',
+    specific = ['obtain', 'score', 'high', 'F-score', 'accuraci',
           'result', 'achiev', 'promis', 'estim', 'report',
           'probabl', 'precis', 'recal', 'peak', 'experi',
           'experiment'
           ]
+    general = [
+              ]
+
     cit_str = cit_str.replace("et al.", "et al")
     context = context.replace("et al.", "et al")
     context_lines = self.sentence_tokenizer.tokenize(context)
@@ -315,42 +318,28 @@ class weight:
     cit_sent = context_lines[cit_sent]
 
     # Popularity
-    popularity = 0
-    cit_sent_stemmed = self.nltk_tools.nltk_stemmer(cit_sent)
-    for c in cue:
+    popularity_specific = 0
+    cit_sent_tokens = self.nltk_tools.nltk_word_tokenize(cit_sent)
+    cit_sent_stemmed = map(lambda x: self.nltk_tools.nltk_stemmer(x), cit_sent_tokens)
+    for c in specific:
       if c in cit_sent_stemmed:
-        popularity += 1
+        popularity_specific += 1
 
     # Density
-    uniq_cue = []
+    uniq_specific = []
     for l in [before, cit_sent, after]:
-      l_stemmed = self.nltk_tools.nltk_stemmer(l)
-      for c in cue:
+      l_tokens = self.nltk_tools.nltk_word_tokenize(l)
+      l_stemmed = map(lambda x: self.nltk_tools.nltk_stemmer(x), l_tokens)
+      for c in specific:
         if c in l_stemmed:
-          if c not in uniq_cue:
-            uniq_cue.append(c)
-    density = len(uniq_cue)
+          if c not in uniq_specific:
+            uniq_specific.append(c)
+    density_specific = len(uniq_specific)
 
     # AvgDens
-    avg_dens = float(density) / float(len([before, cit_sent, after]))
+    avg_dens_specific = float(density_specific) / float(len([before, cit_sent, after]))
 
-    return (popularity, density, avg_dens)
-
-    #tokens = query.lower().split()
-    #tokens_stemmed = map(lambda x: self.nltk_tools.nltk_stemmer(x), tokens)
-    #V = Set(tokens_stemmed) | Set(cue)
-    #v1 = []
-    #v2 = []
-    #for w in V:
-    #  if w in v1:
-    #    v1.append(100)
-    #  else:
-    #    v1.append(1)
-    #  if w in v2:
-    #    v2.append(100)
-    #  else:
-    #    v2.append(1)
-    #return self.nltk_tools.nltk_cosine_distance(v1,v2)
+    return (popularity_specific, density_specific, avg_dens_specific)
 
   def referToDefinition(self, cit_str, context):
     print
@@ -816,8 +805,8 @@ class extract_features:
     #feature_cit_sent_location = self.dist.cit_sent_location(cit_str, query, dom_parscit_section_citing)
     #x.extend(feature_cit_sent_location)
 
-    # Refer To Numbers. Detect Cue Words
-    feature_refer_to_numbers = self.weight.referToNumbers(cit_str, query)
+    # Cue Words
+    feature_cue_words = self.weight.cue_words(cit_str, query)
     for i in feature_refer_to_numbers:
       x.append(i)
 
