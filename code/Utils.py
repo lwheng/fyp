@@ -216,7 +216,9 @@ class weight:
 
     # AvgDens
     avg_dens = float(density) / float(len([before, cit_sent, after]))
-
+    if density > 0:
+      print query
+      print
     return (popularity, density, avg_dens)
 
   def cosine_similarity(self, query_tokens, query_col, dom_parscit_section_cited):
