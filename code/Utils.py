@@ -14,6 +14,7 @@ from nltk.metrics import distance
 from nltk import SnowballStemmer
 from sklearn.linear_model import LogisticRegression
 import sys
+import operator
 
 class printer:
   def line_printer(self, length, character):
@@ -818,7 +819,8 @@ class extract_features:
 
     # Trying out POS tagging
     feature_pos_tag = self.weight.pos_tag_distribution(cit_str, query)
-    print feature_pos_tag
+    pos_hash = sorted(feature_pos_tag.iteritems(), key=operator.itemgetter(1))
+    print pos_hash
     print
 
     return x
