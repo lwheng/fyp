@@ -212,7 +212,7 @@ class weight:
       obj = re.findall(this_regex, l)
       for o in obj:
         if o not in uniq_numbers:
-          uniq_numbers.apppend(o)
+          uniq_numbers.append(o)
     density = len(uniq_numbers)
 
     # AvgDens
