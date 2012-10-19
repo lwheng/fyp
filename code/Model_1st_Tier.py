@@ -137,7 +137,8 @@ if __name__ == "__main__":
   y_train = np.asarray(y_train)
   print X_train.shape
   print y_train
-  clf = svm.SVC(kernel='linear')
+  #clf = svm.SVC(kernel='linear')
+  clf = svm.SVC()
   #clf.fit(X, y)
   #predicted = clf.predict(X_train)
   #expected = y_train
