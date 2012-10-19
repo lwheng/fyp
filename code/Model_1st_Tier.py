@@ -129,7 +129,7 @@ if __name__ == "__main__":
   #  y_train.append(y_g[i])
 
   # Pick randomly
-  times = 3
+  times = 0.5
   X_train.extend(random.sample(X_g, len(y_train)*times))
   y_train.extend(random.sample(y_g, len(y_train)*times))
 
