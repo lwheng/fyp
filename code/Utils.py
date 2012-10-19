@@ -784,8 +784,8 @@ class extract_features:
     #x.append(feature_author_overlap)
 
     # Context's Average TF-IDF Weight
-    #feature_query_weight = self.weight.chunk_average_weight(query_text, citing_col)
-    #x.append(feature_query_weight)
+    feature_query_weight = self.weight.chunk_average_weight(query_text, citing_col)
+    x.append(feature_query_weight)
 
     # Location of Citing Sentence
     #feature_cit_sent_location = self.dist.cit_sent_location(cit_str, query, dom_parscit_section_citing)
