@@ -44,6 +44,9 @@ class nltk_tools:
   def nltk_stemmer(self, input_string):
     return self.stemmer.stem(input_string)
 
+  def nltk_pos(self, text):
+    return nltk.pos_tag(text)
+
 class tools:
   def parseXML(self, data):
     return parseString(data)
@@ -198,16 +201,15 @@ class weight:
     before = context_lines[cit_sent-1] if (cit_sent-1 >= 0) else ""
     after = context_lines[cit_sent+1] if (cit_sent+1 < len(context_lines)) else ""
     cit_sent = context_lines[cit_sent]
+    this_regex = r"\d{2}\.\d+|(\d+,)+\d+|\d{2}\.?\d+%"
 
     # Popularity
     popularity = 0
-    for t in cit_sent.split():
-      if self.tools.check_if_number(t):
-        popularity += 1
+    obj = re.findall(this_regex, cit_sent)
+    popularity += len(obj)
 
     # Density
     uniq_numbers = []
-    this_regex = r"\d{2}\.\d+|(\d+,)+\d+|\d{2}\.?\d+%"
     for l in [before, cit_sent, after]:
       obj = re.findall(this_regex, l)
       for o in obj:
