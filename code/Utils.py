@@ -238,6 +238,9 @@ class weight:
       if tag not in pos_hash:
         pos_hash[tag] = 0
       pos_hash[tag] += 1
+    print sorted(pos_hash.iteritems(), key=operator.itemgetter(1))
+    print cit_str
+    print
     return pos_hash
 
   def cosine_similarity(self, query_tokens, query_col, dom_parscit_section_cited):
@@ -820,9 +823,6 @@ class extract_features:
     # Trying out POS tagging
     feature_pos_tag = self.weight.pos_tag_distribution(cit_str, query)
     pos_hash = sorted(feature_pos_tag.iteritems(), key=operator.itemgetter(1))
-    print query
-    print pos_hash
-    print
 
     return x
 
