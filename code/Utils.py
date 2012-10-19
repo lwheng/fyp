@@ -238,6 +238,7 @@ class weight:
       if tag not in pos_hash:
         pos_hash[tag] = 0
       pos_hash[tag] += 1
+    print context
     print sorted(pos_hash.iteritems(), key=operator.itemgetter(1))
     print cit_str
     print
