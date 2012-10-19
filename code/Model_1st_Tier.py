@@ -129,8 +129,9 @@ if __name__ == "__main__":
   #  y_train.append(y_g[i])
 
   # Pick randomly
-  X_train.extend(random.sample(X_g, len(y_train)))
-  y_train.extend(random.sample(y_g, len(y_train)))
+  times = 3
+  X_train.extend(random.sample(X_g, len(y_train)*times))
+  y_train.extend(random.sample(y_g, len(y_train)*times))
 
   X_train = np.asarray(X_train)
   y_train = np.asarray(y_train)
