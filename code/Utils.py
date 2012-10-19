@@ -736,7 +736,7 @@ class extract_features:
       x.append(i)
 
     # Number Density
-    feature_num_density = self.weight.number_density(query)
+    feature_num_density = self.weight.number_density(cit_str, query)
     for i in feature_num_density:
       x.append(i)
 
