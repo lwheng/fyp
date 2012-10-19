@@ -308,6 +308,7 @@ class weight:
           ]
     general = [
               ]
+    # work here
 
     cit_str = cit_str.replace("et al.", "et al")
     context = context.replace("et al.", "et al")
