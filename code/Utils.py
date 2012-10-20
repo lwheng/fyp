@@ -101,7 +101,8 @@ class weight:
     self.general = ['proposed', 'propose', 'presented', 'present', 'suggested'
             'suggests', 'described', 'describe', 'discuss', 'discussed',
             'gave', 'introduction', 'introduced', 'shown', 'showed',
-            'sketched', 'sketch', 'talked'
+            'sketched', 'sketch', 'talked', 'adopted', 'adopt', 'based',
+            'originated', 'originate', 'built'
               ]
     self.specific = map(lambda x: self.nltk_tools.nltk_stemmer(x), self.specific)
     self.specific = list(set(self.specific))
