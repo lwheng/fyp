@@ -131,7 +131,7 @@ if __name__ == "__main__":
   #  y_train.append(y_g[i])
 
   # Pick randomly
-  times = 2
+  times = 1.5
   X_train.extend(random.sample(X_g, int(len(y_train)*times)))
   y_train.extend(random.sample(y_g, int(len(y_train)*times)))
 
