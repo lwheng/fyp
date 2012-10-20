@@ -332,9 +332,16 @@ class weight:
     for c in self.specific:
       if c in cit_sent_stemmed:
         popularity_specific += 1
+    popularity_general = 0
+    cit_sent_tokens = self.nltk_tools.nltk_word_tokenize(cit_sent)
+    cit_sent_stemmed = map(lambda x: self.nltk_tools.nltk_stemmer(x), cit_sent_tokens)
+    for c in self.general:
+      if c in cit_sent_stemmed:
+        popularity_general += 1
 
     # Density
     uniq_specific = []
+    uniq_general = []
     for l in [before, cit_sent, after]:
       l_tokens = self.nltk_tools.nltk_word_tokenize(l)
       l_stemmed = map(lambda x: self.nltk_tools.nltk_stemmer(x), l_tokens)
@@ -342,12 +349,18 @@ class weight:
         if c in l_stemmed:
           if c not in uniq_specific:
             uniq_specific.append(c)
+      for c in self.general:
+        if c in l_stemmed:
+          if c not in uniq_general:
+            uniq_general.append(c)
     density_specific = len(uniq_specific)
-
+    density_general = len(uniq_general)
+    
     # AvgDens
     avg_dens_specific = float(density_specific) / float(len([before, cit_sent, after]))
-
-    return (popularity_specific, density_specific, avg_dens_specific)
+    avg_dens_general = float(density_general) / float(len([before, cit_sent, after]))
+    
+    return (popularity_specific, density_specific, avg_dens_specific, popularity_general, density_general, avg_dens_general)
 
   def referToDefinition(self, cit_str, context):
     print
