@@ -96,13 +96,14 @@ class weight:
               'F-score', 'Precision', 'precision', 'Recall', 'recall',
               'estimated', 'estimates', 'reported', 'reports',
               'probability', 'probabilities', 'peaked', 'experimental',
-              'experimented'
+              'experimented', 'rate', 'error', 
               ]
     self.general = ['proposed', 'propose', 'presented', 'present', 'suggested'
             'suggests', 'described', 'describe', 'discuss', 'discussed',
             'gave', 'introduction', 'introduced', 'shown', 'showed',
             'sketched', 'sketch', 'talked', 'adopted', 'adopt', 'based',
-            'originated', 'originate', 'built'
+            'originated', 'originate', 'built', 'researchers', 'comparative',
+            'comparison', 'following', 'previously', 'previous'
               ]
     self.specific = map(lambda x: self.nltk_tools.nltk_stemmer(x), self.specific)
     self.specific = list(set(self.specific))
