@@ -92,6 +92,22 @@ class weight:
     for i in range(len(reg)):
       self.regex += reg[i] + "|"
     self.regex = re.compile(self.regex[:-1])
+    self.specific = ['obtains', 'obtained', 'score', 'scored', 'high',
+              'F-score', 'Precision', 'precision', 'Recall', 'recall',
+              'estimated', 'estimates', 'reported', 'reports',
+              'probability', 'probabilities', 'peaked', 'experimental',
+              'experimented'
+              ]
+    self.general = ['proposed', 'propose', 'presented', 'present', 'suggested'
+            'suggests', 'described', 'describe', 'discuss', 'discussed',
+            'gave', 'introduction', 'introduced', 'shown', 'showed',
+            'sketched', 'sketch', 'talked'
+              ]
+    self.specific = map(lambda x: self.nltk_tools.nltk_stemmer(x), self.specific)
+    self.specific = list(set(self.specific))
+    self.general = map(lambda x: self.nltk_tools.nltk_stemmer(x), self.general)
+    self.general = list(set(self.general))
+
 
   def chunk_average_weight(self, chunk, collection):
     temp_weight = 0
@@ -301,15 +317,6 @@ class weight:
 
   def cue_words(self, cit_str, context):
     # Define cue words. These cue words are stemmed
-    specific = ['obtain', 'score', 'high', 'F-score', 'accuraci',
-          'result', 'achiev', 'promis', 'estim', 'report',
-          'probabl', 'precis', 'recal', 'peak', 'experi',
-          'experiment'
-          ]
-    general = [
-              ]
-    # work here
-
     cit_str = cit_str.replace("et al.", "et al")
     context = context.replace("et al.", "et al")
     context_lines = self.sentence_tokenizer.tokenize(context)
@@ -322,7 +329,7 @@ class weight:
     popularity_specific = 0
     cit_sent_tokens = self.nltk_tools.nltk_word_tokenize(cit_sent)
     cit_sent_stemmed = map(lambda x: self.nltk_tools.nltk_stemmer(x), cit_sent_tokens)
-    for c in specific:
+    for c in self.specific:
       if c in cit_sent_stemmed:
         popularity_specific += 1
 
@@ -331,7 +338,7 @@ class weight:
     for l in [before, cit_sent, after]:
       l_tokens = self.nltk_tools.nltk_word_tokenize(l)
       l_stemmed = map(lambda x: self.nltk_tools.nltk_stemmer(x), l_tokens)
-      for c in specific:
+      for c in self.specific:
         if c in l_stemmed:
           if c not in uniq_specific:
             uniq_specific.append(c)
