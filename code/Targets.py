@@ -9,6 +9,7 @@ if __name__ == '__main__':
   y = []
   y_info = []
   y_hash_1st_tier = {}
+  y_hash_2nd_tier = {}
 
   # Init
   general = 0
@@ -47,6 +48,17 @@ if __name__ == '__main__':
         y.append(general)
       elif annotation == 'y':
         y.append(spec_yes)
+        if cite_key not in y_hash_2nd_tier:
+          context_hash = {}
+          y_hash_2nd_tier[cite_key] = context_hash
+        context_hash = y_hash_2nd_tier[cite_key]
+        if context_id not in context_hash:
+          body_text_hash = {}
+          context_hash[context_id] = body_text_hash
+        body_text_hash = context_hash[context_id]
+        body_text_hash[body_text_id] = annotation
+        context_hash[context_id] = body_text_hash
+        y_hash_2nd_tier[cite_key] = context_hash
       elif annotation == 'n':
         y.append(spec_no)
       elif annotation == 'u':
@@ -67,3 +79,4 @@ if __name__ == '__main__':
   pickle.dump(y, open(os.path.join(path_pickles,'Y.pickle'),'wb'))
   pickle.dump(y_info, open(os.path.join(path_pickles,'Y_Info.pickle'),'wb'))
   pickle.dump(y_hash_1st_tier, open(os.path.join(path_pickles,'Y_Hash_1st_Tier.pickle'),'wb'))
+  pickle.dump(y_hash_2nd_tier, open(os.path.join(path_pickles,'Y_Hash_2nd_Tier.pickle'),'wb'))

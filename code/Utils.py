@@ -318,7 +318,6 @@ class weight:
     return feature
 
   def cue_words(self, cit_str, context):
-    # Define cue words. These cue words are stemmed
     cit_str = cit_str.replace("et al.", "et al")
     context = context.replace("et al.", "et al")
     context_lines = self.sentence_tokenizer.tokenize(context)
