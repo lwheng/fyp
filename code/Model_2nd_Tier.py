@@ -30,7 +30,7 @@ if __name__ == "__main__":
   # Run Targets.py to generate Y.pickle from Labels.txt
   execfile("Targets.py")
   # Load y_hash_1st_tier
-  y_hash_1st_tier = pickle.load(open(os.path.join(path_pickles, 'Y_Hash_1st_Tier.pickle'),'r'))
+  y_hash_1st_tier = pickle.load(open(os.path.join(path_pickles, 'Y_Hash_2nd_Tier.pickle'),'r'))
   string = "Loaded Annotations"
   print printer.line_printer(len(string), "-")
   print string
@@ -61,6 +61,7 @@ if __name__ == "__main__":
   feature_extractor = Utils.extract_features()
   X = []
   y = []
+  sys.exit()
   # Extract Features
   num = len(filtered)
   for f in filtered:

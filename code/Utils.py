@@ -836,6 +836,63 @@ class extract_features:
     feature_pos_tag = self.weight.pos_tag_distribution(cit_str, query)
 
     return x
+  
+  def extract_feature_2nd_tier(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
+    cit_str = context.getAttribute('citStr')
+    cit_str = unicode(cit_str.encode('ascii','ignore'), errors='ignore')
+    query = context.firstChild.wholeText
+    query = unicode(query.encode('ascii','ignore'), errors='ignore')
+
+    query_tokens = self.nltk_tools.nltk_word_tokenize(query.lower())
+    query_text = self.nltk_tools.nltk_text(query_tokens)
+    query_col = self.nltk_tools.nltk_text_collection([query_text])
+
+    # Extract Features
+    x = []
+    
+    # Citation Density
+    #feature_cit_density = self.weight.cit_density(query, cit_str)
+    #x.append(feature_cit_density)
+
+    # Physical Features
+    feature_physical = self.weight.physical_features(cit_str, query, dom_parscit_section_citing)
+    for i in feature_physical:
+      x.append(i)
+
+    # Number Density
+    feature_num_density = self.weight.number_density(cit_str, query)
+    for i in feature_num_density:
+      x.append(i)
+
+    # Publishing Year Difference
+    feature_publish_year = self.dist.publish_year(f)
+    x.append(feature_publish_year)
+
+    # Title Overlap
+    #feature_title_overlap = self.weight.title_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
+    #x.append(feature_title_overlap)
+
+    # Authors Overlap
+    #feature_author_overlap = self.weight.author_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
+    #x.append(feature_author_overlap)
+
+    # Context's Average TF-IDF Weight
+    feature_query_weight = self.weight.chunk_average_weight(query_text, citing_col)
+    x.append(feature_query_weight)
+
+    # Location of Citing Sentence
+    #feature_cit_sent_location = self.dist.cit_sent_location(cit_str, query, dom_parscit_section_citing)
+    #x.extend(feature_cit_sent_location)
+
+    # Cue Words
+    feature_cue_words = self.weight.cue_words(cit_str, query)
+    for i in feature_cue_words:
+      x.append(i)
+
+    # Trying out POS tagging
+    feature_pos_tag = self.weight.pos_tag_distribution(cit_str, query)
+
+    return x
 
   def extract_feature(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
     cit_str = context.getAttribute('citStr')
