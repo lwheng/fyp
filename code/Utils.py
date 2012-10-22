@@ -857,7 +857,7 @@ class extract_features:
       text = self.nltk_tools.nltk_text(self.nltk_tools.nltk_word_tokenize(whole_text.lower()))
       docs.append(text)
     docs_col = self.nltk_tools.nltk_text_collection(docs)
-    print body_texts
+    print docs_col
     sys.exit()
 
     # Extract Features
