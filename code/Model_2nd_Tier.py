@@ -72,8 +72,6 @@ if __name__ == "__main__":
     hash_key = citing+"==>"+cited
     f_contexts = contexts[hash_key]
     f_hash = y_hash_2nd_tier[f]
-    print f_hash
-    sys.exit()
     dom_parscit_section_cited = doms[hash_key][3]
     f_contexts = contexts[hash_key]
     context_list = []
@@ -85,6 +83,9 @@ if __name__ == "__main__":
     citing_col = nltk_tools.nltk_text_collection(context_list)
     for context_id in f_hash.keys():
       c = f_contexts[context_id]
+      c_hash = f_hash[c]
+      print c_hash
+      sys.exit()
       x = feature_extractor.extract_feature_2nd_tier(f, c, citing_col, doms[hash_key][1], doms[hash_key][3])
       X.append(x)
       y.append(labels_to_index[y_hash_2nd_tier[hash_key][i]])
