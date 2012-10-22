@@ -65,14 +65,14 @@ if __name__ == "__main__":
   # We should not use filtered this time. Use keys from y_hash_2nd_tier instead
   second_tier_keys = y_hash_2nd_tier.keys()
   num = len(second_tier_keys)
-  print num
-  sys.exit()
   for f in second_tier_keys:
     info = f.split("==>")
     citing = info[0]
     cited = info[1]
     hash_key = citing+"==>"+cited
     f_contexts = contexts[hash_key]
+    print f
+    sys.exit()
     dom_parscit_section_cited = doms[hash_key][3]
     if hash_key in y_hash_2nd_tier:
       f_contexts = contexts[hash_key]
