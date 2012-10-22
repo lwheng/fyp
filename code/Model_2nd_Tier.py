@@ -83,7 +83,7 @@ if __name__ == "__main__":
     citing_col = nltk_tools.nltk_text_collection(context_list)
     for context_id in f_hash.keys():
       c = f_contexts[context_id]
-      c_hash = f_hash[c]
+      c_hash = f_hash[context_id]
       print c_hash
       sys.exit()
       x = feature_extractor.extract_feature_2nd_tier(f, c, citing_col, doms[hash_key][1], doms[hash_key][3])
