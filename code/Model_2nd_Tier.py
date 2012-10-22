@@ -84,9 +84,9 @@ if __name__ == "__main__":
     for context_id in f_hash.keys():
       c = f_contexts[context_id]
       c_hash = f_hash[context_id]
-      print c_hash
-      sys.exit()
       x = feature_extractor.extract_feature_2nd_tier(f, c, citing_col, doms[hash_key][1], doms[hash_key][3])
+      print x
+      sys.exit()
       X.append(x)
       y.append(labels_to_index[y_hash_2nd_tier[hash_key][i]])
     num -= 1
