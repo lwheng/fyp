@@ -262,6 +262,41 @@ class weight:
     print cit_str
     return pos_hash
 
+  def cos_sim(self, query_tokens, query_col, doc_tokens, docs_col):
+    # Vocab
+    vocab = list(set(query_col) | set(docs_col))
+    vocab = map(lambda x: x.lower(), vocab)
+    vocab = [w for w in vocab if not w in self.stopwords]
+    vocab = [w for w in vocab if not w in self.punctuation]
+
+    # Prep Vectors
+    u = []
+    v = []
+    temp_query = map(lambda x: x.lower(), query_tokens)
+    temp_query = [w for w in temp_query if not w in self.stopwords]
+    temp_query = [w for w in temp_query if not w in self.punctuation]
+    temp_doc = map(lambda x: x.lower(), doc_tokens)
+    temp_doc = [w for w in temp_doc if not w in self.stopwords]
+    temp_doc = [w for w in temp_doc if not w in self.punctuation]
+    for term in vocab:
+      if term in temp_query:
+        try:
+          u.append(docs_col.tf_idf(term, temp_doc))
+        except:
+          u.append(0)
+      else:
+        u.append(0)
+      if term in temp_doc:
+        v.append(docs_col.tf_idf(term, temp_doc))
+      else:
+        v.append(0)
+    if math.sqrt(np.dot(u, u)) == 0.0:
+      return 0.0
+    else:
+      r = self.nltk_tools.nltk_cosine_distance(u,v)
+      return r
+
+
   def cosine_similarity(self, query_tokens, query_col, dom_parscit_section_cited):
     docs = []
     #body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
@@ -857,48 +892,19 @@ class extract_features:
       text = self.nltk_tools.nltk_text(self.nltk_tools.nltk_word_tokenize(whole_text.lower()))
       docs.append(text)
     docs_col = self.nltk_tools.nltk_text_collection(docs)
-    print docs_col
-    sys.exit()
 
     # Extract Features
     # In 2nd tier, features are to match context to specific chunk
     # For each chunk, we extract a feature vector, hence we return a list of feature vectors
     X = []
     x = []
-    
-    # Physical Features
-    feature_physical = self.weight.physical_features(cit_str, query, dom_parscit_section_citing)
-    for i in feature_physical:
-      x.append(i)
 
-    # Number Density
-    feature_num_density = self.weight.number_density(cit_str, query)
-    for i in feature_num_density:
-      x.append(i)
-
-    # Context's Average TF-IDF Weight
-    feature_query_weight = self.weight.chunk_average_weight(query_text, citing_col)
-    x.append(feature_query_weight)
-
-    # Cue Words
-    feature_cue_words = self.weight.cue_words(cit_str, query)
-    for i in feature_cue_words:
-      x.append(i)
-
-    # Trying out POS tagging
-    feature_pos_tag = self.weight.pos_tag_distribution(cit_str, query)
-    
-    # Cosine Similarity
-    feature_cosine_similarity = self.weight.cosine_similarity(query_tokens, query_col, dom_parscit_section_cited)
-    for i in feature_cosine_similarity:
-      cosine_tuple = i[1]
-      chunk_avg_weight = cosine_tuple[0]
-      cosine_sim = cosine_tuple[1]
-      temp = x[:]
-      temp.append(chunk_avg_weight)
-      temp.append(cosine_sim)
-      X.append(temp)
-
+    for doc in docs:
+      # Extract features for each body_text
+      # Cos Sim
+      feature_cos_sim = self.weight.cos_sim(query_tokens, query_col, doc, docs_col)
+      x.append(feature_cos_sim)
+      X.append(x)
     return X
 
   def extract_feature(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):

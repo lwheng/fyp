@@ -86,6 +86,8 @@ if __name__ == "__main__":
       c_hash = f_hash[context_id]
       x = feature_extractor.extract_feature_2nd_tier(f, c, citing_col, doms[hash_key][1], doms[hash_key][3])
       # x would be a list of feature vector because we are comparing 1 context against bodyTexts
+      print x
+      sys.exit()
       X.append(x)
       for i in range(len(x)):
         if i in c_hash:
