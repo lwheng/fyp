@@ -72,26 +72,27 @@ if __name__ == "__main__":
     hash_key = citing+"==>"+cited
     f_contexts = contexts[hash_key]
     print f
-    print y_hash_2nd_tier[f]
-    sys.exit()
+    f_hash = y_hash_2nd_tier[f]
     dom_parscit_section_cited = doms[hash_key][3]
-    if hash_key in y_hash_2nd_tier:
-      f_contexts = contexts[hash_key]
-      context_list = []
-      for c in f_contexts:
-        value = c.firstChild.wholeText
-        value = unicode(value.encode('ascii', 'ignore'), errors='ignore')
-        context_list.append(nltk_tools.nltk_text(nltk_tools.nltk_word_tokenize(value)))
-      citing_col = nltk_tools.nltk_text_collection(context_list)
-      for i in range(len(f_contexts)):
-        if y_hash_2nd_tier[hash_key][i] == 'u':
-          continue
-        c = f_contexts[i]
-        x = feature_extractor.extract_feature_2nd_tier(f, c, citing_col, doms[hash_key][1], doms[hash_key][3])
-        X.append(x)
-        y.append(labels_to_index[y_hash_2nd_tier[hash_key][i]])
-      num -= 1
-      print "No. of filtered left = " + str(num)
+    f_contexts = contexts[hash_key]
+    context_list = []
+    for context_id in f_hash.keys():
+      print context_id
+    sys.exit()
+    for c in f_contexts:
+      value = c.firstChild.wholeText
+      value = unicode(value.encode('ascii', 'ignore'), errors='ignore')
+      context_list.append(nltk_tools.nltk_text(nltk_tools.nltk_word_tokenize(value)))
+    citing_col = nltk_tools.nltk_text_collection(context_list)
+    for i in range(len(f_contexts)):
+      if y_hash_2nd_tier[hash_key][i] == 'u':
+        continue
+      c = f_contexts[i]
+      x = feature_extractor.extract_feature_2nd_tier(f, c, citing_col, doms[hash_key][1], doms[hash_key][3])
+      X.append(x)
+      y.append(labels_to_index[y_hash_2nd_tier[hash_key][i]])
+    num -= 1
+    print "No. of filtered left = " + str(num)
   X = np.asarray(X)
   y = np.asarray(y)
 
