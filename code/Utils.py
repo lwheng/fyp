@@ -838,6 +838,7 @@ class extract_features:
     return x
   
   def extract_feature_2nd_tier(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
+    return "Hello world"
     cit_str = context.getAttribute('citStr')
     cit_str = unicode(cit_str.encode('ascii','ignore'), errors='ignore')
     query = context.firstChild.wholeText

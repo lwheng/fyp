@@ -29,8 +29,8 @@ if __name__ == "__main__":
   print printer.line_printer(len(string), "-")
   # Run Targets.py to generate Y.pickle from Labels.txt
   execfile("Targets.py")
-  # Load y_hash_1st_tier
-  y_hash_1st_tier = pickle.load(open(os.path.join(path_pickles, 'Y_Hash_2nd_Tier.pickle'),'r'))
+  # Load y_hash_2nd_tier
+  y_hash_2nd_tier = pickle.load(open(os.path.join(path_pickles, 'Y_Hash_2nd_Tier.pickle'),'r'))
   string = "Loaded Annotations"
   print printer.line_printer(len(string), "-")
   print string
@@ -61,14 +61,20 @@ if __name__ == "__main__":
   feature_extractor = Utils.extract_features()
   X = []
   y = []
-  sys.exit()
   # Extract Features
-  num = len(filtered)
-  for f in filtered:
-    citing = f['citing']
-    cited = f['cited']
+  # We should not use filtered this time. Use keys from y_hash_2nd_tier instead
+  2nd_tier_keys = y_hash_2nd_tier.keys
+  num = len(2nd_tier_keys)
+  print num
+  sys.exit()
+  for f in 2nd_tier_keys:
+    info = f.split("==>")
+    citing = info[0]
+    cited = info[1]
     hash_key = citing+"==>"+cited
-    if hash_key in y_hash_1st_tier:
+    f_contexts = contexts[hash_key]
+    dom_parscit_section_cited = doms[hash_key][3]
+    if hash_key in y_hash_2nd_tier:
       f_contexts = contexts[hash_key]
       context_list = []
       for c in f_contexts:
@@ -77,12 +83,12 @@ if __name__ == "__main__":
         context_list.append(nltk_tools.nltk_text(nltk_tools.nltk_word_tokenize(value)))
       citing_col = nltk_tools.nltk_text_collection(context_list)
       for i in range(len(f_contexts)):
-        if y_hash_1st_tier[hash_key][i] == 'u':
+        if y_hash_2nd_tier[hash_key][i] == 'u':
           continue
         c = f_contexts[i]
-        x = feature_extractor.extract_feature_1st_tier(f, c, citing_col, doms[hash_key][1], doms[hash_key][3])
+        x = feature_extractor.extract_feature_2nd_tier(f, c, citing_col, doms[hash_key][1], doms[hash_key][3])
         X.append(x)
-        y.append(labels_to_index[y_hash_1st_tier[hash_key][i]])
+        y.append(labels_to_index[y_hash_2nd_tier[hash_key][i]])
       num -= 1
       print "No. of filtered left = " + str(num)
   X = np.asarray(X)
@@ -103,4 +109,4 @@ if __name__ == "__main__":
   print printer.line_printer(len(string), "-")
 
   ## Write out the Model
-  pickle.dump(model, open(os.path.join(path_pickles, 'Model_1st_Tier.pickle'),'wb'))
+  pickle.dump(model, open(os.path.join(path_pickles, 'Model_2nd_Tier.pickle'),'wb'))
