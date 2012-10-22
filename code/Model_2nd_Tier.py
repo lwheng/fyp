@@ -72,6 +72,7 @@ if __name__ == "__main__":
     hash_key = citing+"==>"+cited
     f_contexts = contexts[hash_key]
     print f
+    print y_hash_2nd_tier[f]
     sys.exit()
     dom_parscit_section_cited = doms[hash_key][3]
     if hash_key in y_hash_2nd_tier:
