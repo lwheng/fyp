@@ -838,7 +838,6 @@ class extract_features:
     return x
   
   def extract_feature_2nd_tier(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
-    return "Hello world"
     cit_str = context.getAttribute('citStr')
     cit_str = unicode(cit_str.encode('ascii','ignore'), errors='ignore')
     query = context.firstChild.wholeText
@@ -848,13 +847,25 @@ class extract_features:
     query_text = self.nltk_tools.nltk_text(query_tokens)
     query_col = self.nltk_tools.nltk_text_collection([query_text])
 
+    docs = []
+    body_texts = dom_parscit_section_cited.getElementsByTagName('variant')[0].childNodes
+    for body_text in body_texts:
+      if body_text.nodeType == body_text.TEXT_NODE:
+        continue
+      whole_text = body_text.firstChild.wholeText.lower()
+      whole_text = unicode(whole_text.encode('ascii', 'ignore'), errors='ignore')
+      text = self.nltk_tools.nltk_text(self.nltk_tools.nltk_word_tokenize(whole_text.lower()))
+      docs.append(text)
+    docs_col = self.nltk_tools.nltk_text_collection(docs)
+    print body_texts
+    sys.exit()
+
     # Extract Features
+    # In 2nd tier, features are to match context to specific chunk
+    # For each chunk, we extract a feature vector, hence we return a list of feature vectors
+    X = []
     x = []
     
-    # Citation Density
-    #feature_cit_density = self.weight.cit_density(query, cit_str)
-    #x.append(feature_cit_density)
-
     # Physical Features
     feature_physical = self.weight.physical_features(cit_str, query, dom_parscit_section_citing)
     for i in feature_physical:
@@ -865,25 +876,9 @@ class extract_features:
     for i in feature_num_density:
       x.append(i)
 
-    # Publishing Year Difference
-    feature_publish_year = self.dist.publish_year(f)
-    x.append(feature_publish_year)
-
-    # Title Overlap
-    #feature_title_overlap = self.weight.title_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
-    #x.append(feature_title_overlap)
-
-    # Authors Overlap
-    #feature_author_overlap = self.weight.author_overlap(dom_parscit_section_citing, dom_parscit_section_cited)
-    #x.append(feature_author_overlap)
-
     # Context's Average TF-IDF Weight
     feature_query_weight = self.weight.chunk_average_weight(query_text, citing_col)
     x.append(feature_query_weight)
-
-    # Location of Citing Sentence
-    #feature_cit_sent_location = self.dist.cit_sent_location(cit_str, query, dom_parscit_section_citing)
-    #x.extend(feature_cit_sent_location)
 
     # Cue Words
     feature_cue_words = self.weight.cue_words(cit_str, query)
@@ -892,8 +887,19 @@ class extract_features:
 
     # Trying out POS tagging
     feature_pos_tag = self.weight.pos_tag_distribution(cit_str, query)
+    
+    # Cosine Similarity
+    feature_cosine_similarity = self.weight.cosine_similarity(query_tokens, query_col, dom_parscit_section_cited)
+    for i in feature_cosine_similarity:
+      cosine_tuple = i[1]
+      chunk_avg_weight = cosine_tuple[0]
+      cosine_sim = cosine_tuple[1]
+      temp = x[:]
+      temp.append(chunk_avg_weight)
+      temp.append(cosine_sim)
+      X.append(temp)
 
-    return x
+    return X
 
   def extract_feature(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
     cit_str = context.getAttribute('citStr')
