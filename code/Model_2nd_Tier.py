@@ -63,7 +63,7 @@ if __name__ == "__main__":
   y = []
   # Extract Features
   # We should not use filtered this time. Use keys from y_hash_2nd_tier instead
-  2nd_tier_keys = y_hash_2nd_tier.keys
+  2nd_tier_keys = y_hash_2nd_tier.keys()
   num = len(2nd_tier_keys)
   print num
   sys.exit()
