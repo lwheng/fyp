@@ -77,12 +77,12 @@ if __name__ == "__main__":
     f_contexts = contexts[hash_key]
     context_list = []
     for context_id in f_hash.keys():
-      print context_id
-    sys.exit()
-    for c in f_contexts:
+      c = f_contexts[context_id]
       value = c.firstChild.wholeText
+      print value
       value = unicode(value.encode('ascii', 'ignore'), errors='ignore')
       context_list.append(nltk_tools.nltk_text(nltk_tools.nltk_word_tokenize(value)))
+    sys.exit()
     citing_col = nltk_tools.nltk_text_collection(context_list)
     for i in range(len(f_contexts)):
       if y_hash_2nd_tier[hash_key][i] == 'u':
