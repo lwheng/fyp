@@ -91,6 +91,7 @@ if __name__ == "__main__":
       for i in range(len(x)):
         if i in c_hash:
           # Append y
+          print "YES"
           y.append(c_hash[i])
         else:
           # Append n
