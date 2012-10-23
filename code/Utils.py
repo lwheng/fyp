@@ -927,7 +927,7 @@ class extract_features:
       # Bigrams?
       doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
       doc_bigrams = set(doc_bigrams)
-      temp_bigrams_vocab = bigrams_vocab[:]
+      temp_bigrams_vocab = list(bigrams_vocab[:])
       temp_bigrams_vocab.extend(query_bigrams)
       temp_bigrams_vocab = set(temp_bigrams_vocab)
       feature_bigrams = self.weight.cos_sim_bigrams(query_bigrams, doc_bigrams, temp_bigrams_vocab)
