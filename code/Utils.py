@@ -931,7 +931,7 @@ class extract_features:
       temp_bigrams_vocab.extend(query_bigrams)
       temp_bigrams_vocab = set(temp_bigrams_vocab)
       feature_bigrams = self.weight.cos_sim_bigrams(query_bigrams, doc_bigrams, temp_bigrams_vocab)
-      print features_bigrams
+      print feature_bigrams
       sys.exit()
       x.append(feature_bigrams)
 
