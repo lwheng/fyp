@@ -90,17 +90,17 @@ if __name__ == "__main__":
       for i in range(len(x)):
         if i in c_hash:
           # Append y
-          y.append(c_hash[i])
+          y.append(1)
         else:
           # Append n
-          y.append('n')
+          y.append(0)
     num -= 1
     print "No. of keys left = " + str(num)
-  print X
-  print y
-  sys.exit()
   X = np.asarray(X)
   y = np.asarray(y)
+  print X.shape
+  print y.shape
+  sys.exit()
 
   ## Fit the Model
   string = "Fitting Model"
