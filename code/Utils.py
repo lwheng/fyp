@@ -971,9 +971,9 @@ class extract_features:
       print i
       print feature_cos_sim
       print
-      sys.exit()
       x.append(feature_cos_sim)
       X.append(x)
+    sys.exit()
     return X
 
   def extract_feature(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
