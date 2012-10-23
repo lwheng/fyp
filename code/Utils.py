@@ -975,6 +975,7 @@ class extract_features:
         max_index = i
       x.append(feature_cos_sim)
       X.append(x)
+    print f
     print max_index
     print docs[max_index]  
     sys.exit()
