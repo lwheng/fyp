@@ -890,16 +890,29 @@ class extract_features:
 
     return x
   
-  def extract_feature_2nd_tier(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
-    cit_str = context.getAttribute('citStr')
+  def extract_feature_2nd_tier(self, f, c, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
+    # Fix encoding problems
+    cit_str = c.getAttribute('citStr')
     cit_str = unicode(cit_str.encode('ascii','ignore'), errors='ignore')
-    query = context.firstChild.wholeText
-    query = unicode(query.encode('ascii','ignore'), errors='ignore')
+    context = c.firstChild.wholeText
+    context = unicode(query.encode('ascii','ignore'), errors='ignore')
+    
+    cit_str = cit_str.replace("et al.", "et al")
+    context = context.replace("et al.", "et al")
+    print cit_str
+    print context
+    context_lines = self.sentence_tokenizer.tokenize(context)
+    cit_sent = self.tools.search_term_in_lines(cit_str, context_lines)
+    before = context_lines[cit_sent-1] if (cit_sent-1 >= 0) else ""
+    after = context_lines[cit_sent+1] if (cit_sent+1 < len(context_lines)) else ""
+    cit_sent = context_lines[cit_sent]
 
     query_tokens = self.nltk_tools.nltk_word_tokenize(query.lower())
     query_text = self.nltk_tools.nltk_text(query_tokens)
     query_bigrams = self.nltk_tools.nltk_bigrams(query_text)
     query_col = self.nltk_tools.nltk_text_collection([query_text])
+
+    sys.exit()
 
     docs = []
     bigrams_vocab = []
@@ -924,6 +937,12 @@ class extract_features:
     for doc in docs:
       # Extract features for each body_text
       x = []
+
+      # Give priority to matching digits?
+
+      # Order of words important?
+
+      # Look at citing sentences and its neighbour sentences?
       
       # Bigrams?
       doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
