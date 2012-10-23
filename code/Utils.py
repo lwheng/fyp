@@ -465,6 +465,7 @@ class dist:
     # Retunrs jaccard index. Smaller the better
     inputA = map(lambda x: x.lower(), inputA.vocab().keys())
     inputB = map(lambda x: x.lower(), inputB.vocab().keys())
+    print inputA
     return distance.jaccard_distance(set(inputA), set(inputB))
 
   def masi(self, a, b):
@@ -957,7 +958,7 @@ class extract_features:
 
       print i
       print self.dist.jaccard_text(context_text, doc)
-      print
+      sys.exit()
 
       # Cos Sim
       #feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col)
