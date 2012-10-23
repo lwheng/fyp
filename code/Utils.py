@@ -898,27 +898,31 @@ class extract_features:
     context = c.firstChild.wholeText
     context = unicode(context.encode('ascii','ignore'), errors='ignore')
     
+    # Getting the citing sentence and its neighbour sentences
     cit_str = cit_str.replace("et al.", "et al")
     context = context.replace("et al.", "et al")
-    print cit_str
-    print context
     context_lines = self.dist.sentence_tokenizer.tokenize(context)
     cit_sent = self.tools.search_term_in_lines(cit_str, context_lines)
     before = context_lines[cit_sent-1] if (cit_sent-1 >= 0) else ""
     after = context_lines[cit_sent+1] if (cit_sent+1 < len(context_lines)) else ""
     cit_sent = context_lines[cit_sent]
 
-    print before
-    print
-    print cit_sent
-    print
-    print after
-    sys.exit()
+    before_tokens = self.nltk_tools.nltk_word_tokenize(before.lower())
+    before_text = self.nltk_tools.nltk_text(before_tokens)
+    before_bigrams = self.nltk_tools.nltk_bigrams(before_text)
+    
+    cit_sent_tokens = self.nltk_tools.nltk_word_tokenize(cit_sent.lower())
+    cit_sent_text = self.nltk_tools.nltk_text(cit_sent_tokens)
+    cit_sent_bigrams = self.nltk_tools.nltk_bigrams(cit_sent_text)
+    
+    after_tokens = self.nltk_tools.nltk_word_tokenize(after.lower())
+    after_text = self.nltk_tools.nltk_text(after_tokens)
+    after_bigrams = self.nltk_tools.nltk_bigrams(after_text)
 
-    query_tokens = self.nltk_tools.nltk_word_tokenize(query.lower())
-    query_text = self.nltk_tools.nltk_text(query_tokens)
-    query_bigrams = self.nltk_tools.nltk_bigrams(query_text)
-    query_col = self.nltk_tools.nltk_text_collection([query_text])
+    context_tokens = self.nltk_tools.nltk_word_tokenize(context.lower())
+    context_text = self.nltk_tools.nltk_text(context_tokens)
+    context_bigrams = self.nltk_tools.nltk_bigrams(context_text)
+    context_col = self.nltk_tools.nltk_text_collection([context_text])
 
     docs = []
     bigrams_vocab = []
