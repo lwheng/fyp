@@ -9,6 +9,12 @@ from sklearn import svm, metrics
 from sklearn import cross_validation
 
 if __name__ == "__main__":
+  # Load Config.pickle
+  config = pickle.load(open('Config.pickle','r'))
+  path_parscit = config['path_parscit']
+  path_parscit_section = config['path_parscit_section']
+  path_pickles = config['path_pickles']
+
   # Load Model_2nd_Tier
   model_2nd_tier = pickle.load(open(os.path.join(path_pickles, 'Model_2nd_Tier.pickle'), 'r'))
   # Load X
