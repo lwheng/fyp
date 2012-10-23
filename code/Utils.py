@@ -895,7 +895,7 @@ class extract_features:
     cit_str = c.getAttribute('citStr')
     cit_str = unicode(cit_str.encode('ascii','ignore'), errors='ignore')
     context = c.firstChild.wholeText
-    context = unicode(query.encode('ascii','ignore'), errors='ignore')
+    context = unicode(context.encode('ascii','ignore'), errors='ignore')
     
     cit_str = cit_str.replace("et al.", "et al")
     context = context.replace("et al.", "et al")
