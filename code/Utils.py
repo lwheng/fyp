@@ -300,7 +300,6 @@ class weight:
       return r
 
   def cos_sim_bigrams(self, query_bigrams, doc_bigrams, bigrams_vocab):
-    print
     # Prep vectors
     u = []
     v = []
