@@ -903,11 +903,15 @@ class extract_features:
       # Extract features for each body_text
       # Cos Sim
       feature_cos_sim = self.weight.cos_sim(query_tokens, query_col, doc, docs_col)
+      toprint = ""
       for q in query_tokens:
-        print q
+        toprint += q
+      print toprint
       print
+      toprint = ""
       for d in doc:
-        print d
+        toprint += d
+      print toprint
       print
       sys.exit()
       x.append(feature_cos_sim)
