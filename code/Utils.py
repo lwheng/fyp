@@ -956,7 +956,7 @@ class extract_features:
       x = []
 
       print "65"
-      print context_tokens
+      print cit_sent_tokens
       print docs[65].vocab().keys()
       print self.dist.jaccard_text(context_text, docs[65])
       sys.exit()
