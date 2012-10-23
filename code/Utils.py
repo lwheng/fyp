@@ -939,6 +939,7 @@ class extract_features:
       # Cos Sim
       feature_cos_sim = self.weight.cos_sim(query_tokens, query_col, doc, docs_col)
       x.append(feature_cos_sim)
+      X.append(x)
 
     print X
     sys.exit()
