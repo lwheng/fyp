@@ -831,6 +831,7 @@ class extract_features:
   def __init__(self):
     self.dist = dist()
     self.nltk_tools = nltk_tools()
+    self.tools = tools()
     self.weight = weight()
 
   def extract_feature_1st_tier(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
