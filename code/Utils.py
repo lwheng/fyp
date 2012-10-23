@@ -957,8 +957,7 @@ class extract_features:
 
       print i
       print self.dist.jaccard_text(context_text, doc)
-      sys.exit()
-
+      print
 
       # Cos Sim
       #feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col)
