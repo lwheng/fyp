@@ -944,7 +944,7 @@ class extract_features:
     X = []
     x = []
     
-    max_sim = 100
+    max_sim = -1
     max_index = 0
     for i in range(len(docs)):
       doc = docs[i]
@@ -970,7 +970,7 @@ class extract_features:
 
       # Cos Sim
       feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col)
-      if feature_cos_sim < max_sim:
+      if feature_cos_sim > max_sim:
         max_sim = feature_cos_sim
         max_index = i
       x.append(feature_cos_sim)
