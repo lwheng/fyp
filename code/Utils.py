@@ -913,6 +913,7 @@ class extract_features:
         toprint += d
       print toprint
       print
+      print feature_cos_sim
       sys.exit()
       x.append(feature_cos_sim)
       X.append(x)
