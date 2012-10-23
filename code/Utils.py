@@ -923,6 +923,7 @@ class extract_features:
 
     for doc in docs:
       # Extract features for each body_text
+      x = []
       
       # Bigrams?
       doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
