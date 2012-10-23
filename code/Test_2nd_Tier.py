@@ -41,8 +41,8 @@ if __name__ == "__main__":
   
   # Pick randomly
   times = 2
-  X_train.extend(random.sample(X_g, int(len(y_train)*times)))
-  y_train.extend(random.sample(y_g, int(len(y_train)*times)))
+  X_train.extend(random.sample(X_n, int(len(y_train)*times)))
+  y_train.extend(random.sample(y_n, int(len(y_train)*times)))
   
   X_train = np.asarray(X_train)
   y_train = np.asarray(y_train)
