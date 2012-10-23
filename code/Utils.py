@@ -939,10 +939,8 @@ class extract_features:
       feature_cos_sim = self.weight.cos_sim(query_tokens, query_col, doc, docs_col)
       x.append(feature_cos_sim)
 
-      print x
-      X.append(x)
-      print X
-      sys.exit()
+    print X
+    sys.exit()
     return X
 
   def extract_feature(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
