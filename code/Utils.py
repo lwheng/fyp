@@ -971,7 +971,7 @@ class extract_features:
       # Cos Sim
       feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col)
       print feature_cos_sim
-      print type(feature_cos_sim)
+      print feature_cos_sim > 0
       if feature_cos_sim < max_sim:
         max_sum = feature_cos_sim
         max_index = i
