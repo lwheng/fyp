@@ -908,12 +908,17 @@ class extract_features:
     after = context_lines[cit_sent+1] if (cit_sent+1 < len(context_lines)) else ""
     cit_sent = context_lines[cit_sent]
 
+    print before
+    print
+    print cit_sent
+    print
+    print after
+    sys.exit()
+
     query_tokens = self.nltk_tools.nltk_word_tokenize(query.lower())
     query_text = self.nltk_tools.nltk_text(query_tokens)
     query_bigrams = self.nltk_tools.nltk_bigrams(query_text)
     query_col = self.nltk_tools.nltk_text_collection([query_text])
-
-    sys.exit()
 
     docs = []
     bigrams_vocab = []
