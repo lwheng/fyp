@@ -914,7 +914,6 @@ class extract_features:
     cit_sent_tokens = self.nltk_tools.nltk_word_tokenize(cit_sent.lower())
     cit_sent_text = self.nltk_tools.nltk_text(cit_sent_tokens)
     cit_sent_bigrams = self.nltk_tools.nltk_bigrams(cit_sent_text)
-    print cit_sent_bigrams
     
     after_tokens = self.nltk_tools.nltk_word_tokenize(after.lower())
     after_text = self.nltk_tools.nltk_text(after_tokens)
@@ -944,8 +943,9 @@ class extract_features:
     # For each chunk, we extract a feature vector, hence we return a list of feature vectors
     X = []
     x = []
-
-    for doc in docs:
+    
+    for i in range(len(docs)):
+      doc = docs[i]
       # Extract features for each body_text
       x = []
 
@@ -956,18 +956,22 @@ class extract_features:
       # Look at citing sentences and its neighbour sentences?
       
       # Bigrams?
-      doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
-      doc_bigrams = set(doc_bigrams)
-      temp_bigrams_vocab = list(bigrams_vocab)[:]
-      temp_bigrams_vocab.extend(query_bigrams)
-      temp_bigrams_vocab = set(temp_bigrams_vocab)
-      feature_bigrams = self.weight.cos_sim_bigrams(query_bigrams, doc_bigrams, temp_bigrams_vocab)
-      x.append(feature_bigrams)
+      #doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
+      #doc_bigrams = set(doc_bigrams)
+      #temp_bigrams_vocab = list(bigrams_vocab)[:]
+      #temp_bigrams_vocab.extend(query_bigrams)
+      #temp_bigrams_vocab = set(temp_bigrams_vocab)
+      #feature_bigrams = self.weight.cos_sim_bigrams(query_bigrams, doc_bigrams, temp_bigrams_vocab)
+      #x.append(feature_bigrams)
 
       # POS tags?
 
       # Cos Sim
-      feature_cos_sim = self.weight.cos_sim(query_tokens, query_col, doc, docs_col)
+      feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col)
+      print i
+      print feature_cos_sim
+      print
+      sys.exit()
       x.append(feature_cos_sim)
       X.append(x)
     return X
