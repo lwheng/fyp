@@ -914,6 +914,7 @@ class extract_features:
     cit_sent_tokens = self.nltk_tools.nltk_word_tokenize(cit_sent.lower())
     cit_sent_text = self.nltk_tools.nltk_text(cit_sent_tokens)
     cit_sent_bigrams = self.nltk_tools.nltk_bigrams(cit_sent_text)
+    print cit_sent_bigrams
     
     after_tokens = self.nltk_tools.nltk_word_tokenize(after.lower())
     after_text = self.nltk_tools.nltk_text(after_tokens)
