@@ -4,6 +4,7 @@ import cPickle as pickle
 import os
 import sys
 import numpy as np
+import random
 from sklearn import svm
 
 if __name__ == "__main__":
@@ -98,10 +99,6 @@ if __name__ == "__main__":
     print "No. of keys left = " + str(num)
   X = np.asarray(X)
   y = np.asarray(y)
-  print X.shape
-  print y.shape
-  print y
-  sys.exit()
 
   ## Fit the Model
   string = "Fitting Model"
@@ -117,5 +114,33 @@ if __name__ == "__main__":
   print string
   print printer.line_printer(len(string), "-")
 
+  ## Write out X
+  pickle.dump(X, open(os.path.join(path_pickles, 'X_2nd_Tier.pickle'),'wb'))
+  ## Write out y
+  pickle.dump(y, open(os.path.join(path_pickles, 'y_2nd_Tier.pickle'),'wb'))
   ## Write out the Model
   pickle.dump(model, open(os.path.join(path_pickles, 'Model_2nd_Tier.pickle'),'wb'))
+
+  sys.exit()
+
+  # Prediction
+  X_n = []
+  y_n = []
+  X_y = []
+  y_y = []
+  for i in range(y.shape[0]):
+    temp_x = list(X[i])
+    temp_y = int(y[i])
+    if temp_y == 1:
+      X_y.append(temp_x)
+      y_y.append(temp_y)
+    else:
+      X_n.append(temp_x)
+      y_n.append(temp_y)
+  X_train = X_y
+  y_train = y_y
+  
+  # Pick randomly
+  times = 2
+  X_train.extend(random.sample(X_g, int(len(y_train)*times)))
+  y_train.extend(random.sample(y_g, int(len(y_train)*times)))
