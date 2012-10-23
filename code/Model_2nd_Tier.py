@@ -100,6 +100,7 @@ if __name__ == "__main__":
   y = np.asarray(y)
   print X.shape
   print y.shape
+  print y
   sys.exit()
 
   ## Fit the Model
