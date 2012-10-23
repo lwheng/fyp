@@ -55,6 +55,6 @@ if __name__ == "__main__":
   #expected = y_train
   clf.fit(X_train, y_train)
   predicted = clf.predict(X_train)
-  expected = y
+  expected = y_train
   print "Classification report for classifier %s:\n%s\n" % (clf, metrics.classification_report(expected, predicted))
   print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
