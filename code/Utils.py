@@ -48,6 +48,9 @@ class nltk_tools:
   def nltk_pos(self, text):
     return nltk.pos_tag(text)
 
+  def nltk_bigrams(self, text):
+    return nltk.bigrams(text)
+
 class tools:
   def parseXML(self, data):
     return parseString(data)
@@ -295,6 +298,23 @@ class weight:
     else:
       r = self.nltk_tools.nltk_cosine_distance(u,v)
       return r
+
+  def cos_sim_bigrams(self, query_bigrams, doc_bigrams, bigrams_vocab):
+    print
+    # Prep vectors
+    u = []
+    v = []
+    for b in bigrams_vocab:
+      if b in query_bigrams:
+        u.append(100)
+      else:
+        u.append(1)
+      if b in doc_bigrams:
+        v.append(100)
+      else:
+        v.append(1)
+    return self.nltk_tools.nltk_cosine_distance(u,v)
+
 
   def cosine_similarity(self, query_tokens, query_col, dom_parscit_section_cited):
     docs = []
@@ -879,9 +899,11 @@ class extract_features:
 
     query_tokens = self.nltk_tools.nltk_word_tokenize(query.lower())
     query_text = self.nltk_tools.nltk_text(query_tokens)
+    query_bigrams = self.nltk_tools.nltk_bigrams(query_text)
     query_col = self.nltk_tools.nltk_text_collection([query_text])
 
     docs = []
+    bigrams_vocab = []
     body_texts = dom_parscit_section_cited.getElementsByTagName('variant')[0].childNodes
     for body_text in body_texts:
       if body_text.nodeType == body_text.TEXT_NODE:
@@ -889,8 +911,10 @@ class extract_features:
       whole_text = body_text.firstChild.wholeText.lower()
       whole_text = unicode(whole_text.encode('ascii', 'ignore'), errors='ignore')
       text = self.nltk_tools.nltk_text(self.nltk_tools.nltk_word_tokenize(whole_text.lower()))
+      bigrams_vocab.extend(self.nltk_tools.nltk_bigrams(text))
       docs.append(text)
     docs_col = self.nltk_tools.nltk_text_collection(docs)
+    bigrams_vocab = set(bigrams_vocab)
 
     # Extract Features
     # In 2nd tier, features are to match context to specific chunk
@@ -900,6 +924,15 @@ class extract_features:
 
     for doc in docs:
       # Extract features for each body_text
+      
+      # Bigrams?
+      doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
+      doc_bigrams = set(doc_bigrams)
+      feature_bigrams = self.weight.cos_sim_bigrams(query_bigrams, doc_bigrams, bigrams_vocab)
+      x.append(feature_bigrams)
+
+      # POS tags?
+
       # Cos Sim
       feature_cos_sim = self.weight.cos_sim(query_tokens, query_col, doc, docs_col)
       x.append(feature_cos_sim)
