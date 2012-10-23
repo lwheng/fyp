@@ -296,7 +296,6 @@ class weight:
       r = self.nltk_tools.nltk_cosine_distance(u,v)
       return r
 
-
   def cosine_similarity(self, query_tokens, query_col, dom_parscit_section_cited):
     docs = []
     #body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
@@ -903,18 +902,6 @@ class extract_features:
       # Extract features for each body_text
       # Cos Sim
       feature_cos_sim = self.weight.cos_sim(query_tokens, query_col, doc, docs_col)
-      toprint = ""
-      for q in query_tokens:
-        toprint += q
-      print toprint
-      print
-      toprint = ""
-      for d in doc:
-        toprint += d
-      print toprint
-      print
-      print feature_cos_sim
-      sys.exit()
       x.append(feature_cos_sim)
       X.append(x)
     return X
