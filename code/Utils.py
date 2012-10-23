@@ -456,10 +456,16 @@ class dist:
     return (lensum - ldist) / lensum
 
   def jaccard(self, inputA, inputB):
-    # Returns jaccard index. Smaller the more better
+    # Returns jaccard index. Smaller the better
     a = inputA.lower()
     b = inputB.lower()
     return distance.jaccard_distance(set(a.split()), set(b.split()))
+
+  def jaccard_text(self, inputA, inputB):
+    # Retunrs jaccard index. Smaller the better
+    inputA = map(lambda x: x.lower(), inputA.vocab().keys())
+    inputB = map(lambda x: x.lower(), inputB.vocab().keys())
+    return distance.jaccard_distance(set(inputA), set(inputB))
 
   def masi(self, a, b):
     a = a.lower()
@@ -944,13 +950,20 @@ class extract_features:
     X = []
     x = []
     
-    max_sim = -1
-    max_index = 0
     for i in range(len(docs)):
       doc = docs[i]
       # Extract features for each body_text
       x = []
 
+      print i
+      print self.dist.jaccard_text(context_text, doc)
+      sys.exit()
+
+
+      # Cos Sim
+      #feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col)
+      #x.append(feature_cos_sim)
+      
       # Give priority to matching digits?
 
       # Order of words important?
@@ -967,19 +980,8 @@ class extract_features:
       #x.append(feature_bigrams)
 
       # POS tags?
-
-      # Cos Sim
-      feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col)
-      if feature_cos_sim > max_sim:
-        max_sim = feature_cos_sim
-        max_index = i
-      x.append(feature_cos_sim)
+      
       X.append(x)
-    print f
-    print max_index
-    print cit_sent_tokens
-    print docs[max_index].vocab().keys()
-    sys.exit()
     return X
 
   def extract_feature(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
