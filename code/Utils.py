@@ -958,7 +958,7 @@ class extract_features:
       print "65"
       print cit_sent_tokens
       print docs[65].vocab().keys()
-      print self.dist.jaccard_text(context_text, docs[65])
+      print self.dist.jaccard_text(cit_sent_text, docs[65])
       sys.exit()
 
       # Cos Sim
