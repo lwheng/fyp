@@ -469,6 +469,8 @@ class weight:
     if len(cit_sent_num_only) == 0 or len(candidate_num_only) == 0:
       return 0.0
     print cit_sent_num_only
+    print candidate_num_only
+    print
     count = float(0)
     for term in candidate_num_only:
       if term > 1 and term < 100:
@@ -1043,6 +1045,7 @@ class extract_features:
         x.append(feat)
 
       # Number Near Miss e.g. 81.1 for 81.06, 92 for 0.92
+      print i
       feature_number_near_miss = self.weight.number_near_miss(cit_sent_tokens, cit_sent_text_tagged, doc)
       x.append(feature_number_near_miss)
       if feature_number_near_miss > max_sim:
