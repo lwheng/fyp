@@ -136,8 +136,6 @@ if __name__ == "__main__":
   for (d, a) in sample:
     X_train.append(d)
     y_train.append(a)
-  #X_train.extend(random.sample(X_g, int(len(y_train)*times)))
-  #y_train.extend(random.sample(y_g, int(len(y_train)*times)))
 
   X_train = np.asarray(X_train)
   y_train = np.asarray(y_train)

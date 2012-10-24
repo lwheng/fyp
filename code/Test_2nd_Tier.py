@@ -44,10 +44,17 @@ if __name__ == "__main__":
   X_train = X_y
   y_train = y_y
   
-  # Pick randomly
+  # Put X_n and y_n together
+  Xy_n = []
+  for i in range(len(X_n)):
+    Xy_n.append((X_n[i], y_n[i]))
+
+  # Pick randomly from Xy_n
   times = 2
-  X_train.extend(random.sample(X_n, int(len(y_train)*times)))
-  y_train.extend(random.sample(y_n, int(len(y_train)*times)))
+  sample = random.sample(Xy_n, int(len(y_train)*times))
+  for (d, a) in sample:
+    X_train.append(d)
+    y_train.append(a)
   
   X_train = np.asarray(X_train)
   y_train = np.asarray(y_train)
