@@ -963,7 +963,7 @@ class extract_features:
       # Cos Sim
       feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col)
       x.append(feature_cos_sim)
-      if feature_cos_sim > max_sim:
+      if feature_cos_sim < max_sim:
         max_sim = feature_cos_sim
         max_index = i
       
@@ -985,6 +985,7 @@ class extract_features:
       # POS tags?
       
       X.append(x)
+    print cit_sent_tokens
     print max_index
     print docs[max_index].vocab().keys()
     sys.exit()
