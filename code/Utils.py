@@ -1044,7 +1044,10 @@ class extract_features:
 
       # Number Near Miss e.g. 81.1 for 81.06, 92 for 0.92
       feature_number_near_miss = self.weight.number_near_miss(cit_sent_tokens, cit_sent_text_tagged, doc)
-      print feature_number_near_miss
+      x.append(feature_number_near_miss)
+      if feature_number_near_miss > max_sim:
+        max_sim = feature_number_near_miss
+        max_index = i
 
       # Bigrams?
       #doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
