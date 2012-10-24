@@ -266,6 +266,8 @@ class weight:
     return pos_hash
 
   def cos_sim(self, query_tokens, query_col, doc_tokens, docs_col):
+    print query_col.vocab().keys()
+    sys.exit()
     # Vocab
     vocab = list(set(query_col) | set(docs_col))
     vocab = map(lambda x: x.lower(), vocab)
@@ -416,21 +418,6 @@ class weight:
     
     return (popularity_specific, density_specific, avg_dens_specific, popularity_general, density_general, avg_dens_general)
 
-  def matchingDigits(self, cit_sent_text_tagged, candidate_text):
-    # Jaccard using only numbers
-    cit_sent_num_only = []
-    candidate_num_only = []
-    candidate_text_tagged = self.nltk_tools.nltk_pos(candidate_text)
-    for (term, tag) in cit_sent_text_tagged:
-      if tag == 'CD':
-        cit_sent_num_only.append(term)
-    for (term, tag) in candidate_text_tagged:
-      if tag == 'CD':
-        candidate_num_only.append(term)
-    print cit_sent_num_only
-    print candidate_num_only
-    return self.dist.jaccard(cit_sent_num_only, candidate_num_only)
-  
   def referToDefinition(self, cit_str, context):
     print
 
@@ -967,26 +954,14 @@ class extract_features:
     # For each chunk, we extract a feature vector, hence we return a list of feature vectors
     X = []
     x = []
-    smallest = 2
-    smallest_index = 0
-    biggest = -1
-    biggest_index = 0
     for i in range(len(docs)):
       doc = docs[i]
       # Extract features for each body_text
       x = []
 
-      score = self.weight.matchingDigits(cit_sent_text_tagged, docs[i])
-      if score < smallest:
-        smallest = score
-        smallest_index = i
-      if score > biggest:
-        biggest = score
-        biggest_index = i
-
       # Cos Sim
-      #feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col)
-      #x.append(feature_cos_sim)
+      feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col)
+      x.append(feature_cos_sim)
       
       # Give priority to matching digits?
 
@@ -1006,9 +981,6 @@ class extract_features:
       # POS tags?
       
       X.append(x)
-    print cit_sent_tokens
-    print docs[smallest_index].vocab().keys()
-    print docs[biggest_index].vocab().keys()
     sys.exit()
     return X
 
