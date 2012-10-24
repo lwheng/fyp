@@ -933,7 +933,7 @@ class extract_features:
     cit_sent_tokens = self.nltk_tools.nltk_word_tokenize(cit_sent.lower())
     cit_sent_text = self.nltk_tools.nltk_text(cit_sent_tokens)
     cit_sent_bigrams = self.nltk_tools.nltk_bigrams(cit_sent_text)
-    cit_sent_text_tagged = slef.nltk_tools.nltk_pos(cit_sent_text)
+    cit_sent_text_tagged = self.nltk_tools.nltk_pos(cit_sent_text)
     
     after_tokens = self.nltk_tools.nltk_word_tokenize(after.lower())
     after_text = self.nltk_tools.nltk_text(after_tokens)
