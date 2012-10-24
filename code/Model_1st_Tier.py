@@ -129,13 +129,13 @@ if __name__ == "__main__":
   Xy_g = []
   for i in range(len(X_g)):
     Xy_g.append((X_g[i], y_g[i]))
-  print Xy_g
-  print len(X_g)
-  print len(Xy_g)
-  sys.exit()
 
-  # Pick randomly
+  # Pick randomly from Xy_g
   times = 2
+  sample = random.sample(Xy_g, int(len(y_train)*times))
+  print sample
+  print len(sample)
+  sys.exit()
   X_train.extend(random.sample(X_g, int(len(y_train)*times)))
   y_train.extend(random.sample(y_g, int(len(y_train)*times)))
 
