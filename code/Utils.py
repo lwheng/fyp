@@ -448,7 +448,6 @@ class weight:
 
   def number_near_miss(self, cit_sent_tokens, cit_sent_text_tagged, candidate_text):
     candidate_tagged = self.nltk_tools.nltk_pos(candidate_text)
-
     # Filter to look at only numbers like 81.1, 81.06, 0.92, 92
     cit_sent_num_only = []
     candidate_num_only = []
@@ -487,6 +486,9 @@ class weight:
         count += 1
     return count / float(len(cit_sent_num_only))
 
+  def bigrams_matching(self, citing_bigrams, doc_bigrams, vocab_bigrams):
+    print
+  
   def referToDefinition(self, cit_str, context):
     print
 
@@ -1046,13 +1048,14 @@ class extract_features:
       x.append(feature_number_near_miss)
 
       # Bigrams?
-      #doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
-      #doc_bigrams = set(doc_bigrams)
-      #temp_bigrams_vocab = list(bigrams_vocab)[:]
-      #temp_bigrams_vocab.extend(query_bigrams)
-      #temp_bigrams_vocab = set(temp_bigrams_vocab)
-      #feature_bigrams = self.weight.cos_sim_bigrams(query_bigrams, doc_bigrams, temp_bigrams_vocab)
-      #x.append(feature_bigrams)
+      doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
+      doc_bigrams = set(doc_bigrams)
+      temp_bigrams_vocab = list(bigrams_vocab)[:]
+      temp_bigrams_vocab.extend(context_bigrams)
+      temp_bigrams_vocab = set(temp_bigrams_vocab)
+      feature_bigrams_matching = self.weight.bigrams_matching(context_bigrams, doc_bigrams, temp_bigrams_vocab)
+      print feature_bigrams_matching
+      x.append(feature_bigrams_matching)
       
       # Cos Sim
       #feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col, vocab)

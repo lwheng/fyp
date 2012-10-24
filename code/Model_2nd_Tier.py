@@ -67,7 +67,7 @@ if __name__ == "__main__":
   second_tier_keys = y_hash_2nd_tier.keys()
   num = len(second_tier_keys)
   for f in second_tier_keys:
-    f = "N04-1032==>C02-1126" # REMOVE AFTER DEBUG
+    f = "P06-2066==>P98-1106" # REMOVE AFTER DEBUG
     info = f.split("==>")
     citing = info[0]
     cited = info[1]
