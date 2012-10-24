@@ -281,20 +281,19 @@ class weight:
     temp_doc = map(lambda x: x.lower(), doc_tokens)
     temp_doc = [w for w in temp_doc if not w in self.stopwords]
     temp_doc = [w for w in temp_doc if not w in self.punctuation]
-    print temp_query
-    sys.exit()
     for term in vocab:
       if term in temp_query:
-        try:
-          u.append(docs_col.tf_idf(term, temp_doc))
-        except:
-          u.append(0)
+        #u.append(docs_col.tf_idf(term, temp_doc))
+        u.append(100)
       else:
-        u.append(0)
+        #u.append(0)
+        u.append(1)
       if term in temp_doc:
-        v.append(docs_col.tf_idf(term, temp_doc))
+        #v.append(docs_col.tf_idf(term, temp_doc))
+        v.append(100)
       else:
-        v.append(0)
+        #v.append(0)
+        v.append(1)
     if math.sqrt(np.dot(u, u)) == 0.0:
       return 0.0
     else:
