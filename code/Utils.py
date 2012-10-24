@@ -468,8 +468,8 @@ class weight:
           None
     if len(cit_sent_num_only) == 0 or len(candidate_num_only) == 0:
       return 0.0
+    print cit_sent_num_only
     count = float(0)
-
     for term in candidate_num_only:
       if term > 1 and term < 100:
         # Rounding
