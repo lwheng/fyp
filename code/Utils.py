@@ -999,6 +999,7 @@ class extract_features:
       # POS tags?
       
       X.append(x)
+    print cit_sent_tokens
     print docs[smallest_index].vocab().keys()
     sys.exit()
     return X
