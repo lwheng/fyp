@@ -40,6 +40,7 @@ class nltk_tools:
     return stopwords.words('english')
 
   def nltk_cosine_distance(self, u, v):
+    # Closer to 1 the better
     return nltk.cluster.util.cosine_distance(u,v)
 
   def nltk_stemmer(self, input_string):
@@ -934,8 +935,10 @@ class extract_features:
     context_bigrams = self.nltk_tools.nltk_bigrams(context_text)
     context_col = self.nltk_tools.nltk_text_collection([context_text])
 
+    # Setting up vocab, bigrams_vocab
     docs = []
     bigrams_vocab = []
+    vocab = []
     body_texts = dom_parscit_section_cited.getElementsByTagName('variant')[0].childNodes
     for body_text in body_texts:
       if body_text.nodeType == body_text.TEXT_NODE:
@@ -945,8 +948,12 @@ class extract_features:
       text = self.nltk_tools.nltk_text(self.nltk_tools.nltk_word_tokenize(whole_text.lower()))
       bigrams_vocab.extend(self.nltk_tools.nltk_bigrams(text))
       docs.append(text)
+      vocab.append(whole_text.split())
     docs_col = self.nltk_tools.nltk_text_collection(docs)
     bigrams_vocab = set(bigrams_vocab)
+    vocab = set(vocab)
+    print vocab
+    print len(vocab)
 
     # Extract Features
     # In 2nd tier, features are to match context to specific chunk
