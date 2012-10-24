@@ -24,7 +24,6 @@ if __name__ == "__main__":
 
   print X.shape
   print y.shape
-  sys.exit()
 
   # Prediction
   X_n = []
