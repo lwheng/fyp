@@ -99,7 +99,7 @@ if __name__ == "__main__":
   print string
   print printer.line_printer(len(string), "-")
   # Select Classifier
-  model = svm.SVC(kernel='linear')
+  model = svm.SVC()
   model.fit(X[0:len(y)], y)
   # Fit X and y
   string = "Fitted Model. Writing Out Now"

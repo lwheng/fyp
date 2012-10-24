@@ -261,10 +261,10 @@ class weight:
       if tag not in pos_hash:
         pos_hash[tag] = 0
       pos_hash[tag] += 1
-    print cit_sent
-    print cit_sent_pos
-    print sorted(pos_hash.iteritems(), key=operator.itemgetter(1))
-    print cit_str
+    #print cit_sent
+    #print cit_sent_pos
+    #print sorted(pos_hash.iteritems(), key=operator.itemgetter(1))
+    #print cit_str
     return pos_hash
 
   def cos_sim(self, query_tokens, query_col, doc_tokens, docs_col, vocab):
@@ -978,7 +978,7 @@ class extract_features:
       x.append(i)
 
     # Trying out POS tagging
-    feature_pos_tag = self.weight.pos_tag_distribution(cit_str, query)
+    #feature_pos_tag = self.weight.pos_tag_distribution(cit_str, query)
 
     return x
   
