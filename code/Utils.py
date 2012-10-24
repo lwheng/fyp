@@ -996,7 +996,6 @@ class extract_features:
     print max_index
     print max_sim
     print docs[max_index].vocab().keys()
-    sys.exit()
     return X
 
   def extract_feature(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
