@@ -22,7 +22,7 @@ if __name__ == "__main__":
   # Load y
   y = pickle.load(open(os.path.join(path_pickles, 'y_2nd_Tier.pickle'), 'r'))
 
-  for i in range(len(X.shape[0])):
+  for i in range(X.shape[0]):
     print X[i] + " >>>>> " + y[i]
   print X.shape
   print y.shape
