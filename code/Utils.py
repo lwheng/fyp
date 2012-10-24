@@ -1058,7 +1058,9 @@ class extract_features:
       temp_bigrams_vocab.extend(context_bigrams)
       temp_bigrams_vocab = set(temp_bigrams_vocab)
       feature_bigrams_matching = self.weight.bigrams_matching(context_bigrams, doc_bigrams)
-      print feature_bigrams_matching
+      if feature_bigrams_matching > max_sim:
+        max_sim = feature_bigrams_matching
+        max_index = i
       x.append(feature_bigrams_matching)
       
       # Cos Sim
