@@ -965,6 +965,7 @@ class extract_features:
       print before_tokens
       print cit_sent_tokens
       print docs[65].vocab().keys()
+      self.weight.matchingDigits(cit_sent_text, cit_sent_text)
       self.weight.matchingDigits(cit_sent_text, docs[65])
       self.weight.matchingDigits(before_text, docs[65])
       sys.exit()
