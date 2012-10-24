@@ -417,6 +417,20 @@ class weight:
     
     return (popularity_specific, density_specific, avg_dens_specific, popularity_general, density_general, avg_dens_general)
 
+  def surface_matching_numbers(self, cit_sent_tokens, candidate_tokens):
+    temp_query = map(lambda x: x.lower(), cit_sent_tokens)
+    temp_query = [w for w in temp_query if not w in self.stopwords]
+    temp_query = [w for w in temp_query if not w in self.punctuation]
+    temp_candidate = map(lambda x: x.lower(), candidate_tokens)
+    temp_candidate = [w for w in temp_candidate if not w in self.stopwords]
+    temp_candidate = [w for w in temp_candidate if not w in self.punctuation]
+
+    count = float(0)
+    for term in temp_query:
+      if term in temp_candidate:
+        count += 1
+    return count / float(len(temp_query))
+
   def referToDefinition(self, cit_str, context):
     print
 
@@ -965,12 +979,18 @@ class extract_features:
       # Extract features for each body_text
       x = []
 
-      # Cos Sim
-      feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col, vocab)
-      x.append(feature_cos_sim)
-      if feature_cos_sim > max_sim:
-        max_sim = feature_cos_sim
+      # Surface Matching - Numbers
+      feature_surface_matching_numbers = self.weight.surface_matching_numbers(cit_sent_tokens, doc)
+      if feat > max_sim:
+        max_sim = feat
         max_index = i
+
+      # Cos Sim
+      #feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col, vocab)
+      #x.append(feature_cos_sim)
+      #if feature_cos_sim > max_sim:
+      #  max_sim = feature_cos_sim
+      #  max_index = i
       
       # Give priority to matching digits?
 
