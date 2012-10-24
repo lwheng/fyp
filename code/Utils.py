@@ -1074,6 +1074,9 @@ class extract_features:
       doc_bigrams = self.nltk_tools.nltk_bigrams(doc_tokens)
       doc_bigrams = list(set(doc_bigrams))
       feature_bigrams_matching = self.weight.bigrams_matching(cit_sent_cleaned_bigrams, doc_bigrams)
+      if feature_bigrams_matching > max_sim:
+        max_sim = feature_bigrams_matching
+        max_index = i
       x.append(feature_bigrams_matching[1])
       
       # Cos Sim
