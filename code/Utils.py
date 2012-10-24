@@ -284,7 +284,7 @@ class weight:
     for term in vocab:
       if term in temp_query:
         #u.append(docs_col.tf_idf(term, temp_doc))
-        if self.nltk_tools.nltk_pos([term])[0][1] == 'CD':
+        if self.nltk_tools.nltk_pos([term])[0][1] == 'CD' and term in temp_doc:
           u.append(1000)
         else:
           u.append(100)
@@ -293,7 +293,7 @@ class weight:
         u.append(1)
       if term in temp_doc:
         #v.append(docs_col.tf_idf(term, temp_doc))
-        if self.nltk_tools.nltk_pos([term])[0][1] == 'CD':
+        if self.nltk_tools.nltk_pos([term])[0][1] == 'CD' and term in temp_query:
           v.append(1000)
         else:
           v.append(100)
