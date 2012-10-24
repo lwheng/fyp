@@ -1029,6 +1029,7 @@ class extract_features:
         continue
       whole_text = body_text.firstChild.wholeText.lower()
       whole_text = unicode(whole_text.encode('ascii', 'ignore'), errors='ignore')
+      whole_text = whole_text.replace(cit_str, "")
       text = self.nltk_tools.nltk_text(self.nltk_tools.nltk_word_tokenize(whole_text.lower()))
       bigrams_vocab.extend(self.nltk_tools.nltk_bigrams(text))
       docs.append(text)
@@ -1061,6 +1062,12 @@ class extract_features:
       x.append(feature_number_near_miss)
 
       # Bigrams Matching
+      doc_tokens = doc.vocab().keys()
+      doc_tokens = [w for w in doc_tokens if not w in self.stopwords]
+      doc_tokens = [w for w in doc_tokens if not w in self.punctuation]
+      print doc
+      print doc_tokens
+      sys.exit()
       doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
       doc_bigrams = list(set(doc_bigrams))
       feature_bigrams_matching = self.weight.bigrams_matching(cit_sent_no_cit_str_bigrams, doc_bigrams)
