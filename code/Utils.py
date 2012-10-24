@@ -5,6 +5,7 @@ import nltk
 import re
 import os
 import math
+import decimal
 import numpy as np
 import cPickle as pickle
 from sets import Set
@@ -465,8 +466,27 @@ class weight:
           candidate_num_only.append(term)
         except:
           None
-    print cit_sent_num_only
-    print candidate_num_only
+    if len(cit_sent_num_only) == 0 or len(candidate_num_only) == 0:
+      return 0.0
+    count = float(0)
+    
+    for term in candidate_num_only:
+      if term > 1:
+        # Rounding
+        if term in cit_sent_num_only:
+          count += 1
+        else:
+          num_dp = abs(decimal.Decimal(term).as_tuple().exponent)
+          if round(term, num_dp-1) in cit_sent_num_only:
+            count += 1
+      else:
+        # Percentage
+        if term in cit_sent_num_only:
+          count += 1
+        else:
+          if (term * 100) in cit_sent_num_only:
+            count += 1
+    return count / float(len(cit_sent_num_only))
 
   def referToDefinition(self, cit_str, context):
     print
@@ -1024,7 +1044,7 @@ class extract_features:
 
       # Number Near Miss e.g. 81.1 for 81.06, 92 for 0.92
       feature_number_near_miss = self.weight.number_near_miss(cit_sent_tokens, cit_sent_text_tagged, doc)
-      sys.exit()
+      print feature_number_near_miss
 
       # Bigrams?
       #doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
