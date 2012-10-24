@@ -1069,10 +1069,7 @@ class extract_features:
         doc_tokens.append(k)
       doc_tokens = [w for w in doc_tokens if not w in self.stopwords]
       doc_tokens = [w for w in doc_tokens if not w in self.punctuation]
-      print doc
-      print doc_tokens
-      sys.exit()
-      doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
+      doc_bigrams = self.nltk_tools.nltk_bigrams(doc_tokens)
       doc_bigrams = list(set(doc_bigrams))
       feature_bigrams_matching = self.weight.bigrams_matching(cit_sent_no_cit_str_bigrams, doc_bigrams)
       if i==3 or i==23:
