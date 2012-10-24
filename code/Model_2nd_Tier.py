@@ -102,7 +102,6 @@ if __name__ == "__main__":
   y = np.asarray(y)
   print X.shape
   print y.shape
-  sys.exit()
 
   ## Fit the Model
   string = "Fitting Model"
@@ -125,6 +124,7 @@ if __name__ == "__main__":
   ## Write out the Model
   pickle.dump(model, open(os.path.join(path_pickles, 'Model_2nd_Tier.pickle'),'wb'))
 
+  # Leave testing to another file
   sys.exit()
 
   # Prediction
