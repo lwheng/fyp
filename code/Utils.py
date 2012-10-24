@@ -997,9 +997,6 @@ class extract_features:
       feature_surface_matching = self.weight.surface_matching(cit_sent_tokens, cit_sent_text_tagged, doc)
       for feat in feature_surface_matching:
         x.append(feat)
-      if feature_surface_matching[1] > max_sim:
-        max_sim = feature_surface_matching
-        max_index = i
 
       # Cos Sim
       #feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col, vocab)
