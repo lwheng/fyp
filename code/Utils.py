@@ -416,18 +416,11 @@ class weight:
     
     return (popularity_specific, density_specific, avg_dens_specific, popularity_general, density_general, avg_dens_general)
 
-  def matchingDigits(self, cit_sent_text_tagged, candidate_text):
+  def matchingDigits(self, cit_sent_text, candidate_text):
     cit_sent_num_only = []
     candidate_num_only = []
-    for (term, tag) in cit_sent_text_tagged:
-      if tag == 'CD':
-        cit_sent_num_only.append(term)
-    candidate_text_tagged = self.nltk_tools.nltk_pos(candidate_text)
-    for (term, tag) in candidate_text_tagged:
-      if tag == 'CD':
-        candidate_num_only.append(term)
-    print cit_sent_num_only
-    print candidate_num_only
+    self.dist.jaccard_text(cit_sent_text, candidate_text)
+    irint candidate_num_only
   
   def referToDefinition(self, cit_str, context):
     print
@@ -972,7 +965,7 @@ class extract_features:
       print "65"
       print cit_sent_tokens
       print docs[65].vocab().keys()
-      self.weight.matchingDigits(cit_sent_text_tagged, docs[65])
+      self.weight.matchingDigits(cit_sent_text, docs[65])
       sys.exit()
 
       # Cos Sim
