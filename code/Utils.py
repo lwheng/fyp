@@ -967,6 +967,8 @@ class extract_features:
     x = []
     smallest = 2
     smallest_index = 0
+    biggest = -1
+    biggest_index = 0
     for i in range(len(docs)):
       doc = docs[i]
       # Extract features for each body_text
@@ -976,6 +978,9 @@ class extract_features:
       if score < smallest:
         smallest = score
         smallest_index = i
+      if score > biggest:
+        biggest = score
+        biggest_index = i
 
       # Cos Sim
       #feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col)
@@ -1001,6 +1006,7 @@ class extract_features:
       X.append(x)
     print cit_sent_tokens
     print docs[smallest_index].vocab().keys()
+    print docs[biggest_index].vocab().keys()
     sys.exit()
     return X
 
