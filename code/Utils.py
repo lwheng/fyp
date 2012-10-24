@@ -1042,7 +1042,7 @@ class extract_features:
       x = []
 
       # Surface Matching - Using only cit_sent
-      #returns (num_match, text_match)
+      # returns (num_match, text_match)
       feature_surface_matching = self.weight.surface_matching(cit_sent_tokens, cit_sent_text_tagged, doc)
       for feat in feature_surface_matching:
         x.append(feat)
@@ -1051,7 +1051,7 @@ class extract_features:
       feature_number_near_miss = self.weight.number_near_miss(cit_sent_tokens, cit_sent_text_tagged, doc)
       x.append(feature_number_near_miss)
 
-      # Bigrams?
+      # Bigrams Matching
       doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
       doc_bigrams = set(doc_bigrams)
       temp_bigrams_vocab = list(bigrams_vocab)[:]
@@ -1067,12 +1067,8 @@ class extract_features:
       #  max_sim = feature_cos_sim
       #  max_index = i
       
-      # Give priority to matching digits?
-
       # Order of words important?
 
-      # Look at citing sentences and its neighbour sentences?
-      
       # POS tags?
       
       X.append(x)
