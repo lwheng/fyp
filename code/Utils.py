@@ -266,13 +266,14 @@ class weight:
     return pos_hash
 
   def cos_sim(self, query_tokens, query_col, doc_tokens, docs_col):
-    print query_col.vocab().keys()
-    sys.exit()
     # Vocab
     vocab = list(set(query_col) | set(docs_col))
     vocab = map(lambda x: x.lower(), vocab)
     vocab = [w for w in vocab if not w in self.stopwords]
     vocab = [w for w in vocab if not w in self.punctuation]
+
+    print vocab
+    sys.exit()
 
     # Prep Vectors
     u = []
