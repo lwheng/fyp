@@ -427,6 +427,8 @@ class weight:
     for (term, tag) in candidate_text_tagged:
       if tag == 'CD':
         candidate_num_only.append(term)
+    print cit_sent_num_only
+    print candidate_num_only
     return self.dist.jaccard(cit_sent_num_only, candidate_num_only)
   
   def referToDefinition(self, cit_str, context):
