@@ -419,8 +419,7 @@ class weight:
   def matchingDigits(self, cit_sent_text, candidate_text):
     cit_sent_num_only = []
     candidate_num_only = []
-    self.dist.jaccard_text(cit_sent_text, candidate_text)
-    irint candidate_num_only
+    print self.dist.jaccard_text(cit_sent_text, candidate_text)
   
   def referToDefinition(self, cit_str, context):
     print
