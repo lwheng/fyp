@@ -981,7 +981,7 @@ class extract_features:
 
       # Surface Matching - Numbers
       feature_surface_matching_numbers = self.weight.surface_matching_numbers(cit_sent_tokens, doc)
-      if feat > max_sim:
+      if feature_surface_matching_numbers > max_sim:
         max_sim = feat
         max_index = i
 
