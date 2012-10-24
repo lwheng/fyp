@@ -995,6 +995,7 @@ class extract_features:
     before = context_lines[cit_sent-1] if (cit_sent-1 >= 0) else ""
     after = context_lines[cit_sent+1] if (cit_sent+1 < len(context_lines)) else ""
     cit_sent = context_lines[cit_sent]
+    cit_sent_no_cit_str = cit_sent.replace(cit_str, "")
 
     before_tokens = self.nltk_tools.nltk_word_tokenize(before.lower())
     before_text = self.nltk_tools.nltk_text(before_tokens)
@@ -1004,6 +1005,10 @@ class extract_features:
     cit_sent_text = self.nltk_tools.nltk_text(cit_sent_tokens)
     cit_sent_bigrams = self.nltk_tools.nltk_bigrams(cit_sent_text)
     cit_sent_text_tagged = self.nltk_tools.nltk_pos(cit_sent_text)
+    cit_sent_no_cit_str_tokens = self.nltk_tools.nltk_word_tokenize(cit_sent_no_cit_str.lower())
+    cit_sent_no_cit_str_text = self.nltk_tools.nltk_text(cit_sent_no_cit_str_tokens)
+    cit_sent_no_cit_str_bigrams = self.nltk_tools.nltk_bigrams(cit_sent_no_cit_str_text)
+    cit_sent_no_cit_str_text_tagged = self.nltk_tools.nltk_pos(cit_sent_no_cit_str_text)
     
     after_tokens = self.nltk_tools.nltk_word_tokenize(after.lower())
     after_text = self.nltk_tools.nltk_text(after_tokens)
@@ -1058,7 +1063,7 @@ class extract_features:
       # Bigrams Matching
       doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
       doc_bigrams = list(set(doc_bigrams))
-      feature_bigrams_matching = self.weight.bigrams_matching(cit_sent_bigrams, doc_bigrams)
+      feature_bigrams_matching = self.weight.bigrams_matching(cit_sent_no_cit_str_bigrams, doc_bigrams)
       if i==3 or i==23:
         print ">>>>>" + str(i) + ">>>>" + str(feature_bigrams_matching[0])
       if feature_bigrams_matching[1] > max_sim:
