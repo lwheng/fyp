@@ -1057,7 +1057,7 @@ class extract_features:
       temp_bigrams_vocab = list(bigrams_vocab)[:]
       temp_bigrams_vocab.extend(context_bigrams)
       temp_bigrams_vocab = set(temp_bigrams_vocab)
-      feature_bigrams_matching = self.weight.bigrams_matching(context_bigrams, doc_bigrams)
+      feature_bigrams_matching = self.weight.bigrams_matching(cit_sent_bigrams, doc_bigrams)
       if feature_bigrams_matching > max_sim:
         max_sim = feature_bigrams_matching
         max_index = i
