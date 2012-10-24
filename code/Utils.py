@@ -997,7 +997,7 @@ class extract_features:
     before = context_lines[cit_sent-1] if (cit_sent-1 >= 0) else ""
     after = context_lines[cit_sent+1] if (cit_sent+1 < len(context_lines)) else ""
     cit_sent = context_lines[cit_sent]
-    cit_sent_cleaned = cit_sent.replace(cit_str, "")
+    cit_sent_cleaned = cit_sent.replace(cit_str, "").lower()
     cit_sent_cleaned = [w for w in cit_sent_cleaned if not w in self.stopwords]
     cit_sent_cleaned = [w for w in cit_sent_cleaned if not w in self.punctuation]
 
@@ -1009,7 +1009,7 @@ class extract_features:
     cit_sent_text = self.nltk_tools.nltk_text(cit_sent_tokens)
     cit_sent_bigrams = self.nltk_tools.nltk_bigrams(cit_sent_text)
     cit_sent_text_tagged = self.nltk_tools.nltk_pos(cit_sent_text)
-    cit_sent_cleaned_tokens = self.nltk_tools.nltk_word_tokenize(cit_sent_cleaned.lower())
+    cit_sent_cleaned_tokens = self.nltk_tools.nltk_word_tokenize(cit_sent_cleaned)
     cit_sent_cleaned_text = self.nltk_tools.nltk_text(cit_sent_cleaned_tokens)
     cit_sent_cleaned_bigrams = self.nltk_tools.nltk_bigrams(cit_sent_cleaned_text)
     cit_sent_cleaned_text_tagged = self.nltk_tools.nltk_pos(cit_sent_cleaned_text)
