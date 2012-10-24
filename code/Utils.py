@@ -1070,6 +1070,10 @@ class extract_features:
       doc_bigrams = list(set(doc_bigrams))
       feature_bigrams_matching = self.weight.bigrams_matching(cit_sent_no_cit_str_bigrams, doc_bigrams)
       x.append(feature_bigrams_matching)
+
+      # Cos sim
+      feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col, vocab)
+      x.append(feature_cos_sim)
       
       X.append(x)
     #print "############"
