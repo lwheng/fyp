@@ -124,9 +124,15 @@ if __name__ == "__main__":
       y_g.append(temp_y)
   X_train = X_s
   y_train = y_s
-  #for i in range(len(y_train)):
-  #  X_train.append(X_g[i])
-  #  y_train.append(y_g[i])
+
+  # Put X_g and y_g together
+  Xy_g = []
+  for i in range(len(X_g)):
+    Xy_g.append((X_g[i], y_g[i]))
+  print Xy_g
+  print len(X_g)
+  print len(Xy_g)
+  sys.exit()
 
   # Pick randomly
   times = 2
