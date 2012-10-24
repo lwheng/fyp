@@ -487,14 +487,11 @@ class weight:
     return count / float(len(cit_sent_num_only))
 
   def bigrams_matching(self, citing_bigrams, doc_bigrams):
-    matching_ones = []
     count = float(0)
     for tup in citing_bigrams:
       if tup in doc_bigrams:
         count += 1
-        matching_ones.append(tup)
     value = count / float(len(citing_bigrams))
-    return (matching_ones, value)
     return value
   
   def referToDefinition(self, cit_str, context):
@@ -1072,7 +1069,7 @@ class extract_features:
       doc_bigrams = self.nltk_tools.nltk_bigrams(doc_tokens)
       doc_bigrams = list(set(doc_bigrams))
       feature_bigrams_matching = self.weight.bigrams_matching(cit_sent_no_cit_str_bigrams, doc_bigrams)
-      x.append(feature_bigrams_matching[1])
+      x.append(feature_bigrams_matching)
       
       X.append(x)
     #print "############"
