@@ -284,7 +284,7 @@ class weight:
     temp_doc = [w for w in temp_doc if not w in self.punctuation]
     for term in vocab:
       if term in temp_query:
-        u.append(docs_col.tf_idf(term, temp_doc))
+        u.append(query_col.tf_idf(term, temp_doc))
         #u.append(100)
       else:
         u.append(0)
