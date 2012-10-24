@@ -416,6 +416,19 @@ class weight:
     
     return (popularity_specific, density_specific, avg_dens_specific, popularity_general, density_general, avg_dens_general)
 
+  def matchingDigits(self, cit_sent_text_tagged, candidate_text):
+    cit_sent_num_only = []
+    candidate_num_only = []
+    for (term, tag) in cit_sent_text_tagged:
+      if tag == 'CD':
+        cit_sent_num_only.append(term)
+    candidate_text_tagged = self.nltk_tools.nltk_pos(candidate_text)
+    for (term, tag) in candidate_text_tagged:
+      if tag == 'CD':
+        candidate_num_only.append(term)
+    print cit_sent_num_only
+    print candidate_num_only
+  
   def referToDefinition(self, cit_str, context):
     print
 
@@ -920,6 +933,7 @@ class extract_features:
     cit_sent_tokens = self.nltk_tools.nltk_word_tokenize(cit_sent.lower())
     cit_sent_text = self.nltk_tools.nltk_text(cit_sent_tokens)
     cit_sent_bigrams = self.nltk_tools.nltk_bigrams(cit_sent_text)
+    cit_sent_text_tagged = slef.nltk_tools.nltk_pos(cit_sent_text)
     
     after_tokens = self.nltk_tools.nltk_word_tokenize(after.lower())
     after_text = self.nltk_tools.nltk_text(after_tokens)
@@ -958,8 +972,7 @@ class extract_features:
       print "65"
       print cit_sent_tokens
       print docs[65].vocab().keys()
-      print self.dist.jaccard_text(cit_sent_text, docs[62])
-      print self.dist.jaccard_text(cit_sent_text, docs[65])
+      self.weight.matchingDigits(cit_sent_text_tagged, docs[65])
       sys.exit()
 
       # Cos Sim
