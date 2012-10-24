@@ -1060,7 +1060,7 @@ class extract_features:
       doc_bigrams = list(set(doc_bigrams))
       feature_bigrams_matching = self.weight.bigrams_matching(cit_sent_bigrams, doc_bigrams)
       if i==3 or i==23:
-        print feature_bigrams_matching[0]
+        print ">>>>>" + str(i) + ">>>>" + str(feature_bigrams_matching[0])
       if feature_bigrams_matching[1] > max_sim:
         max_sim = feature_bigrams_matching[1]
         max_index = i
@@ -1078,6 +1078,7 @@ class extract_features:
       # POS tags?
       
       X.append(x)
+    print "############"
     print cit_sent_tokens
     print max_index
     print max_sim
