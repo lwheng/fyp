@@ -419,7 +419,7 @@ class weight:
   def matchingDigits(self, cit_sent_text, candidate_text):
     cit_sent_num_only = []
     candidate_num_only = []
-    print self.dist.jaccard_text(cit_sent_text, candidate_text)
+    return self.dist.jaccard_text(cit_sent_text, candidate_text)
   
   def referToDefinition(self, cit_str, context):
     print
@@ -955,7 +955,8 @@ class extract_features:
     # For each chunk, we extract a feature vector, hence we return a list of feature vectors
     X = []
     x = []
-    
+    smallest = 2
+    smallest_index = 0
     for i in range(len(docs)):
       doc = docs[i]
       # Extract features for each body_text
@@ -968,7 +969,10 @@ class extract_features:
       #self.weight.matchingDigits(cit_sent_text, cit_sent_text)
       #self.weight.matchingDigits(cit_sent_text, docs[65])
       #self.weight.matchingDigits(before_text, docs[65])
-      self.weight.matchingDigits(cit_sent_text, docs[i])
+      score = self.weight.matchingDigits(cit_sent_text, docs[i])
+      if score < smallest:
+        smallest = score
+        smallest_index = i
 
       # Cos Sim
       #feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col)
@@ -992,6 +996,7 @@ class extract_features:
       # POS tags?
       
       X.append(x)
+    print docs[smallest_index].vocab().keys()
     sys.exit()
     return X
 
