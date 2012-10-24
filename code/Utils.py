@@ -470,28 +470,21 @@ class weight:
           None
     if len(cit_sent_num_only) == 0 or len(candidate_num_only) == 0:
       return 0.0
-    cit_sent_num_only = list(set(cit_sent_num_only))
-    candidate_num_only = list(set(candidate_num_only))
-    print cit_sent_num_only
-    print candidate_num_only
-    print
-    count = float(0)
+
+    candidate_num_only_cleaned = []
     for term in candidate_num_only:
-      if term > 1 and term < 100:
+      if term > 1:
         # Rounding
-        if term in cit_sent_num_only:
-          count += 1
-        else:
-          num_dp = abs(decimal.Decimal(term).as_tuple().exponent)
-          if round(term, num_dp-1) in cit_sent_num_only:
-            count += 1
+        num_dp = abs(decimal.Decimal(term).as_tuple().exponent)
+        candidate_num_only_cleaned.append(round(term,num_dp-1))
       elif term < 1:
         # Percentage
-        if term in cit_sent_num_only:
-          count += 1
-        else:
-          if (term * 100) in cit_sent_num_only:
-            count += 1
+        candidate_num_only_cleaned.append(term*100)
+    candidate_num_only_cleaned = list(set(candidate_num_only_cleaned))
+    count = float(0)
+    for term in candidate_num_only:
+      if term in cit_sent_num_only:
+        count += 1
     return count / float(len(cit_sent_num_only))
 
   def referToDefinition(self, cit_str, context):
