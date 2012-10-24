@@ -481,6 +481,7 @@ class weight:
         # Percentage
         candidate_num_only_cleaned.append(term*100)
     candidate_num_only_cleaned = list(set(candidate_num_only_cleaned))
+
     count = float(0)
     for term in candidate_num_only:
       if term in cit_sent_num_only:
