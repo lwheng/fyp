@@ -22,7 +22,9 @@ if __name__ == "__main__":
   # Load y
   y = pickle.load(open(os.path.join(path_pickles, 'y_2nd_Tier.pickle'), 'r'))
 
+  print X
   print X.shape
+  print y
   print y.shape
 
   # Prediction
@@ -57,7 +59,7 @@ if __name__ == "__main__":
   #predicted = clf.predict(X_train)
   #expected = y_train
   clf.fit(X_train, y_train)
-  predicted = clf.predict(X)
-  expected = y
+  predicted = clf.predict(X_train)
+  expected = y_train
   print "Classification report for classifier %s:\n%s\n" % (clf, metrics.classification_report(expected, predicted))
   print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
