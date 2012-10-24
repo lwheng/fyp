@@ -469,6 +469,9 @@ class weight:
     if len(cit_sent_num_only) == 0 or len(candidate_num_only) == 0:
       return 0.0
     count = float(0)
+
+    print cit_sent_num_only
+    print candidate_num_only
     
     for term in candidate_num_only:
       if term > 1:
