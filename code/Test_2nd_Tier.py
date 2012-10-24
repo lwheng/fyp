@@ -22,6 +22,10 @@ if __name__ == "__main__":
   # Load y
   y = pickle.load(open(os.path.join(path_pickles, 'y_2nd_Tier.pickle'), 'r'))
 
+  print X.shape
+  print y.shape
+  sys.exit()
+
   # Prediction
   X_n = []
   y_n = []
