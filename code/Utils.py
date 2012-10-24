@@ -922,6 +922,8 @@ class extract_features:
     self.nltk_tools = nltk_tools()
     self.tools = tools()
     self.weight = weight()
+    self.stopwords = self.nltk_tools.nltk_stopwords()
+    self.punctuation = "~`!@#$%^&*()-_+={}[]|\\:;\"\'<>,.?/"
 
   def extract_feature_1st_tier(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
     cit_str = context.getAttribute('citStr')
@@ -1063,7 +1065,7 @@ class extract_features:
 
       # Bigrams Matching
       doc_tokens = doc.vocab().keys()
-      doc_tokens = [w for w in doc_tokens if not w in self.nltk_tools.nltk_stopwords()]
+      doc_tokens = [w for w in doc_tokens if not w in self.stopwords]
       doc_tokens = [w for w in doc_tokens if not w in self.punctuation]
       print doc
       print doc_tokens
