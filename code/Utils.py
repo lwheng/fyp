@@ -961,14 +961,14 @@ class extract_features:
       # Extract features for each body_text
       x = []
 
-      print "65"
-      print before_tokens
-      print cit_sent_tokens
-      print docs[65].vocab().keys()
-      self.weight.matchingDigits(cit_sent_text, cit_sent_text)
-      self.weight.matchingDigits(cit_sent_text, docs[65])
-      self.weight.matchingDigits(before_text, docs[65])
-      sys.exit()
+      #print "65"
+      #print before_tokens
+      #print cit_sent_tokens
+      #print docs[65].vocab().keys()
+      #self.weight.matchingDigits(cit_sent_text, cit_sent_text)
+      #self.weight.matchingDigits(cit_sent_text, docs[65])
+      #self.weight.matchingDigits(before_text, docs[65])
+      self.weight.matchingDigits(cit_sent_text, docs[i])
 
       # Cos Sim
       #feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col)
@@ -992,6 +992,7 @@ class extract_features:
       # POS tags?
       
       X.append(x)
+    sys.exit()
     return X
 
   def extract_feature(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
