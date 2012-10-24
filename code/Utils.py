@@ -997,10 +997,7 @@ class extract_features:
     before = context_lines[cit_sent-1] if (cit_sent-1 >= 0) else ""
     after = context_lines[cit_sent+1] if (cit_sent+1 < len(context_lines)) else ""
     cit_sent = context_lines[cit_sent]
-    cit_sent_cleaned = cit_sent.replace(cit_str, "")
-    cit_sent_cleaned = [w for w in cit_sent_cleaned if not w in self.stopwords]
-    cit_sent_cleaned = [w for w in cit_sent_cleaned if not w in self.punctuation]
-    cit_sent_cleaned = " ".join(cit_sent_cleaned)
+    cit_sent_no_cit_str = cit_sent.replace(cit_str, "")
 
     before_tokens = self.nltk_tools.nltk_word_tokenize(before.lower())
     before_text = self.nltk_tools.nltk_text(before_tokens)
@@ -1010,10 +1007,10 @@ class extract_features:
     cit_sent_text = self.nltk_tools.nltk_text(cit_sent_tokens)
     cit_sent_bigrams = self.nltk_tools.nltk_bigrams(cit_sent_text)
     cit_sent_text_tagged = self.nltk_tools.nltk_pos(cit_sent_text)
-    cit_sent_cleaned_tokens = self.nltk_tools.nltk_word_tokenize(cit_sent_cleaned.lower())
-    cit_sent_cleaned_text = self.nltk_tools.nltk_text(cit_sent_cleaned_tokens)
-    cit_sent_cleaned_bigrams = self.nltk_tools.nltk_bigrams(cit_sent_cleaned_text)
-    cit_sent_cleaned_text_tagged = self.nltk_tools.nltk_pos(cit_sent_cleaned_text)
+    cit_sent_no_cit_str_tokens = self.nltk_tools.nltk_word_tokenize(cit_sent_no_cit_str.lower())
+    cit_sent_no_cit_str_text = self.nltk_tools.nltk_text(cit_sent_no_cit_str_tokens)
+    cit_sent_no_cit_str_bigrams = self.nltk_tools.nltk_bigrams(cit_sent_no_cit_str_text)
+    cit_sent_no_cit_str_text_tagged = self.nltk_tools.nltk_pos(cit_sent_no_cit_str_text)
     
     after_tokens = self.nltk_tools.nltk_word_tokenize(after.lower())
     after_text = self.nltk_tools.nltk_text(after_tokens)
@@ -1074,9 +1071,9 @@ class extract_features:
       doc_tokens = [w for w in doc_tokens if not w in self.punctuation]
       doc_bigrams = self.nltk_tools.nltk_bigrams(doc_tokens)
       doc_bigrams = list(set(doc_bigrams))
-      feature_bigrams_matching = self.weight.bigrams_matching(cit_sent_cleaned_bigrams, doc_bigrams)
-      if feature_bigrams_matching > max_sim:
-        max_sim = feature_bigrams_matching
+      feature_bigrams_matching = self.weight.bigrams_matching(cit_sent_no_cit_str_bigrams, doc_bigrams)
+      if feature_bigrams_matching[1] > max_sim:
+        max_sim = feature_bigrams_matching[1]
         max_index = i
       x.append(feature_bigrams_matching[1])
       
