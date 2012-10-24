@@ -463,16 +463,13 @@ class weight:
       if tag == 'CD':
         try:
           temp = float(term)
-          candidate_num_only.append(term)
+          candidate_num_only.append(temp)
         except:
           None
     if len(cit_sent_num_only) == 0 or len(candidate_num_only) == 0:
       return 0.0
     count = float(0)
 
-    print cit_sent_num_only
-    print candidate_num_only
-    
     for term in candidate_num_only:
       if term > 1:
         # Rounding
