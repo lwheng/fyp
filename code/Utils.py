@@ -471,7 +471,7 @@ class weight:
     count = float(0)
 
     for term in candidate_num_only:
-      if term > 1:
+      if term > 1 and term < 100:
         # Rounding
         if term in cit_sent_num_only:
           count += 1
