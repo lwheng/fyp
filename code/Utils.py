@@ -476,7 +476,7 @@ class weight:
       if term > 1:
         # Rounding
         num_dp = abs(decimal.Decimal(term).as_tuple().exponent)
-        candidate_num_only_cleaned.append(round(term,num_dp-1))
+        candidate_num_only_cleaned.append(round(term,1))
       elif term < 1:
         # Percentage
         candidate_num_only_cleaned.append(term*100)
