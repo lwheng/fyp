@@ -416,10 +416,18 @@ class weight:
     
     return (popularity_specific, density_specific, avg_dens_specific, popularity_general, density_general, avg_dens_general)
 
-  def matchingDigits(self, cit_sent_text, candidate_text):
+  def matchingDigits(self, cit_sent_text_tagged, candidate_text):
+    # Jaccard using only numbers
     cit_sent_num_only = []
     candidate_num_only = []
-    return self.dist.jaccard_text(cit_sent_text, candidate_text)
+    candidate_text_tagged = self.nltk_tools.nltk_pos(candidate_text)
+    for (term, tag) in cit_sent_text_tagged:
+      if tag == 'CD':
+        cit_sent_num_only.append(term)
+    for (term, tag) in candidate_text_tagged:
+      if tag == 'CD':
+        candidate_num_only.append(term)
+    return self.dist.jaccard(cit_sent_num_only, candidate_num_only)
   
   def referToDefinition(self, cit_str, context):
     print
@@ -461,16 +469,18 @@ class dist:
     return (lensum - ldist) / lensum
 
   def jaccard(self, inputA, inputB):
-    # Returns jaccard index. Smaller the better
-    a = inputA.lower()
-    b = inputB.lower()
-    return distance.jaccard_distance(set(a.split()), set(b.split()))
-
-  def jaccard_text(self, inputA, inputB):
-    # Retunrs jaccard index. Smaller the better
-    inputA = map(lambda x: x.lower(), inputA.vocab().keys())
-    inputB = map(lambda x: x.lower(), inputB.vocab().keys())
-    return distance.jaccard_distance(set(inputA), set(inputB))
+    if type(inputA) == str or type(inputA) == unicode:
+      inputA_tokens = inputA.lower().split()
+      inputB_tokens = inputB.lower().split()
+      return distance.jaccard_distance(set(inputA_tokens), set(inputB_tokens))
+    elif type(inputA) == nltk.text.Text:
+      inputA_tokens = map(lambda x: x.lower(), inputA.vocab().keys())
+      inputB_tokens = map(lambda x: x.lower(), inputB.vocab().keys())
+      return distance.jaccard_distance(set(inputA_tokens), set(inputB_tokens))
+    elif type(inputA) == list:
+      inputA_tokens = map(lambda x: x.lower(), inputA)
+      inputB_tokens = map(lambda x: x.lower(), inputB)
+      return distance.jaccard_distance(set(inputA_tokens), set(inputB_tokens))
 
   def masi(self, a, b):
     a = a.lower()
@@ -962,14 +972,7 @@ class extract_features:
       # Extract features for each body_text
       x = []
 
-      #print "65"
-      #print before_tokens
-      #print cit_sent_tokens
-      #print docs[65].vocab().keys()
-      #self.weight.matchingDigits(cit_sent_text, cit_sent_text)
-      #self.weight.matchingDigits(cit_sent_text, docs[65])
-      #self.weight.matchingDigits(before_text, docs[65])
-      score = self.weight.matchingDigits(cit_sent_text, docs[i])
+      score = self.weight.matchingDigits(cit_sent_text_tagged, docs[i])
       if score < smallest:
         smallest = score
         smallest_index = i
