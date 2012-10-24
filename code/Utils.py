@@ -417,7 +417,7 @@ class weight:
     
     return (popularity_specific, density_specific, avg_dens_specific, popularity_general, density_general, avg_dens_general)
 
-  def surface_matching_numbers(self, cit_sent_tokens, cit_sent_text_tagged, candidate_text):
+  def surface_matching(self, cit_sent_tokens, cit_sent_text_tagged, candidate_text):
     temp_query = map(lambda x: x.lower(), cit_sent_tokens)
     temp_query = [w for w in temp_query if not w in self.stopwords]
     temp_query = [w for w in temp_query if not w in self.punctuation]
@@ -425,16 +425,25 @@ class weight:
     temp_candidate = [w for w in temp_candidate if not w in self.stopwords]
     temp_candidate = [w for w in temp_candidate if not w in self.punctuation]
 
-    tocheck = []
+    num_check = []
+    text_check = []
     for (term, tag) in cit_sent_text_tagged:
       if tag == 'CD':
-        tocheck.append(term)
+        num_check.append(term)
+      else:
+        text_check.append(term)
 
     count = float(0)
-    for term in tocheck:
+    for term in num_check:
       if term in temp_candidate:
         count += 1
-    return count / float(len(temp_query))
+    num_match = count / float(len(temp_query))
+    count = float(0)
+    for term in text_check:
+      if term in temp_candidate:
+        count += 1
+    text_match = count / float(len(temp_query))
+    return (num_match, text_match)
 
   def referToDefinition(self, cit_str, context):
     print
@@ -984,10 +993,12 @@ class extract_features:
       # Extract features for each body_text
       x = []
 
-      # Surface Matching - Numbers
-      feature_surface_matching_numbers = self.weight.surface_matching_numbers(cit_sent_tokens, cit_sent_text_tagged, doc)
-      if feature_surface_matching_numbers > max_sim:
-        max_sim = feature_surface_matching_numbers
+      # Surface Matching - returns (num_match, text_match)
+      feature_surface_matching = self.weight.surface_matching(cit_sent_tokens, cit_sent_text_tagged, doc)
+      for feat in feature_surface_matching:
+        x.append(feat)
+      if feature_surface_matching[1] > max_sim:
+        max_sim = feature_surface_matching
         max_index = i
 
       # Cos Sim
