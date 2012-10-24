@@ -479,7 +479,7 @@ class weight:
           num_dp = abs(decimal.Decimal(term).as_tuple().exponent)
           if round(term, num_dp-1) in cit_sent_num_only:
             count += 1
-      else:
+      elif term < 1:
         # Percentage
         if term in cit_sent_num_only:
           count += 1
