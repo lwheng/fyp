@@ -456,7 +456,7 @@ class weight:
       if tag == 'CD':
         try:
           temp = float(term)
-          if not temp > 100:
+          if temp < 100:
             cit_sent_num_only.append(temp)
         except:
           None
@@ -464,12 +464,14 @@ class weight:
       if tag == 'CD':
         try:
           temp = float(term)
-          if not temp > 100:
+          if temp < 100:
             candidate_num_only.append(temp)
         except:
           None
     if len(cit_sent_num_only) == 0 or len(candidate_num_only) == 0:
       return 0.0
+    cit_sent_num_only = list(set(cit_sent_num_only))
+    candidate_num_only = list(set(candidate_num_only))
     print cit_sent_num_only
     print candidate_num_only
     print
