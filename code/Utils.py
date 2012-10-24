@@ -284,13 +284,19 @@ class weight:
     for term in vocab:
       if term in temp_query:
         #u.append(docs_col.tf_idf(term, temp_doc))
-        u.append(100)
+        if self.nltk_tools.nltk_pos(term)[1] == 'CD':
+          u.append(1000)
+        else:
+          u.append(100)
       else:
         #u.append(0)
         u.append(1)
       if term in temp_doc:
         #v.append(docs_col.tf_idf(term, temp_doc))
-        v.append(100)
+        if self.nltk_tools.nltk_pos(term)[1] == 'CD':
+          v.append(1000)
+        else:
+          v.append(100)
       else:
         #v.append(0)
         v.append(1)
@@ -952,15 +958,13 @@ class extract_features:
     bigrams_vocab = set(bigrams_vocab)
     vocab.extend(context_tokens)
     vocab = set(vocab)
-    print vocab
-    print len(vocab)
 
     # Extract Features
     # In 2nd tier, features are to match context to specific chunk
     # For each chunk, we extract a feature vector, hence we return a list of feature vectors
     X = []
     x = []
-    max_sim = 100
+    max_sim = -1
     max_index = 0
     for i in range(len(docs)):
       doc = docs[i]
@@ -970,7 +974,7 @@ class extract_features:
       # Cos Sim
       feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col, vocab)
       x.append(feature_cos_sim)
-      if feature_cos_sim < max_sim:
+      if feature_cos_sim > max_sim:
         max_sim = feature_cos_sim
         max_index = i
       
