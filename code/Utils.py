@@ -456,14 +456,16 @@ class weight:
       if tag == 'CD':
         try:
           temp = float(term)
-          cit_sent_num_only.append(temp)
+          if not temp > 100:
+            cit_sent_num_only.append(temp)
         except:
           None
     for (term, tag) in candidate_tagged:
       if tag == 'CD':
         try:
           temp = float(term)
-          candidate_num_only.append(temp)
+          if not temp > 100:
+            candidate_num_only.append(temp)
         except:
           None
     if len(cit_sent_num_only) == 0 or len(candidate_num_only) == 0:
