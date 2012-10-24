@@ -281,7 +281,7 @@ class weight:
     temp_doc = map(lambda x: x.lower(), doc_tokens)
     temp_doc = [w for w in temp_doc if not w in self.stopwords]
     temp_doc = [w for w in temp_doc if not w in self.punctuation]
-    print temp_doc
+    print temp_query
     sys.exit()
     for term in vocab:
       if term in temp_query:
