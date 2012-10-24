@@ -445,6 +445,29 @@ class weight:
     text_match = count / float(len(temp_query))
     return (num_match, text_match)
 
+  def number_near_miss(self, cit_sent_tokens, cit_sent_text_tagged, candidate_text):
+    candidate_tagged = self.nltk_tools.nltk_pos(candidate_text)
+
+    # Filter to look at only numbers like 81.1, 81.06, 0.92, 92
+    cit_sent_num_only = []
+    candidate_num_only = []
+    for (term, tag) in cit_sent_text_tagged:
+      if tag == 'CD':
+        try:
+          temp = float(term)
+          cit_sent_num_only.append(temp)
+        except:
+          None
+    for (term, tag) in candidate_tagged:
+      if tag == 'CD':
+        try:
+          temp = float(term)
+          candidate_num_only.append(term)
+        except:
+          None
+    print cit_sent_num_only
+    print candidate_num_only
+
   def referToDefinition(self, cit_str, context):
     print
 
@@ -993,11 +1016,25 @@ class extract_features:
       # Extract features for each body_text
       x = []
 
-      # Surface Matching - returns (num_match, text_match)
+      # Surface Matching - Using only cit_sent
+      #returns (num_match, text_match)
       feature_surface_matching = self.weight.surface_matching(cit_sent_tokens, cit_sent_text_tagged, doc)
       for feat in feature_surface_matching:
         x.append(feat)
 
+      # Number Near Miss e.g. 81.1 for 81.06, 92 for 0.92
+      feature_number_near_miss = self.weight.number_near_miss(cit_sent_tokens, cit_sent_text_tagged, doc)
+      sys.exit()
+
+      # Bigrams?
+      #doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
+      #doc_bigrams = set(doc_bigrams)
+      #temp_bigrams_vocab = list(bigrams_vocab)[:]
+      #temp_bigrams_vocab.extend(query_bigrams)
+      #temp_bigrams_vocab = set(temp_bigrams_vocab)
+      #feature_bigrams = self.weight.cos_sim_bigrams(query_bigrams, doc_bigrams, temp_bigrams_vocab)
+      #x.append(feature_bigrams)
+      
       # Cos Sim
       #feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col, vocab)
       #x.append(feature_cos_sim)
@@ -1011,15 +1048,6 @@ class extract_features:
 
       # Look at citing sentences and its neighbour sentences?
       
-      # Bigrams?
-      #doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
-      #doc_bigrams = set(doc_bigrams)
-      #temp_bigrams_vocab = list(bigrams_vocab)[:]
-      #temp_bigrams_vocab.extend(query_bigrams)
-      #temp_bigrams_vocab = set(temp_bigrams_vocab)
-      #feature_bigrams = self.weight.cos_sim_bigrams(query_bigrams, doc_bigrams, temp_bigrams_vocab)
-      #x.append(feature_bigrams)
-
       # POS tags?
       
       X.append(x)
