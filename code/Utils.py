@@ -481,9 +481,6 @@ class weight:
         # Percentage
         candidate_num_only_cleaned.append(term*100)
     candidate_num_only_cleaned = list(set(candidate_num_only_cleaned))
-    print cit_sent_num_only
-    print candidate_num_only_cleaned
-    print
     count = float(0)
     for term in candidate_num_only_cleaned:
       if term in cit_sent_num_only:
@@ -1045,12 +1042,8 @@ class extract_features:
         x.append(feat)
 
       # Number Near Miss e.g. 81.1 for 81.06, 92 for 0.92
-      print i
       feature_number_near_miss = self.weight.number_near_miss(cit_sent_tokens, cit_sent_text_tagged, doc)
       x.append(feature_number_near_miss)
-      if feature_number_near_miss > max_sim:
-        max_sim = feature_number_near_miss
-        max_index = i
 
       # Bigrams?
       #doc_bigrams = self.nltk_tools.nltk_bigrams(doc)
