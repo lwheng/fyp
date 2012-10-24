@@ -485,7 +485,7 @@ class weight:
     print candidate_num_only_cleaned
     print
     count = float(0)
-    for term in candidate_num_only:
+    for term in candidate_num_only_cleaned:
       if term in cit_sent_num_only:
         count += 1
     return count / float(len(cit_sent_num_only))
