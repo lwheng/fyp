@@ -421,7 +421,7 @@ class weight:
     temp_query = map(lambda x: x.lower(), cit_sent_tokens)
     temp_query = [w for w in temp_query if not w in self.stopwords]
     temp_query = [w for w in temp_query if not w in self.punctuation]
-    temp_candidate = map(lambda x: x.lower(), candidate_tokens)
+    temp_candidate = map(lambda x: x.lower(), candidate_text)
     temp_candidate = [w for w in temp_candidate if not w in self.stopwords]
     temp_candidate = [w for w in temp_candidate if not w in self.punctuation]
 
