@@ -953,7 +953,7 @@ class extract_features:
     # For each chunk, we extract a feature vector, hence we return a list of feature vectors
     X = []
     x = []
-    max_sim = -1
+    max_sim = 100
     max_index = 0
     for i in range(len(docs)):
       doc = docs[i]
