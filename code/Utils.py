@@ -950,7 +950,10 @@ class extract_features:
       vocab.extend(whole_text.split())
     docs_col = self.nltk_tools.nltk_text_collection(docs)
     bigrams_vocab = set(bigrams_vocab)
+    vocab.extend(context_tokens)
     vocab = set(vocab)
+    print vocab
+    print len(vocab)
 
     # Extract Features
     # In 2nd tier, features are to match context to specific chunk
