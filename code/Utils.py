@@ -266,9 +266,8 @@ class weight:
     print cit_str
     return pos_hash
 
-  def cos_sim(self, query_tokens, query_col, doc_tokens, docs_col):
+  def cos_sim(self, query_tokens, query_col, doc_tokens, docs_col, vocab):
     # Vocab
-    vocab = list(set(query_col) | set(docs_col))
     vocab = map(lambda x: x.lower(), vocab)
     vocab = [w for w in vocab if not w in self.stopwords]
     vocab = [w for w in vocab if not w in self.punctuation]
@@ -948,12 +947,10 @@ class extract_features:
       text = self.nltk_tools.nltk_text(self.nltk_tools.nltk_word_tokenize(whole_text.lower()))
       bigrams_vocab.extend(self.nltk_tools.nltk_bigrams(text))
       docs.append(text)
-      vocab.append(whole_text.split())
+      vocab.extend(whole_text.split())
     docs_col = self.nltk_tools.nltk_text_collection(docs)
     bigrams_vocab = set(bigrams_vocab)
     vocab = set(vocab)
-    print vocab
-    print len(vocab)
 
     # Extract Features
     # In 2nd tier, features are to match context to specific chunk
@@ -968,7 +965,7 @@ class extract_features:
       x = []
 
       # Cos Sim
-      feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col)
+      feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col, vocab)
       x.append(feature_cos_sim)
       if feature_cos_sim < max_sim:
         max_sim = feature_cos_sim
