@@ -992,6 +992,7 @@ class extract_features:
       X.append(x)
     print cit_sent_tokens
     print max_index
+    print max_sim
     print docs[max_index].vocab().keys()
     sys.exit()
     return X
