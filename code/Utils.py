@@ -486,8 +486,12 @@ class weight:
         count += 1
     return count / float(len(cit_sent_num_only))
 
-  def bigrams_matching(self, citing_bigrams, doc_bigrams, vocab_bigrams):
-    print
+  def bigrams_matching(self, citing_bigrams, doc_bigrams):
+    count = float(0)
+    for tup in citing_bigrams:
+      if tup in doc_bigrams:
+        count += 1
+    return count / float(len(citing_bigrams))
   
   def referToDefinition(self, cit_str, context):
     print
@@ -1053,7 +1057,7 @@ class extract_features:
       temp_bigrams_vocab = list(bigrams_vocab)[:]
       temp_bigrams_vocab.extend(context_bigrams)
       temp_bigrams_vocab = set(temp_bigrams_vocab)
-      feature_bigrams_matching = self.weight.bigrams_matching(context_bigrams, doc_bigrams, temp_bigrams_vocab)
+      feature_bigrams_matching = self.weight.bigrams_matching(context_bigrams, doc_bigrams)
       print feature_bigrams_matching
       x.append(feature_bigrams_matching)
       
