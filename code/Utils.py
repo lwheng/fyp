@@ -1064,7 +1064,9 @@ class extract_features:
       x.append(feature_number_near_miss)
 
       # Bigrams Matching
-      doc_tokens = doc.vocab().keys()
+      doc_tokens = []
+      for k in doc:
+        doc_tokens.append(k)
       doc_tokens = [w for w in doc_tokens if not w in self.stopwords]
       doc_tokens = [w for w in doc_tokens if not w in self.punctuation]
       print doc
