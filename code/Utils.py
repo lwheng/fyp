@@ -268,8 +268,6 @@ class weight:
 
   def cos_sim(self, query_tokens, query_col, doc_tokens, docs_col, vocab):
     # Vocab
-    # Try restrict the vocab to only query+doc
-    vocab = set(query_tokens + doc_tokens.vocab().keys())
     vocab = map(lambda x: x.lower(), vocab)
     vocab = [w for w in vocab if not w in self.stopwords]
     vocab = [w for w in vocab if not w in self.punctuation]
@@ -285,17 +283,17 @@ class weight:
     temp_doc = [w for w in temp_doc if not w in self.punctuation]
     for term in vocab:
       if term in temp_query:
-        #u.append(docs_col.tf_idf(term, temp_doc))
-        u.append(100)
+        u.append(docs_col.tf_idf(term, temp_doc))
+        #u.append(100)
       else:
-        #u.append(0)
-        u.append(1)
+        u.append(0)
+        #u.append(1)
       if term in temp_doc:
-        #v.append(docs_col.tf_idf(term, temp_doc))
-        v.append(100)
+        v.append(docs_col.tf_idf(term, temp_doc))
+        #v.append(100)
       else:
-        #v.append(0)
-        v.append(1)
+        v.append(0)
+        #v.append(1)
     if math.sqrt(np.dot(u, u)) == 0.0:
       return 0.0
     else:
