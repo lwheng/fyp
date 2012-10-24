@@ -962,7 +962,7 @@ class extract_features:
       x = []
 
       print "65"
-      print before_text_tokens
+      print before_tokens
       print cit_sent_tokens
       print docs[65].vocab().keys()
       self.weight.matchingDigits(cit_sent_text, docs[65])
