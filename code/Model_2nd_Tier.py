@@ -83,6 +83,8 @@ if __name__ == "__main__":
       value = unicode(value.encode('ascii', 'ignore'), errors='ignore')
       context_list.append(nltk_tools.nltk_text(nltk_tools.nltk_word_tokenize(value)))
     citing_col = nltk_tools.nltk_text_collection(context_list)
+    print f_hash.keys()
+    sys.exit()
     for context_id in f_hash.keys():
       c = f_contexts[context_id]
       c_hash = f_hash[context_id]
