@@ -96,11 +96,12 @@ if __name__ == "__main__":
         else:
           # Append n
           y.append(0)
-    sys.exit()
     num -= 1
     print "No. of keys left = " + str(num)
   X = np.asarray(X)
   y = np.asarray(y)
+  print X.shape
+  print y.shape
 
   ## Fit the Model
   string = "Fitting Model"

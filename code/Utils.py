@@ -1074,23 +1074,12 @@ class extract_features:
       feature_bigrams_matching = self.weight.bigrams_matching(cit_sent_no_cit_str_bigrams, doc_bigrams)
       x.append(feature_bigrams_matching[1])
       
-      # Cos Sim
-      #feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col, vocab)
-      #x.append(feature_cos_sim)
-      #if feature_cos_sim > max_sim:
-      #  max_sim = feature_cos_sim
-      #  max_index = i
-      
-      # Order of words important?
-
-      # POS tags?
-      
       X.append(x)
-    print "############"
-    print cit_sent_tokens
-    print max_index
-    print max_sim
-    print docs[max_index].vocab().keys()
+    #print "############"
+    #print cit_sent_tokens
+    #print max_index
+    #print max_sim
+    #print docs[max_index].vocab().keys()
     return X
 
   def extract_feature(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
