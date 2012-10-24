@@ -272,9 +272,6 @@ class weight:
     vocab = [w for w in vocab if not w in self.stopwords]
     vocab = [w for w in vocab if not w in self.punctuation]
 
-    print vocab
-    sys.exit()
-
     # Prep Vectors
     u = []
     v = []
@@ -955,6 +952,8 @@ class extract_features:
     # For each chunk, we extract a feature vector, hence we return a list of feature vectors
     X = []
     x = []
+    max_sim = -1
+    max_index = 0
     for i in range(len(docs)):
       doc = docs[i]
       # Extract features for each body_text
@@ -963,6 +962,9 @@ class extract_features:
       # Cos Sim
       feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col)
       x.append(feature_cos_sim)
+      if feature_cos_sim > max_sim:
+        max_sim = feature_cos_sim
+        max_index = i
       
       # Give priority to matching digits?
 
@@ -982,6 +984,8 @@ class extract_features:
       # POS tags?
       
       X.append(x)
+    print max_index
+    print docs[max_index].vocab().keys()
     sys.exit()
     return X
 
