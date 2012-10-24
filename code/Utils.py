@@ -1072,8 +1072,6 @@ class extract_features:
       doc_bigrams = self.nltk_tools.nltk_bigrams(doc_tokens)
       doc_bigrams = list(set(doc_bigrams))
       feature_bigrams_matching = self.weight.bigrams_matching(cit_sent_no_cit_str_bigrams, doc_bigrams)
-      if i==3 or i==23:
-        print ">>>>>" + str(i) + ">>>>" + str(feature_bigrams_matching[0])
       if feature_bigrams_matching[1] > max_sim:
         max_sim = feature_bigrams_matching[1]
         max_index = i
