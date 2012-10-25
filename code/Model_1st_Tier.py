@@ -138,6 +138,8 @@ if __name__ == "__main__":
     y_train.append(a)
 
   # Perform leave-one-out evaluation
+  total = len(X_train)
+  correct = 0
   for i in range(len(X_train)):
     front_X = X_train[:i]
     test_X = X_train[i]
@@ -156,7 +158,10 @@ if __name__ == "__main__":
     clf.fit(training_X, training_y)
     predicted = clf.predict(test_X)
     expected = test_y
-    print "Predicted: " + str(predicted) + " " + str(expected) + " :Expected"
+    if predicted == expected:
+      correct += 1
+    #print "Predicted: " + str(predicted) + " " + str(expected) + " :Expected"
+  print "Results: " + str(correct) + "/" + str(total)
 
 
   sys.exit()
