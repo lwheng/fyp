@@ -161,7 +161,7 @@ if __name__ == "__main__":
     if predicted == expected:
       correct += 1
     #print "Predicted: " + str(predicted) + " " + str(expected) + " :Expected"
-  print "Results: " + str(correct) + "/" + str(total)
+  print "Results: " + str(correct) + "/" + str(total) + " = " + float(correct) / float(total)
 
 
   sys.exit()
