@@ -156,7 +156,7 @@ if __name__ == "__main__":
     clf.fit(training_X, training_y)
     predicted = clf.predict(test_X)
     expected = test_y
-    print "Predicted: " + predicted + " " + expected + " :Expected"
+    print "Predicted: " + str(predicted) + " " + str(expected) + " :Expected"
 
 
   X_train = np.asarray(X_train)
