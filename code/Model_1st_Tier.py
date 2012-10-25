@@ -137,8 +137,6 @@ if __name__ == "__main__":
     X_train.append(d)
     y_train.append(a)
 
-  print y_train
-  sys.exit()
   # Perform leave-one-out evaluation
   clf = svm.SVC()
   for i in range(len(X_train)):
@@ -152,13 +150,14 @@ if __name__ == "__main__":
 
     training_X = front_X + back_X
     training_y = front_y + back_y
+    print training_y
     training_X = np.asarray(training_X)
     training_y = np.asarray(training_y)
 
-    clf.fit(training_X, training_y)
-    predicted = clf.predict(test_X)
-    expected = test_y
-    print "Predicted: " + str(predicted) + " " + str(expected) + " :Expected"
+    #clf.fit(training_X, training_y)
+    #predicted = clf.predict(test_X)
+    #expected = test_y
+    #print "Predicted: " + str(predicted) + " " + str(expected) + " :Expected"
 
 
   sys.exit()
