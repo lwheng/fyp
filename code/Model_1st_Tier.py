@@ -105,8 +105,15 @@ if __name__ == "__main__":
   print string
   print printer.line_printer(len(string), "-")
 
+  ## Write out X
+  pickle.dump(X, open(os.path.join(path_pickles, 'X_1st_Tier.pickle'),'wb'))
+  ## Write out y
+  pickle.dump(y, open(os.path.join(path_pickles, 'y_1st_Tier.pickle'),'wb'))
   ## Write out the Model
   pickle.dump(model, open(os.path.join(path_pickles, 'Model_1st_Tier.pickle'),'wb'))
+
+  # Leave testing to another file
+  sys.exit()
 
   # Prediction
   X_g = []
