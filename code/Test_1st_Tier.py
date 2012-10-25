@@ -40,7 +40,7 @@ if __name__ == "__main__":
   y_train = y_s
   
   # Put X_g and y_g together
-  Xy_n = []
+  Xy_g = []
   for i in range(len(X_g)):
     Xy_g.append((X_g[i], y_g[i]))
 
