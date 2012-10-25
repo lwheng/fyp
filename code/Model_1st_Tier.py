@@ -137,17 +137,36 @@ if __name__ == "__main__":
     X_train.append(d)
     y_train.append(a)
 
+  # Perform leave-one-out evaluation
+  clf = svm.SVC()
+  for i in range(len(X_train)):
+    front_X = X_train[:i]
+    test_X = X_train[i]
+    back_X = X_train[i+1:]
+    
+    front_y = y_train[:i]
+    test_y = y_train[i]
+    back_y = y_train[i+1:]
+
+    training_X = front_X + back_X
+    training_y = front_y + back_y
+    training_X = np.asarray(training_X)
+    training_y = np.asarray(training_y)
+
+    clf.fit(training_X, training_y)
+    predicted = clf.predict(test_X)
+    expected = test_y
+    print "Predicted: " + predicted + " " + expected + " :Expected"
+
+
   X_train = np.asarray(X_train)
   y_train = np.asarray(y_train)
   print X_train.shape
   print y_train
-  #clf = svm.SVC(kernel='linear')
-  clf = svm.SVC()
-  #clf.fit(X, y)
-  #predicted = clf.predict(X_train)
-  #expected = y_train
-  clf.fit(X_train, y_train)
-  predicted = clf.predict(X)
-  expected = y
-  print "Classification report for classifier %s:\n%s\n" % (clf, metrics.classification_report(expected, predicted))
-  print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
+
+  #clf = svm.SVC()
+  #clf.fit(X_train, y_train)
+  #predicted = clf.predict(X)
+  #expected = y
+  #print "Classification report for classifier %s:\n%s\n" % (clf, metrics.classification_report(expected, predicted))
+  #print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
