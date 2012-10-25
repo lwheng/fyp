@@ -45,7 +45,7 @@ if __name__ == "__main__":
     Xy_n.append((X_n[i], y_n[i]))
 
   # Pick randomly from Xy_n
-  times = 2
+  times = 1.5
   sample = random.sample(Xy_n, int(len(y_train)*times))
   for (d, a) in sample:
     X_train.append(d)
