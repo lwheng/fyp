@@ -150,9 +150,9 @@ if __name__ == "__main__":
 
     training_X = front_X + back_X
     training_y = front_y + back_y
-    print training_y
     training_X = np.asarray(training_X)
     training_y = np.asarray(training_y)
+    print len(training_y[training_y==1])
 
     #clf.fit(training_X, training_y)
     #predicted = clf.predict(test_X)
