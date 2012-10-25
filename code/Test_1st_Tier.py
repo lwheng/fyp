@@ -23,30 +23,30 @@ if __name__ == "__main__":
   y = pickle.load(open(os.path.join(path_pickles, 'y_1st_Tier.pickle'), 'r'))
 
   # Prediction
-  X_n = []
-  y_n = []
-  X_y = []
-  y_y = []
+  X_g = []
+  y_g = []
+  X_s = []
+  y_s = []
   for i in range(y.shape[0]):
     temp_x = list(X[i])
     temp_y = int(y[i])
     if temp_y == 1:
-      X_y.append(temp_x)
-      y_y.append(temp_y)
+      X_s.append(temp_x)
+      y_s.append(temp_y)
     else:
-      X_n.append(temp_x)
-      y_n.append(temp_y)
-  X_train = X_y
-  y_train = y_y
+      X_g.append(temp_x)
+      y_g.append(temp_y)
+  X_train = X_s
+  y_train = y_s
   
-  # Put X_n and y_n together
+  # Put X_g and y_g together
   Xy_n = []
-  for i in range(len(X_n)):
-    Xy_n.append((X_n[i], y_n[i]))
+  for i in range(len(X_g)):
+    Xy_g.append((X_g[i], y_g[i]))
 
-  # Pick randomly from Xy_n
-  times = 1
-  sample = random.sample(Xy_n, int(len(y_train)*times))
+  # Pick randomly from Xy_g
+  times = 2
+  sample = random.sample(Xy_g, int(len(y_train)*times))
   for (d, a) in sample:
     X_train.append(d)
     y_train.append(a)
