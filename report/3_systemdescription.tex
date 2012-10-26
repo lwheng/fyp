@@ -130,7 +130,6 @@ A numerical feature that indicates the amount of \textit{valuable} (as determine
 \item Cue Words \\
 Another numerical feature adopted from \cite{dongensemble}, that computes the amount of cue words (pre-defined manually by us) that appear in the citing sentence and its neighbour sentences. We defined 2 classes of cue words: Cue-General and Cue-Specific. Cue-General $ = \{proposed, introduced, sketched, discussed, suggested\ldots \}$ and Cue-Specific $ = \{obtained, scored, precision, probabilities, experimental\ldots \}$. These cue words are selected based on the examples we observed in our training corpus.
 \end{enumerate}
-
 From our training corpus we extracted these features to build our First Tier Model for prediction.
 
 \subsection{Second Tier}
@@ -144,4 +143,11 @@ A numerical feature that measures the amount of word overlap between the citing 
 
 \item Number Near-Miss \\
 A numerical feature that measures the amount of numerical figures overlap between the citing sentence and a fragment in the cited paper. This feature will preprocess each fragment, rounding numerical figures or converting to percentage values, when it try to match the numerical figures in the citing sentence. The intuition for this feature is from our observation that most Specific citations refer to evaluation results in the cited paper.
+
+\item Bigrams Matching \\
+A numerical feature that measures the amount of bigrams overlap between the citing sentence and a fragment in the cited paper. This feature is to preserve word order when comparing the citing sentence and the fragment. This feature is also targeted at Specific citations that refer to the cited paper for term definitions and quoting.
+
+\item Cosine Similarity \\
+A common numerical feature used in information retrieval tasks.
 \end{enumerate}
+Similarly we extracted these features from our training data to build our Second Tier Model for prediction.
