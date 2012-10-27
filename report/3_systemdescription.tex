@@ -40,6 +40,7 @@ In the scope of our project, all citations are classified into 2 types: \textbf{
 \paragraph{}
 In general, for \textbf{Specific} citations, we would be able to specifically extract a fragment in the cited paper that represents the source of the information mentioned in the citation itself i.e. Citation Provenance.
 
+%Tao: Could you remove/combine some of the subsection titles? Since some subsection only consist of 1 or 2 paragraphs.
 \subsection{Locating The Cited Information}
 \paragraph{}
 Our problem is now reduced to determining whether a citation is General or Specific. If a citation is General, the reader can be directed, for example, to the Abstract section of the cited paper, but this is not the main focus of our task. If a citation is Specific, the reader can be directed to that specific paragraph or lines respectively. Therefore during computation, the cited document can be broken down into fragments. Hence if given that a citation is Specific, then there must exists a fragment that the citation refers to. For this we need to implement some ranking system that determines the location of this fragment.
@@ -75,9 +76,12 @@ Now that we have modelled our problem, we are able to specify the required data 
 
 \paragraph{}
 Our first attempt at collecting annotations was to require an annotator to specify the line numbers of the cited information that the citing context was referring to. The annotator would be provided the citing and cited paper in plain text format, and he/she will need to annotate on a separate file, specifying the line number range, e.g. line range \url{L12-55} of the cited paper. For this annotation task, we designed an annotation framework\footnote{http://citprov.heroku.com} where an annotator is presented with an user-friendly interface to select the lines in the cited paper that he/she deem Specific. We posted this task onto the Amazon Mechanical Turk (MTurk\footnote{https://www.mturk.com}) for a few Turk workers to participate in our annotation task. After a trial round of collection, we reviewed this annotation scheme together with feedbacks from our small group of participants. First, this annotation task is a non-trivial one. The annotations collected from MTurk do not agree among the annotators and ourselves. Participants must be able to understand the contents of the papers, thus, must be researchers or have some experience in reading scientific papers. Second, this annotation scheme is too tricky, and would also cause us much problem when it comes to evaluation. Consider our implemented system that outputs a prediction for citation provenance in the form of a line number range. It is difficult to judge the correctness of this prediction, say \url{L30-67}, when compared against the annotated \url{L12-55}.
+%Tao: You need to emphasize that it is the pilot study that motivate you to:1) abandom MTurk as the platform to employ annotators (->youself as the only annotator) 2) change the annotation granuity(-> the second attempt).
+
 
 \paragraph{}
 Our second attempt is more straightforward. Recall that we use ParsCit for extracting the citing context. ParsCit also divides a paper into logically adequate fragments according to sections, sub-sections, figures and tables etc. So instead of annotating by line number ranges, we annotated each fragment with 3 classes: General ($g$), Specific-Yes ($y$) and Specific-No ($n$). To be precise, we annotate $g$ (for all its fragments) if a cite link is deemed General, and $y$ \underline{only} for the fragment(s) that is deemed Specific. For the other fragments that are not Specific, we annotate $n$. Table \ref{tab:annotation} summarises the statistics for annotation. Note that we only display percentage values for Specific instances.
+
 \begin{table}[h]
 	\center
 	\begin{tabular}{ l | l}
@@ -127,6 +131,7 @@ A numerical feature that represents difference in the publishing year between th
 \item Citing Context's Average \url{tf-idf} Weight \\
 A numerical feature that indicates the amount of \textit{valuable} (as determined by \url{tf-idf} \cite{irtextbook}) words in the citing context. Higher values suggest important words and thus specific keywords.
 
+%Tao: You'd better put the complete cue words list in the appendix
 \item Cue Words \\
 Another numerical feature adopted from \cite{dongensemble}, that computes the amount of cue words (pre-defined manually by us) that appear in the citing sentence and its neighbour sentences. We defined 2 classes of cue words: Cue-General and Cue-Specific. Cue-General $ = \{proposed, introduced, sketched, discussed, suggested\ldots \}$ and Cue-Specific $ = \{obtained, scored, precision, probabilities, experimental\ldots \}$. These cue words are selected based on the examples we observed in our training corpus.
 \end{enumerate}
