@@ -80,7 +80,7 @@ if __name__ == "__main__":
     if predicted == expected:
       correct += 1
     svm_predicted.append(int(predicted[0]))
-    svm_expected.append(int(expected[0]))
+    svm_expected.append(int(expected))
   print float(correct) / float(total)
   svm_predicted = np.asarray(svm_predicted)
   svm_expected = np.asarray(svm_expected)
