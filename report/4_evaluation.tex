@@ -1,7 +1,11 @@
 \chapter{Evaluation}
 \label{evaluation}
 \paragraph{}
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+We performed 2 evaluations, one for each tier as described early in Chapter \ref{twotierapproach}. We are able to do this because the tiers are independent of each other.
+
+\section{Results - First Tier}
+\paragraph{}
+Recall that we have 275 annotated cite links, either General ($g$) or Specific ($s$), and that we have very limited instances of Specific cite links, a situation mentioned in \cite{li2010negative}, that we have a highly unbalanced ratio between General instances and Specific instances. So for our evaluation, we first gathered all Specific instances, and then randomly select General instances, twice the number of Specific instances. Out of these 84 instances, we have $1:2$ ratio of Specific vs General instances.
 
 \paragraph{}
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+We trained our model using the Support Vector Machine (SVM), which is suitable for our binary classification task.

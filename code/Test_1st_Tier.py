@@ -7,6 +7,7 @@ import numpy as np
 import random
 from sklearn import svm, metrics
 from sklearn import cross_validation
+from sklearn.naive_bayes import GaussianNB
 
 if __name__ == "__main__":
   # Load Config.pickle
@@ -68,7 +69,8 @@ if __name__ == "__main__":
     training_X = np.asarray(training_X)
     training_y = np.asarray(training_y)
 
-    clf = svm.SVC()
+    #clf = svm.SVC()
+    clf = GaussianNB()
     clf.fit(training_X, training_y)
     predicted = clf.predict(test_X)
     expected = test_y
