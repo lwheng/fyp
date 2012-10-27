@@ -48,7 +48,7 @@ if __name__ == "__main__":
     Xy_g.append((X_g[i], y_g[i]))
 
   # Pick randomly from Xy_g
-  times = 2
+  times = 3
   sample = random.sample(Xy_g, int(len(y_train)*times))
   for (d, a) in sample:
     X_train.append(d)
