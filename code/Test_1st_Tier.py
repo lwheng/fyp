@@ -75,6 +75,8 @@ if __name__ == "__main__":
     clf = LinearRegression()
     clf.fit(training_X, training_y)
     predicted = clf.predict(test_X)
+    print predicted
+    sys.exit()
     expected = test_y
     if predicted == expected:
       correct += 1
