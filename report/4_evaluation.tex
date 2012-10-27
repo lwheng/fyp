@@ -40,4 +40,34 @@ We examine the confusion matrix for the SVM classifier (see Table \ref{tab:svmco
 
 \section{Results - Second Tier}
 \paragraph{}
-For Second Tier evaluation, we are predicting whether each fragment in the cited paper is a Specific one. We have over 30 thousand training instances for second tier, and so for the same reason, we had to select our training set manually similarly.
+For Second Tier evaluation, we are predicting whether each fragment in the cited paper is a Specific one. We have over 30 thousand training instances for second tier, and so for the same reason, we had to select our training set manually similarly to get a $1:1$ ratio for Specific versus General instances.
+
+\begin{table}[h]
+	\center
+	\begin{tabular}{ c | c  c  c }
+		\textsc{Classifier/Values} & \textsc{Avg. Precision} & \textsc{Avg. Recall} & \textsc{Avg. F1-Score} \\
+		\hline
+		\textsc{SVM} 			& 0.84 & 0.82 & 0.82 \\
+		\textsc{NaiveBayes} 	& 0.84 & 0.84 & 0.84 \\
+		\textsc{DecisionTree}	& 0.80 & 0.80 & 0.80
+	\end{tabular}
+	\caption{Second Tier Results}
+	\label{tab:secondtieresults}
+\end{table}
+\newpage
+\paragraph{}
+Now if we look at Table \ref{tab:naivebayesconfusionmatrix} for the confusion matrix for the Naive Bayes classifier, we can observe that the features we defined for the Second Tier performed reasonably well in predicting the class of the citation. 
+
+\begin{table}[h]
+	\center
+	\begin{tabular}{ c | c  c }
+		 & \textsc{actual $g$} & \textsc{actual $s$} \\
+		\hline
+		\textsc{predicted $g$} 	& 24 & 4 \\
+		\textsc{predicted $s$}		& 5 & 23
+	\end{tabular}
+	\caption{Confusion Matrix for Naive Bayes}
+	\label{tab:naivebayesconfusionmatrix}
+\end{table}
+
+(Refer to Appendix \ref{resultsdetails} for more details of our experimental results.)
