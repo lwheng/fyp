@@ -63,6 +63,7 @@ if __name__ == "__main__":
   while (rounds > 0):
     total = len(X_train)
     correct = 0
+    rounds -= 1
     for i in range(len(X_train)):
       front_X = X_train[:i]
       test_X = X_train[i]
@@ -97,14 +98,13 @@ if __name__ == "__main__":
       expected = test_y
       if predicted == expected:
         dt_score += 1
-    rounds -= 1
-      #print "Predicted: " + str(predicted) + " " + str(expected) + " :Expected"
-    #print "Results: " + str(correct) + "/" + str(total) + " = " + str(float(correct) / float(total))
   print "SVM = " + str(svm_score / float(10))
   print "NB = " + str(nb_score / float(10))
   print "DT = " + str(dt_score / float(10))
   
   sys.exit()
+      #print "Predicted: " + str(predicted) + " " + str(expected) + " :Expected"
+    #print "Results: " + str(correct) + "/" + str(total) + " = " + str(float(correct) / float(total))
   X_train = np.asarray(X_train)
   y_train = np.asarray(y_train)
   print X_train.shape
