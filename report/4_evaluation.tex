@@ -8,4 +8,16 @@ We performed 2 evaluations, one for each tier as described early in Chapter \ref
 Recall that we have 275 annotated cite links, either General ($g$) or Specific ($s$), and that we have very limited instances of Specific cite links, a situation mentioned in \cite{li2010negative}, that we have a highly unbalanced ratio between General instances and Specific instances. So for our evaluation, we first gathered all Specific instances, and then randomly select General instances, twice the number of Specific instances. Out of these 84 instances, we have $1:2$ ratio of Specific vs General instances.
 
 \paragraph{}
-We trained our model using the Support Vector Machine (SVM), which is suitable for our binary classification task.
+We trained our model using various classifiers, and then performed \url{Leave-One-Out} evaluation using the 84 instances. In other words, in one round of evaluation we predict 84 times. For each classifier, we performed 10 rounds of evaluation and we compute the average score for each round. Table \ref{tab:firsttieresults} summarises the accuracy for each classifier.
+
+\begin{table}[h]
+	\center
+	\begin{tabular}{| l | l | l |}
+		\hline
+		\textsc{SVM} & \textsc{NaiveBayes} & \textsc{DecisionTree} \\
+		\hline
+		
+	\end{tabular}
+	\caption{Annotation Statistics}
+	\label{tab:firsttieresults}
+\end{table}
