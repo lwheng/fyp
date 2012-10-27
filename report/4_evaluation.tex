@@ -5,19 +5,22 @@ We performed 2 evaluations, one for each tier as described early in Chapter \ref
 
 \section{Results - First Tier}
 \paragraph{}
-Recall that we have 275 annotated cite links, either General ($g$) or Specific ($s$), and that we have very limited instances of Specific cite links, a situation mentioned in \cite{li2010negative}, that we have a highly unbalanced ratio between General instances and Specific instances. So for our evaluation, we first gathered all Specific instances, and then randomly select General instances, twice the number of Specific instances. Out of these 84 instances, we have $1:2$ ratio of Specific vs General instances.
+Recall that we have 275 annotated cite links, either General ($g$) or Specific ($s$), and that we have very limited instances of Specific cite links, a situation mentioned in \cite{li2010negative}, that we have a highly unbalanced ratio between General instances and Specific instances. So for our evaluation, we first gathered all Specific instances, and then randomly select General instances, twice the number of Specific instances. Out of these 84 instances, we have $1:2$ ratio of Specific versus General instances.
 
 \paragraph{}
 We trained our model using various classifiers, and then performed \url{Leave-One-Out} evaluation using the 84 instances. In other words, in one round of evaluation we predict 84 times. For each classifier, we performed 10 rounds of evaluation and we compute the average score for each round. Table \ref{tab:firsttieresults} summarises the accuracy for each classifier.
 
 \begin{table}[h]
 	\center
-	\begin{tabular}{| l | l | l |}
-		\hline
+	\begin{tabular}{ c  c  c }
 		\textsc{SVM} & \textsc{NaiveBayes} & \textsc{DecisionTree} \\
 		\hline
-		
+		0.702 & \textbf{0.774} & 0.679
 	\end{tabular}
-	\caption{Annotation Statistics}
+	\caption{First Tier Results}
 	\label{tab:firsttieresults}
 \end{table}
+
+\section{Results - Second Tier}
+\paragraph{}
+For Second Tier evaluation, we are predicting whether each fragment in the cited paper is a Specific one. We have over 30 thousand training instances for second tier, and so for the same reason, we had to select our training set manually similarly, except that we have a $1:1$ ratio for Specific versus General instances.
