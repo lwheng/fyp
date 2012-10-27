@@ -79,7 +79,7 @@ if __name__ == "__main__":
     expected = test_y
     if predicted == expected:
       correct += 1
-    print predicted
+    print int(predicted[0])
     sys.exit()
     svm_predicted.append(predicted)
     svm_expected.append(expected)
