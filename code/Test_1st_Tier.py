@@ -79,10 +79,8 @@ if __name__ == "__main__":
     expected = test_y
     if predicted == expected:
       correct += 1
-    print int(predicted[0])
-    sys.exit()
-    svm_predicted.append(predicted)
-    svm_expected.append(expected)
+    svm_predicted.append(int(predicted[0]))
+    svm_expected.append(int(expected[0]))
   print float(correct) / float(total)
   svm_predicted = np.asarray(svm_predicted)
   svm_expected = np.asarray(svm_expected)
