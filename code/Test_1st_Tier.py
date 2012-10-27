@@ -56,6 +56,7 @@ if __name__ == "__main__":
   
   # Perform leave-one-out evaluation
   total = len(X_train)
+  correct = 0
   for i in range(len(X_train)):
     front_X = X_train[:i]
     test_X = X_train[i]
