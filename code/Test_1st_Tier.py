@@ -62,7 +62,9 @@ if __name__ == "__main__":
   dt_score = float(0)
   while (rounds > 0):
     total = len(X_train)
-    correct = 0
+    svm_correct = 0
+    nb_correct = 0
+    dt_correct = 0
     rounds -= 1
     for i in range(len(X_train)):
       front_X = X_train[:i]
@@ -83,21 +85,24 @@ if __name__ == "__main__":
       predicted = clf.predict(test_X)
       expected = test_y
       if predicted == expected:
-        svm_score += 1
+        svm_correct += 1
       
       clf = GaussianNB()
       clf.fit(training_X, training_y)
       predicted = clf.predict(test_X)
       expected = test_y
       if predicted == expected:
-        nb_score += 1
+        nb_correct += 1
       
       clf = DecisionTreeClassifier()
       clf.fit(training_X, training_y)
       predicted = clf.predict(test_X)
       expected = test_y
       if predicted == expected:
-        dt_score += 1
+        dt_correct += 1
+    svm_score += float(svm_correct) / float(total)
+    nb_score += float(nb_correct) / float(total)
+    dt_score += float(dt_correct) / float(total)
   print "SVM = " + str(svm_score / float(10))
   print "NB = " + str(nb_score / float(10))
   print "DT = " + str(dt_score / float(10))
