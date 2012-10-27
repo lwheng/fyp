@@ -1,7 +1,10 @@
 \chapter{Conclusion}
 \label{conclusion}
 \paragraph{}
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+We touched on a new task for citation analysis, Citation Provenance. In this task, we are trying to first determine whether a in-line citation is General or Specific, and second, if Specific, to locate where in the cited paper is the referenced information for the citation itself.
 
 \paragraph{}
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+One of the challenges in this task is the highly unbalanced ratio between General versus Specific citations, i.e. Specific citations are very rare. Also, the annotation task is very challenging and would require experienced researchers who understands the content of the papers to be annotated.
+
+\paragraph{}
+We presented a two-tier approach towards this problem. With the first acting as a filter to separate the General citations from the Specific ones and the second one to predict which of the fragments in the cited paper are referenced by the citation. We arranged for our training set to have a balanced ratio of General versus Specific instances, so that the results would reflect the extent our approach is able to differentiate the 2 types of citations we defined. We evaluated our approach on 3 classifiers and we were able to obtain promising results.
