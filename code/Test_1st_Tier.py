@@ -9,6 +9,7 @@ from sklearn import svm, metrics
 from sklearn import cross_validation
 from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeClassifier
 
 if __name__ == "__main__":
   # Load Config.pickle
@@ -72,12 +73,9 @@ if __name__ == "__main__":
 
     #clf = svm.SVC()
     #clf = GaussianNB()
-    clf = LinearRegression()
+    clf = DecisionTreeClassifier()
     clf.fit(training_X, training_y)
     predicted = clf.predict(test_X)
-    print dir(clf)
-    print predicted
-    sys.exit()
     expected = test_y
     if predicted == expected:
       correct += 1
