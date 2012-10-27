@@ -5,24 +5,39 @@ We performed 2 evaluations, one for each tier as described early in Chapter \ref
 
 \section{Results - First Tier}
 \paragraph{}
-Recall that we have 275 annotated cite links, either General ($g$) or Specific ($s$), and that we have very limited instances of Specific cite links, a situation mentioned in \cite{li2010negative}, that we have a highly unbalanced ratio between General instances and Specific instances. So for our evaluation, we first gathered all Specific instances, and then randomly select General instances, twice the number of Specific instances. Out of these 84 instances, we have $1:1$ ratio of Specific versus General instances. The reason for choosing a $1:1$ ratio is because we wish to measure our approach's ability to differentiate between General and Specific using a balanced training set.
+Recall that we have 275 annotated cite links, either General ($g$) or Specific ($s$), and that we have very limited instances of Specific cite links, a situation mentioned in \cite{li2010negative}, that we have a highly unbalanced ratio between General instances and Specific instances. So for our evaluation, we first gathered all Specific instances, and then \textbf{randomly} select General instances. Out of these 56 instances, we have $1:1$ ratio of Specific versus General instances. The reason for choosing a $1:1$ ratio is because we wish to measure our approach's ability to differentiate between General and Specific using a balanced training set.
 
 \paragraph{}
-We trained our model using various classifiers, and then performed \url{Leave-One-Out} evaluation using the 84 instances. In other words, in one round of evaluation we predict 84 times. We did this for the various classifiers and Table \ref{tab:firsttieresults} summarises the accuracy for each classifier.
+We trained our model using various classifiers, and then performed \url{Leave-One-Out} evaluation using the 56 instances. In other words, in one round of evaluation we predict 56 times. We did this for the various classifiers and Table \ref{tab:firsttieresults} summarises the performance for each classifier.
 
 \begin{table}[h]
 	\center
 	\begin{tabular}{ c | c  c  c }
-		\textsc{Classifier/Values} & \textsc{Precision} & \textsc{Recall} & \textsc{F-Score} \\
+		\textsc{Classifier/Values} & \textsc{Avg. Precision} & \textsc{Avg. Recall} & \textsc{Avg. F1-Score} \\
 		\hline
-		\textsc{SVM} 			& \textbf{0.774} & 0.679 & 0.22 \\
-		\textsc{NaiveBayes} 	& \textbf{0.774} & 0.679 & 0.22 \\
-		\textsc{DecisionTree}	& \textbf{0.774} & 0.679 & 0.22
+		\textsc{SVM} 			& 0.75 & 0.75 & 0.75 \\
+		\textsc{NaiveBayes} 	& 0.67 & 0.64 & 0.63 \\
+		\textsc{DecisionTree}	& 0.68 & 0.68 & 0.68
 	\end{tabular}
 	\caption{First Tier Results}
 	\label{tab:firsttieresults}
 \end{table}
 
+\paragraph{}
+We examine the confusion matrix for the SVM classifier (see Table \ref{tab:svmconfusionmatrix}). We can observe that our First Tier has done considerably well in differentiating General and Specific cite links.
+
+\begin{table}[h]
+	\center
+	\begin{tabular}{ c | c  c }
+		 & \textsc{actual $g$} & \textsc{actual $s$} \\
+		\hline
+		\textsc{predicted $g$} 	& 20 & 8 \\
+		\textsc{predicted $s$}		& 6 & 22
+	\end{tabular}
+	\caption{Confusion Matrix for SVM}
+	\label{tab:svmconfusionmatrix}
+\end{table}
+
 \section{Results - Second Tier}
 \paragraph{}
-For Second Tier evaluation, we are predicting whether each fragment in the cited paper is a Specific one. We have over 30 thousand training instances for second tier, and so for the same reason, we had to select our training set manually similarly, except that we have a $1:1$ ratio for Specific versus General instances.
+For Second Tier evaluation, we are predicting whether each fragment in the cited paper is a Specific one. We have over 30 thousand training instances for second tier, and so for the same reason, we had to select our training set manually similarly.
