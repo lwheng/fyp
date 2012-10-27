@@ -97,9 +97,9 @@ if __name__ == "__main__":
       expected = test_y
       if predicted == expected:
         dt_score += 1
+    rounds -= 1
       #print "Predicted: " + str(predicted) + " " + str(expected) + " :Expected"
     #print "Results: " + str(correct) + "/" + str(total) + " = " + str(float(correct) / float(total))
-    rounds -= 1
   print "SVM = " + str(svm_score / float(10))
   print "NB = " + str(nb_score / float(10))
   print "DT = " + str(dt_score / float(10))
