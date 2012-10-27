@@ -8,6 +8,7 @@ import random
 from sklearn import svm, metrics
 from sklearn import cross_validation
 from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import LinearRegression
 
 if __name__ == "__main__":
   # Load Config.pickle
@@ -70,7 +71,8 @@ if __name__ == "__main__":
     training_y = np.asarray(training_y)
 
     #clf = svm.SVC()
-    clf = GaussianNB()
+    #clf = GaussianNB()
+    clf = LinearRegression()
     clf.fit(training_X, training_y)
     predicted = clf.predict(test_X)
     expected = test_y
