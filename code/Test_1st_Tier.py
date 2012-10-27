@@ -57,6 +57,8 @@ if __name__ == "__main__":
   # Perform leave-one-out evaluation
   total = len(X_train)
   correct = 0
+  svm_predicted = []
+  svm_expected = []
   for i in range(len(X_train)):
     front_X = X_train[:i]
     test_X = X_train[i]
@@ -77,15 +79,15 @@ if __name__ == "__main__":
     expected = test_y
     if predicted == expected:
       correct += 1
+    svm_predicted.append(predicted)
+    svm_expected.append(expected)
   print float(correct) / float(total)
+  svm_predicted = np.asarray(svm_predicted)
+  svm_expected = np.asarray(svm_expected)
+  print "Confusion matrix:\n%s" % metrics.confusion_matrix(svm_expected, svm_predicted)
   sys.exit()
       #print "Predicted: " + str(predicted) + " " + str(expected) + " :Expected"
     #print "Results: " + str(correct) + "/" + str(total) + " = " + str(float(correct) / float(total))
-  X_train = np.asarray(X_train)
-  y_train = np.asarray(y_train)
-  print X_train.shape
-  print y_train
-  #clf = svm.SVC(kernel='linear')
   clf = svm.SVC()
   #clf.fit(X, y)
   #predicted = clf.predict(X_train)
