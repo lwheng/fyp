@@ -55,59 +55,28 @@ if __name__ == "__main__":
     y_train.append(a)
   
   # Perform leave-one-out evaluation
-  # Perform 10 rounds and compute the average
-  rounds = 10
-  svm_score = float(0)
-  nb_score = float(0)
-  dt_score = float(0)
-  while (rounds > 0):
-    total = len(X_train)
-    svm_correct = 0
-    nb_correct = 0
-    dt_correct = 0
-    rounds -= 1
-    for i in range(len(X_train)):
-      front_X = X_train[:i]
-      test_X = X_train[i]
-      back_X = X_train[i+1:]
-      
-      front_y = y_train[:i]
-      test_y = y_train[i]
-      back_y = y_train[i+1:]
+  total = len(X_train)
+  for i in range(len(X_train)):
+    front_X = X_train[:i]
+    test_X = X_train[i]
+    back_X = X_train[i+1:]
+    
+    front_y = y_train[:i]
+    test_y = y_train[i]
+    back_y = y_train[i+1:]
 
-      training_X = front_X + back_X
-      training_y = front_y + back_y
-      training_X = np.asarray(training_X)
-      training_y = np.asarray(training_y)
+    training_X = front_X + back_X
+    training_y = front_y + back_y
+    training_X = np.asarray(training_X)
+    training_y = np.asarray(training_y)
 
-      clf = svm.SVC()
-      clf.fit(training_X, training_y)
-      predicted = clf.predict(test_X)
-      expected = test_y
-      if predicted == expected:
-        svm_correct += 1
-      
-      clf = GaussianNB()
-      clf.fit(training_X, training_y)
-      predicted = clf.predict(test_X)
-      expected = test_y
-      if predicted == expected:
-        nb_correct += 1
-      
-      clf = DecisionTreeClassifier()
-      clf.fit(training_X, training_y)
-      predicted = clf.predict(test_X)
-      expected = test_y
-      if predicted == expected:
-        dt_correct += 1
-    svm_score += float(svm_correct) / float(total)
-    nb_score += float(nb_correct) / float(total)
-    dt_score += float(dt_correct) / float(total)
-  print "SVM = " + str(svm_score / float(10))
-  print "NB = " + str(nb_score / float(10))
-  print "DT = " + str(dt_score / float(10))
-  print
-  
+    clf = svm.SVC()
+    clf.fit(training_X, training_y)
+    predicted = clf.predict(test_X)
+    expected = test_y
+    if predicted == expected:
+      correct += 1
+  print float(correct) / float(total)
   sys.exit()
       #print "Predicted: " + str(predicted) + " " + str(expected) + " :Expected"
     #print "Results: " + str(correct) + "/" + str(total) + " = " + str(float(correct) / float(total))
