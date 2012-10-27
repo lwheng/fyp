@@ -106,6 +106,7 @@ if __name__ == "__main__":
   print "SVM = " + str(svm_score / float(10))
   print "NB = " + str(nb_score / float(10))
   print "DT = " + str(dt_score / float(10))
+  print
   
   sys.exit()
   X_train = np.asarray(X_train)
