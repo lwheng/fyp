@@ -84,6 +84,7 @@ if __name__ == "__main__":
   print float(correct) / float(total)
   svm_predicted = np.asarray(svm_predicted)
   svm_expected = np.asarray(svm_expected)
+  print "Classification report for classifier %s:\n%s\n" % (clf, metrics.classification_report(svm_expected, svm_predicted))
   print "Confusion matrix:\n%s" % metrics.confusion_matrix(svm_expected, svm_predicted)
   sys.exit()
       #print "Predicted: " + str(predicted) + " " + str(expected) + " :Expected"
