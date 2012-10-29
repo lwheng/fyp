@@ -12,11 +12,10 @@ Recall that we have 275 annotated cite links, either General ($g$) or Specific (
 \paragraph{}
 We trained our model using various classifiers, and then performed \url{Leave-One-Out} evaluation using the 56 instances. In other words, in one round of evaluation we predict 56 times. We did this for the various classifiers and Table \ref{tab:firsttieresults} summarises the performance for each classifier.
 
-%Tao: F1 should be F_1 (1 is the subscript)
 \begin{table}[h]
 	\center
 	\begin{tabular}{ c | c  c  c }
-		\textsc{Classifier/Values} & \textsc{Avg. Precision} & \textsc{Avg. Recall} & \textsc{Avg. F1-Score} \\
+		\textsc{Classifier/Values} & \textsc{Avg. Precision} & \textsc{Avg. Recall} & \textsc{Avg. F$_1$-Score} \\
 		\hline
 		\textsc{SVM} 			& 0.75 & 0.75 & 0.75 \\
 		\textsc{NaiveBayes} 	& 0.67 & 0.64 & 0.63 \\
@@ -48,7 +47,7 @@ For Second Tier evaluation, we are predicting whether each fragment in the cited
 \begin{table}[h]
 	\center
 	\begin{tabular}{ c | c  c  c }
-		\textsc{Classifier/Values} & \textsc{Avg. Precision} & \textsc{Avg. Recall} & \textsc{Avg. F1-Score} \\
+		\textsc{Classifier/Values} & \textsc{Avg. Precision} & \textsc{Avg. Recall} & \textsc{Avg. F$_1$-Score} \\
 		\hline
 		\textsc{SVM} 			& 0.84 & 0.82 & 0.82 \\
 		\textsc{NaiveBayes} 	& 0.84 & 0.84 & 0.84 \\
