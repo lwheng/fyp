@@ -10,23 +10,24 @@ Recall that we have 275 annotated cite links, either General ($g$) or Specific (
 
 %Tao: Give the reason of using Leave-One-Out evaluation
 \paragraph{}
-We trained our model using various classifiers, and then performed \url{Leave-One-Out} and \url{n-Fold} ($n=14$, each fold has 4 instances) evaluation using the 56 instances. The main reason for using \url{Leave-One-Out} is because we are working with limited instances we wish to maximise them for training. As for the performance when given less training data, we use the \url{n-Fold} strategy. We did this for the various classifiers and Table \ref{tab:firsttieresults} summarises the performance for each classifier.
+We trained our model using various classifiers, and then performed \url{Leave-One-Out} (\url{LOO}) and \url{n-Fold} ($n=14$, each fold has 4 instances) evaluation using the 56 instances. The main reason for using \url{Leave-One-Out} is because we are working with limited instances we wish to maximise them for training. As for the performance when given less training data, we use the \url{n-Fold} strategy. We did this for the various classifiers and Table \ref{tab:firsttieresults} summarises the performance for each classifier.
 
 \begin{table}[h]
 	\center
 	\begin{tabular}{ c | c  c  c }
 		\textsc{Classifier/Values} & \textsc{Avg. Precision} & \textsc{Avg. Recall} & \textsc{Avg. F$_1$-Score} \\
+		& \url{LOO} / \url{n-Fold} & \url{LOO} / \url{n-Fold} & \url{LOO} / \url{n-Fold} \\
 		\hline
-		\textsc{SVM} 			& 0.75 & 0.75 & 0.75 \\
-		\textsc{NaiveBayes} 	& 0.67 & 0.64 & 0.63 \\
-		\textsc{DecisionTree}	& 0.68 & 0.68 & 0.68
+		\textsc{SVM} 			& 0.84 / 0.76 & 0.82 / 0.75 & 0.82 / 0.75 \\
+		\textsc{NaiveBayes} 	& 0.67 / 0.69 & 0.64 / 0.66 & 0.63 / 0.65 \\
+		\textsc{DecisionTree}	& 0.61 / 0.46 & 0.61 / 0.46 & 0.61 / 0.46
 	\end{tabular}
 	\caption{First Tier Results}
 	\label{tab:firsttieresults}
 \end{table}
 
 \paragraph{}
-We examine the confusion matrix for the SVM classifier (see Table \ref{tab:svmconfusionmatrix}). We can observe that our First Tier has done considerably well in differentiating General and Specific cite links.
+We examine the confusion matrix for the SVM classifier (see Table \ref{tab:svmconfusionmatrix}) that we ran for the \url{Leave-One-Out} strategy. We can observe that our First Tier has done considerably well in differentiating General and Specific cite links.
 
 \begin{table}[h]
 	\center
@@ -34,9 +35,9 @@ We examine the confusion matrix for the SVM classifier (see Table \ref{tab:svmco
 		 & \textsc{actual $g$} & \textsc{actual $s$} \\
 		\hline
 		\textsc{predicted $g$} 	& 20 & 8 \\
-		\textsc{predicted $s$}		& 6 & 22
+		\textsc{predicted $s$}		& 2 & 26
 	\end{tabular}
-	\caption{Confusion Matrix for SVM}
+	\caption{Confusion Matrix for SVM with Leave-One-Out}
 	\label{tab:svmconfusionmatrix}
 \end{table}
 
