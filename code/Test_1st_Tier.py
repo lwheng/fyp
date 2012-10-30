@@ -109,3 +109,10 @@ if __name__ == "__main__":
   decisiontree_expected = np.asarray(decisiontree_expected)
   print metrics.classification_report(decisiontree_expected, decisiontree_predicted)
   print "Confusion matrix:\n%s" % metrics.confusion_matrix(decisiontree_expected, decisiontree_predicted)
+
+  # Perform n-fold cross validation
+  # Total number = 56
+  # We do 14-fold, each fold has 52 train, 4 test
+  total = len(X_train)
+  for i in range(total/4):
+    print X_train[i*4:i*4+4]
