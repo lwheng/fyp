@@ -143,6 +143,7 @@ if __name__ == "__main__":
     expected = test_y
     svm_predicted.extend(predicted)
     svm_expected.extend(expected)
+
     
     clf = GaussianNB()
     clf.fit(training_X, training_y)
