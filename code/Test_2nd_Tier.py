@@ -109,3 +109,63 @@ if __name__ == "__main__":
   decisiontree_expected = np.asarray(decisiontree_expected)
   print metrics.classification_report(decisiontree_expected, decisiontree_predicted)
   print "Confusion matrix:\n%s" % metrics.confusion_matrix(decisiontree_expected, decisiontree_predicted)
+  
+  print
+  print
+
+  # Perform n-fold cross validation
+  # Total number = 56
+  # We do 14-fold, each fold has 52 train, 4 test
+  total = len(X_train)
+  svm_predicted = []
+  svm_expected = []
+  naivebayes_predicted = []
+  naivebayes_expected = []
+  decisiontree_predicted = []
+  decisiontree_expected = []
+  for i in range(total/4):
+    front_X = X_train[:i*4]
+    test_X = X_train[i*4:i*4+4]
+    back_X = X_train[i*4+4:]
+    
+    front_y = y_train[:i*4]
+    test_y = y_train[i*4:i*4+4]
+    back_y = y_train[i*4+4:]
+    
+    training_X = front_X + back_X
+    training_y = front_y + back_y
+    training_X = np.asarray(training_X)
+    training_y = np.asarray(training_y)
+
+    clf = svm.SVC()
+    clf.fit(training_X, training_y)
+    predicted = clf.predict(test_X)
+    expected = test_y
+    svm_predicted.extend(predicted)
+    svm_expected.extend(expected)
+    
+    clf = GaussianNB()
+    clf.fit(training_X, training_y)
+    predicted = clf.predict(test_X)
+    expected = test_y
+    naivebayes_predicted.extend(predicted)
+    naivebayes_expected.extend(expected)
+    
+    clf = DecisionTreeClassifier()
+    clf.fit(training_X, training_y)
+    predicted = clf.predict(test_X)
+    expected = test_y
+    decisiontree_predicted.extend(predicted)
+    decisiontree_expected.extend(expected)
+  svm_predicted = np.asarray(svm_predicted)
+  svm_expected = np.asarray(svm_expected)
+  print metrics.classification_report(svm_expected, svm_predicted)
+  print "Confusion matrix:\n%s" % metrics.confusion_matrix(svm_expected, svm_predicted)
+  naivebayes_predicted = np.asarray(naivebayes_predicted)
+  naivebayes_expected = np.asarray(naivebayes_expected)
+  print metrics.classification_report(naivebayes_expected, naivebayes_predicted)
+  print "Confusion matrix:\n%s" % metrics.confusion_matrix(naivebayes_expected, naivebayes_predicted)
+  decisiontree_predicted = np.asarray(decisiontree_predicted)
+  decisiontree_expected = np.asarray(decisiontree_expected)
+  print metrics.classification_report(decisiontree_expected, decisiontree_predicted)
+  print "Confusion matrix:\n%s" % metrics.confusion_matrix(decisiontree_expected, decisiontree_predicted)
