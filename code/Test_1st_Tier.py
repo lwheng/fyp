@@ -111,6 +111,7 @@ if __name__ == "__main__":
   print "Confusion matrix:\n%s" % metrics.confusion_matrix(decisiontree_expected, decisiontree_predicted)
 
   print
+  print "########################################################################"
   print
 
   # Perform n-fold cross validation
