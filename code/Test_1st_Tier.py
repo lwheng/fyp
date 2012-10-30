@@ -141,22 +141,22 @@ if __name__ == "__main__":
     clf.fit(training_X, training_y)
     predicted = clf.predict(test_X)
     expected = test_y
-    svm_predicted.append(int(predicted[0]))
-    svm_expected.append(int(expected))
+    svm_predicted.extend(predicted)
+    svm_expected.extend(expected)
     
     clf = GaussianNB()
     clf.fit(training_X, training_y)
     predicted = clf.predict(test_X)
     expected = test_y
-    naivebayes_predicted.append(int(predicted[0]))
-    naivebayes_expected.append(int(expected))
+    naivebayes_predicted.extend(predicted)
+    naivebayes_expected.extend(expected)
     
     clf = DecisionTreeClassifier()
     clf.fit(training_X, training_y)
     predicted = clf.predict(test_X)
     expected = test_y
-    decisiontree_predicted.append(int(predicted[0]))
-    decisiontree_expected.append(int(expected))
+    decisiontree_predicted.extend(predicted)
+    decisiontree_expected.extend(expected)
   svm_predicted = np.asarray(svm_predicted)
   svm_expected = np.asarray(svm_expected)
   print metrics.classification_report(svm_expected, svm_predicted)
