@@ -10,7 +10,7 @@ Recall that we have 275 annotated cite links, either General ($g$) or Specific (
 
 %Tao: Give the reason of using Leave-One-Out evaluation
 \paragraph{}
-We trained our model using various classifiers, and then performed \url{Leave-One-Out} evaluation using the 56 instances. In other words, in one round of evaluation we predict 56 times. We did this for the various classifiers and Table \ref{tab:firsttieresults} summarises the performance for each classifier.
+We trained our model using various classifiers, and then performed \url{Leave-One-Out} and \url{n-Fold} ($n=14$, each fold has 4 instances) evaluation using the 56 instances. The main reason for using \url{Leave-One-Out} is because we are working with limited instances we wish to maximise them for training. As for the performance when given less training data, we use the \url{n-Fold} strategy. We did this for the various classifiers and Table \ref{tab:firsttieresults} summarises the performance for each classifier.
 
 \begin{table}[h]
 	\center
