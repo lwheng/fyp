@@ -53,6 +53,11 @@ if __name__ == "__main__":
   for (d, a) in sample:
     X_train.append(d)
     y_train.append(a)
+
+  # Find out the feature weight distribution
+  clf = svm.SVC(kernel='linear')
+  clf.fit(X_train, y_train)
+  print clf.coef_
   
   # Perform leave-one-out evaluation
   total = len(X_train)
@@ -77,7 +82,7 @@ if __name__ == "__main__":
     training_X = np.asarray(training_X)
     training_y = np.asarray(training_y)
 
-    clf = svm.SVC()
+    clf = svm.SVC(kernel='linear')
     clf.fit(training_X, training_y)
     predicted = clf.predict(test_X)
     expected = test_y
