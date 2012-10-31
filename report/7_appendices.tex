@@ -9,102 +9,140 @@ obtains, obtained, score, scored, high, F-score, Precision, precision, Recall, r
 
 \chapter{Results Details (1st Tier)}
 \label{resultsdetails}
-\begin{multicols}{2}
 \section{Results: Leave-One-Out}
-\subsection{SVM $P/R/F_1$ Scores}
+\begin{table}[ht]
+\begin{minipage}[b]{0.45\linewidth}\centering
 \begin{tabular}{ c | c  c  c }
 	& \textsc{Precision} & \textsc{Recall} & \textsc{F$_1$-Score} \\
 	\hline
 	\textsc{$g$} 	& 0.91 & 0.71 & 0.80 \\
 	\textsc{$s$}	& 0.76 & 0.93 & 0.84
 \end{tabular}
-\subsection{SVM Confusion Matrix}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.45\linewidth}
+\centering
 \begin{tabular}{ c | c  c }
 	 & \textsc{actual $g$} & \textsc{actual $s$} \\
 	\hline
 	\textsc{predicted $g$} 	& 20 & 8 \\
 	\textsc{predicted $s$}		& 2 & 26
 \end{tabular}
+\end{minipage}
+\caption{SVM $P/R/F_1$ Scores and Confusion Matrix}
+\end{table}
 
-\subsection{NB $P/R/F_1$ Scores}
+\begin{table}[ht]
+\begin{minipage}[b]{0.45\linewidth}\centering
 \begin{tabular}{ c | c  c  c }
 	& \textsc{Precision} & \textsc{Recall} & \textsc{F$_1$-Score} \\
 	\hline
 	\textsc{$g$} 	& 0.60 & 0.86 & 0.71 \\
 	\textsc{$s$}	& 0.75 & 0.43 & 0.55
 \end{tabular}
-\subsection{NB Confusion Matrix}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.45\linewidth}
+\centering
 \begin{tabular}{ c | c  c }
 	 & \textsc{actual $g$} & \textsc{actual $s$} \\
 	\hline
 	\textsc{predicted $g$} 	& 24 & 4 \\
 	\textsc{predicted $s$}		& 16 & 12
 \end{tabular}
+\end{minipage}
+\caption{Naive Bayes $P/R/F_1$ Scores and Confusion Matrix}
+\end{table}
 
-\subsection{DT $P/R/F_1$ Scores}
+\begin{table}[ht]
+\begin{minipage}[b]{0.45\linewidth}\centering
 \begin{tabular}{ c | c  c  c }
 	& \textsc{Precision} & \textsc{Recall} & \textsc{F$_1$-Score} \\
 	\hline
 	\textsc{$g$} 	& 0.59 & 0.68 & 0.63 \\
 	\textsc{$s$}	& 0.62 & 0.54 & 0.58
 \end{tabular}
-\subsection{DT Confusion Matrix}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.45\linewidth}
+\centering
 \begin{tabular}{ c | c  c }
 	 & \textsc{actual $g$} & \textsc{actual $s$} \\
 	\hline
 	\textsc{predicted $g$} 	& 19 & 9 \\
 	\textsc{predicted $s$}		& 13 & 15
 \end{tabular}
-\end{multicols}
-
+\end{minipage}
+\caption{Decision Tree $P/R/F_1$ Scores and Confusion Matrix}
+\end{table}
 \newpage
 
-\begin{multicols}{2}
 \section{Results: n-Fold}
-\subsection{SVM $P/R/F_1$ Scores}
+\begin{table}[ht]
+\begin{minipage}[b]{0.45\linewidth}\centering
 \begin{tabular}{ c | c  c  c }
 	& \textsc{Precision} & \textsc{Recall} & \textsc{F$_1$-Score} \\
 	\hline
 	\textsc{$g$} 	& 0.79 & 0.68 & 0.73 \\
 	\textsc{$s$}	& 0.72 & 0.82 & 0.77
 \end{tabular}
-\subsection{SVM Confusion Matrix}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.45\linewidth}
+\centering
 \begin{tabular}{ c | c  c }
 	 & \textsc{actual $g$} & \textsc{actual $s$} \\
 	\hline
 	\textsc{predicted $g$} 	& 19 & 9 \\
 	\textsc{predicted $s$}		& 5 & 23
 \end{tabular}
-\subsection{NB $P/R/F_1$ Scores}
+\end{minipage}
+\caption{SVM $P/R/F_1$ Scores and Confusion Matrix}
+\end{table}
+
+\begin{table}[ht]
+\begin{minipage}[b]{0.45\linewidth}\centering
 \begin{tabular}{ c | c  c  c }
 	& \textsc{Precision} & \textsc{Recall} & \textsc{F$_1$-Score} \\
 	\hline
 	\textsc{$g$} 	& 0.62 & 0.86 & 0.72 \\
 	\textsc{$s$}	& 0.76 & 0.46 & 0.58
 \end{tabular}
-\subsection{NB Confusion Matrix}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.45\linewidth}
+\centering
 \begin{tabular}{ c | c  c }
 	 & \textsc{actual $g$} & \textsc{actual $s$} \\
 	\hline
 	\textsc{predicted $g$} 	& 24 & 4 \\
 	\textsc{predicted $s$}		& 15 & 13
 \end{tabular}
-\subsection{DT $P/R/F_1$ Scores}
+\end{minipage}
+\caption{Naive Bayes $P/R/F_1$ Scores and Confusion Matrix}
+\end{table}
+
+\begin{table}[ht]
+\begin{minipage}[b]{0.45\linewidth}\centering
 \begin{tabular}{ c | c  c  c }
 	& \textsc{Precision} & \textsc{Recall} & \textsc{F$_1$-Score} \\
 	\hline
 	\textsc{$g$} 	& 0.47 & 0.57 & 0.52 \\
 	\textsc{$s$}	& 0.45 & 0.36 & 0.40
 \end{tabular}
-\subsection{DT Confusion Matrix}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.45\linewidth}
+\centering
 \begin{tabular}{ c | c  c }
 	 & \textsc{actual $g$} & \textsc{actual $s$} \\
 	\hline
 	\textsc{predicted $g$} 	& 16 & 12 \\
 	\textsc{predicted $s$}		& 18 & 10
 \end{tabular}
-\end{multicols}
-
+\end{minipage}
+\caption{Decision Tree $P/R/F_1$ Scores and Confusion Matrix}
+\end{table}
 
 \chapter{Results Details (2nd Tier)}
 
