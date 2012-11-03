@@ -1,28 +1,6 @@
-\chapter{Our Approach}
-\label{approach}
-\section{Terminology}
-\paragraph{}
-To aid the reader, and to avoid misunderstanding and confusion, it is important that we first list some of the key terms we are using in our paper.
-\begin{table}[h]
-	\center
-	\begin{tabular}{ l p{13cm}}
-		\textsc{Term} & \textsc{Description}\\
-		\hline
-		Citing Paper & The paper that makes the citation \\
-		Cited Paper & The paper that is being cited by the citing paper \\
-		Cite Link & E.g. \url{E06-1034==>J93-2004}. A citation relation between a citing paper (\url{E06-1034}) and a cited paper (\url{J93-2004}) \\
-		Cite String & The citation mark. E.g. Nivre and Scholz (2004), [1], (23) \\
-		Citing Sentence & A sentence in the citing paper that contains the in-line citation. E.g. \textit{That algorithm, in turn, is similar to the dependency parsing algorithm of \textbf{Nivre and Scholz (2004)}, but it builds a constituent tree and a dependency tree simultaneously.} \\
-		Citing Context & The block of text surrounding the citing sentence, about 2 sentences before and after the citing sentence, for providing contextual information \\
-		Cited Fragment & A fragment, from a few lines to paragraphs, in the cited paper
-	\end{tabular}
-	\caption{Terminology}
-	\label{tab:terminology}
-\end{table}
+\chapter{Problem Analysis}
+\label{problemanalysis}
 
-\section{Problem Analysis}
-\subsection{Types of Citation}
-\paragraph{}
 In the scope of our project, all citations are classified into 2 types: \textbf{General} and \textbf{Specific}. We define citations as such to be inline with our goal. That is, to be able to tell, if Specific, where the cited information is in the cited document. Otherwise, the citation would be deemed General. To rid of ambiguity in our definition of a General/Specific citation, we have the following guidelines:\\
 \textbf{General Citations}
 \begin{enumerate}
@@ -37,7 +15,40 @@ In the scope of our project, all citations are classified into 2 types: \textbf{
 \item Authors may refer to digits or numerical figures in the cited paper. Usually for making reference to evaluation results in the cited paper. Authors may also complement the cited paper for its promising/excellent performance.
 \item Authors may quote a line/segment in the cited paper.
 \end{enumerate}
-\paragraph{}
+
+\begin{figure}[h]
+\label{fig:terminology}
+\framebox[\textwidth]{
+	\begin{tabular}{ l p{11cm}}
+		\textsc{Term} & \textsc{Description}\\
+		\hline
+		Citing Paper & The paper that makes the citation \\
+		Cited Paper & The paper that is being cited by the citing paper \\
+		Cite Link & E.g. \url{E06-1034==>J93-2004}. A citation relation between a citing paper (\url{E06-1034}) and a cited paper (\url{J93-2004}) \\
+		Cite String & The citation mark. E.g. Nivre and Scholz (2004), [1], (23) \\
+		Citing Sentence & A sentence in the citing paper that contains the in-line citation. E.g. \textit{That algorithm, in turn, is similar to the dependency parsing algorithm of \textbf{Nivre and Scholz (2004)}, but it builds a constituent tree and a dependency tree simultaneously.} \\
+		Citing Context & The block of text surrounding the citing sentence, about 2 sentences before and after the citing sentence, for providing contextual information \\
+		Cited Fragment & A fragment, from a few lines to paragraphs, in the cited paper
+	\end{tabular}
+}
+\caption{Terminologies used in this paper}
+\end{figure}
+
+%In the scope of our project, all citations are classified into 2 types: \textbf{General} and \textbf{Specific}. We define citations as such to be inline with our goal. That is, to be able to tell, if Specific, where the cited information is in the cited document. Otherwise, the citation would be deemed General. To rid of ambiguity in our definition of a General/Specific citation, we have the following guidelines:\\
+%\textbf{General Citations}
+%\begin{enumerate}
+%\item Authors may refer to a paper as a whole. If the author cites for a key idea, e.g. Machine Learning, and Machine Learning makes up the entire or majority of the cited paper, it is a general citation.
+%\item Authors may refer to a paper as a form of mentioning. The authors merely mentions the cited paper out of acknowledgement of its contributions.
+%\end{enumerate}
+%\textbf{Specific Citations}
+%\begin{enumerate}
+%\item Authors may refer to a term definition in the cited paper.
+%\item Authors may refer to a key idea/implementation in the cited paper. This key idea/implementation does not make up the entire cited paper.
+%\item Authors may refer to an algorithm or a theorem in the cited paper. This algorithm/theorem does not make up the entire cited paper.
+%\item Authors may refer to digits or numerical figures in the cited paper. Usually for making reference to evaluation results in the cited paper. Authors may also complement the cited paper for its promising/excellent performance.
+%\item Authors may quote a line/segment in the cited paper.
+%\end{enumerate}
+
 In general, for \textbf{Specific} citations, we would be able to specifically extract a fragment in the cited paper that represents the source of the information mentioned in the citation itself i.e. Citation Provenance.
 
 \subsection{Scope Of The Problem}
