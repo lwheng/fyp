@@ -496,15 +496,6 @@ class weight:
     value = count / float(len(citing_bigrams))
     return value
   
-  def referToDefinition(self, cit_str, context):
-    print
-
-  def referToQuote(self, cit_str, context):
-    print
-
-  def referToMethod(self, cit_str, context):
-    print
-
 class dist:
   def __init__(self):
     self.sentence_tokenizer = PunktSentenceTokenizer()

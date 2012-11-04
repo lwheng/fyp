@@ -21,6 +21,8 @@ if __name__ == "__main__":
   # Load X
   X = pickle.load(open(os.path.join(path_pickles, 'X_2nd_Tier_Best.pickle'), 'r'))
   X = np.asarray(X)
+  print X.shape
+  sys.exit()
   # Load y
   y = pickle.load(open(os.path.join(path_pickles, 'y_2nd_Tier_Best.pickle'), 'r'))
   y = np.asarray(y)
