@@ -68,3 +68,48 @@ if __name__ == "__main__":
       correct += 1
   accuracy = float(correct) / float(total)
   print "Full - 2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
+  # Remove third feature
+  X_train = []
+  for x in X:
+    x = list(x)
+    X_train.append(x[0:7] + x[8:])
+  X_train = np.asarray(X_train)
+  correct = 0
+  clf = svm.SVC(kernel='linear')
+  clf.fit(X_train, y)
+  predicted = clf.predict(X_train)
+  for i in range(total):
+    if predicted[i] == expected[i]:
+      correct += 1
+  accuracy = float(correct) / float(total)
+  print "Full - 2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
+  # Remove fourth feature
+  X_train = []
+  for x in X:
+    x = list(x)
+    X_train.append(x[0:8] + x[9:])
+  X_train = np.asarray(X_train)
+  correct = 0
+  clf = svm.SVC(kernel='linear')
+  clf.fit(X_train, y)
+  predicted = clf.predict(X_train)
+  for i in range(total):
+    if predicted[i] == expected[i]:
+      correct += 1
+  accuracy = float(correct) / float(total)
+  print "Full - 2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
+  # Remove fifth feature
+  X_train = []
+  for x in X:
+    x = list(x)
+    X_train.append(x[0:9] + x[10:])
+  X_train = np.asarray(X_train)
+  correct = 0
+  clf = svm.SVC(kernel='linear')
+  clf.fit(X_train, y)
+  predicted = clf.predict(X_train)
+  for i in range(total):
+    if predicted[i] == expected[i]:
+      correct += 1
+  accuracy = float(correct) / float(total)
+  print "Full - 2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
