@@ -18,7 +18,7 @@ if __name__ == "__main__":
   path_parscit_section = config['path_parscit_section']
   path_pickles = config['path_pickles']
 
-  # Load Model_2nd_Tier
+  # Load Model_1st_Tier
   model_1st_tier = pickle.load(open(os.path.join(path_pickles, 'Model_1st_Tier.pickle'), 'r'))
   # Load X
   X = pickle.load(open(os.path.join(path_pickles, 'X_1st_Tier.pickle'), 'r'))

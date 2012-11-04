@@ -2,9 +2,8 @@
 \label{evaluation}
 I first performed modular evaluation on {\it GvS} and {\it LocateProv} separately. For each tier I evaluate its performance on a few classifiers: Support Vector Machine, Naive Bayes and Decision Tree. For each classifier I also performed evaluation using a few evaluation strategies.
 
-%Tao: To make the results more complete, you may discuss the discriminative power of features by show the weights learned by machine learning algorithem. 
 \section{Evaluating {\it GvS}}
-I first evaluate the features I added for $
+Recall that I used a $1:1$ of Specific versus General data instances for building the model. To verify {\it GvS}, I first evaluated the features added using the {\it feature ablation} strategy.
 
 Recall that we have 275 annotated cite links, either General ($g$) or Specific ($s$), and that we have very limited instances of Specific cite links, a situation mentioned in \cite{li2010negative}, that we have a highly unbalanced ratio between General instances and Specific instances. So for our evaluation, we first gathered all Specific instances, and then \textbf{randomly} select General instances. Out of these 56 instances, we have $1:1$ ratio of Specific versus General instances. The reason for choosing a $1:1$ ratio is because we wish to measure our approach's ability to differentiate between General and Specific when given a balanced training set.
 
