@@ -258,13 +258,24 @@ if __name__ == "__main__":
   # Load y_all
   y_all = pickle.load(open(os.path.join(path_pickles, 'y_1st_Tier.pickle'), 'r'))
 
-  print X_all
-  print type(X_all)
-  sys.exit()
+  X_all = list(X_all)
+  y_all = list(y_all)
 
   # Prepare X_skewed and y_skewed
   X_skewed = []
   y_skewed = []
-  for x in X_all:
+  for i in range(len(X_all)):
+    x = X_all[i]
     if not x in X:
       X_skewed.append(x)
+      y_skewed.append(y[i])
+
+  X_all = np.asarray(X_all)
+  y_all = np.asarray(y_all)
+  X_skewed = np.asarray(X_skewed)
+  y_skewed = np.asarray(y_skewed)
+  X = np.asarray(X)
+  y = np.asarray(y)
+  print X_all.shape
+  print X_skewed.shape
+  print X.shape
