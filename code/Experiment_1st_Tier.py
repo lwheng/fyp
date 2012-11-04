@@ -25,4 +25,4 @@ if __name__ == "__main__":
 
   # Feature Ablation
   clf = svm.SVC(kernel='linear')
-  clf.fit(X_train, y_train)
+  clf.fit(X, y)
