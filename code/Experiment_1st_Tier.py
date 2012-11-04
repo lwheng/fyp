@@ -24,9 +24,13 @@ if __name__ == "__main__":
   y = pickle.load(open(os.path.join(path_pickles, 'y_1st_Tier_Best.pickle'), 'r'))
 
   # Feature Ablation
-  # Remove first feature
-  print X[0]
-  print X[0][5:]
+  # Remove first feature (5 parts)
+  X_train = []
+  for x in X:
+    X_train.append(x[5:])
+  X_train.npasarray(X_train)
+  print X.shape
+  print X_train.shape
   sys.exit()
   clf = svm.SVC(kernel='linear')
   clf.fit(X, y)
