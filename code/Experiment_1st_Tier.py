@@ -55,7 +55,8 @@ if __name__ == "__main__":
   print "Full - 1st : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
   # Remove second feature
   X_train = []
-  for x in list(X):
+  for x in X:
+    x = list(x)
     X_train.append(x[0:4] + x[7:])
   X_train = np.asarray(X_train)
   correct = 0
