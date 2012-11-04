@@ -126,7 +126,7 @@ if __name__ == "__main__":
     if predicted[i] == expected[i]:
       correct += 1
   accuracy = float(correct) / float(total)
-  print "Full - 1st : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
+  print "1st : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
   # Only second feature
   X_train = []
   for x in X:
@@ -141,7 +141,7 @@ if __name__ == "__main__":
     if predicted[i] == expected[i]:
       correct += 1
   accuracy = float(correct) / float(total)
-  print "Full - 2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
+  print "2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
   # Only third feature
   X_train = []
   for x in X:
@@ -156,7 +156,7 @@ if __name__ == "__main__":
     if predicted[i] == expected[i]:
       correct += 1
   accuracy = float(correct) / float(total)
-  print "Full - 2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
+  print "2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
   # Only fourth feature
   X_train = []
   for x in X:
@@ -171,7 +171,7 @@ if __name__ == "__main__":
     if predicted[i] == expected[i]:
       correct += 1
   accuracy = float(correct) / float(total)
-  print "Full - 2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
+  print "2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
   # Only fifth feature
   X_train = []
   for x in X:
@@ -186,4 +186,4 @@ if __name__ == "__main__":
     if predicted[i] == expected[i]:
       correct += 1
   accuracy = float(correct) / float(total)
-  print "Full - 2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
+  print "2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
