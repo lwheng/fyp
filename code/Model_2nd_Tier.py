@@ -126,25 +126,3 @@ if __name__ == "__main__":
 
   # Leave testing to another file
   sys.exit()
-
-  # Prediction
-  X_n = []
-  y_n = []
-  X_y = []
-  y_y = []
-  for i in range(y.shape[0]):
-    temp_x = list(X[i])
-    temp_y = int(y[i])
-    if temp_y == 1:
-      X_y.append(temp_x)
-      y_y.append(temp_y)
-    else:
-      X_n.append(temp_x)
-      y_n.append(temp_y)
-  X_train = X_y
-  y_train = y_y
-  
-  # Pick randomly
-  times = 2
-  X_train.extend(random.sample(X_g, int(len(y_train)*times)))
-  y_train.extend(random.sample(y_g, int(len(y_train)*times)))

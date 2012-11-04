@@ -319,7 +319,6 @@ class weight:
         v.append(1)
     return self.nltk_tools.nltk_cosine_distance(u,v)
 
-
   def cosine_similarity(self, query_tokens, query_col, dom_parscit_section_cited):
     docs = []
     #body_texts = dom_parscit_section_cited.getElementsByTagName('bodyText')
@@ -981,6 +980,38 @@ class extract_features:
     #feature_pos_tag = self.weight.pos_tag_distribution(cit_str, query)
 
     return x
+  
+  def extract_feature_1st_tier_baseline(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
+    cit_str = context.getAttribute('citStr')
+    cit_str = unicode(cit_str.encode('ascii','ignore'), errors='ignore')
+    query = context.firstChild.wholeText
+    query = unicode(query.encode('ascii','ignore'), errors='ignore')
+
+    query_tokens = self.nltk_tools.nltk_word_tokenize(query.lower())
+    query_text = self.nltk_tools.nltk_text(query_tokens)
+    query_col = self.nltk_tools.nltk_text_collection([query_text])
+
+    # Use Cosine Similarity as Baseline
+    big_doc = ""
+    docs = []
+    vocab = []
+    body_texts = dom_parscit_section_cited.getElementsByTagName('variant')[0].childNodes
+    for body_text in body_texts:
+      if body_text.nodeType == body_text.TEXT_NODE:
+        continue
+      whole_text = body_text.firstChild.wholeText.lower()
+      whole_text = unicode(whole_text.encode('ascii', 'ignore'), errors='ignore')
+      whole_text = whole_text.replace(cit_str, "")
+      big_doc += whole_text + " "
+      text = self.nltk_tools.nltk_text(self.nltk_tools.nltk_word_tokenize(whole_text.lower()))
+      docs.append(text)
+      vocab.extend(whole_text.split())
+    docs_col = self.nltk_tools.nltk_text_collection(docs)
+    vocab.extend(query_tokens)
+    big_doc_tokens = self.nltk_tools.nltk_word_tokenize(big_doc.lower())
+
+    feature_cos_sim = self.weight.cos_sim(query_tokens, citing_col, big_doc_tokens, docs_col, vocab)
+    return feature_cos_sim
   
   def extract_feature_2nd_tier(self, f, c, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
     # Fix encoding problems

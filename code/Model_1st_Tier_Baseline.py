@@ -80,7 +80,9 @@ if __name__ == "__main__":
         if y_hash_1st_tier[hash_key][i] == 'u':
           continue
         c = f_contexts[i]
-        x = feature_extractor.extract_feature_1st_tier(f, c, citing_col, doms[hash_key][1], doms[hash_key][3])
+        x = feature_extractor.extract_feature_1st_tier_baseline(f, c, citing_col, doms[hash_key][1], doms[hash_key][3])
+        print x
+        sys.exit()
         X.append(x)
         y.append(labels_to_index[y_hash_1st_tier[hash_key][i]])
   X = np.asarray(X)
@@ -106,11 +108,11 @@ if __name__ == "__main__":
   print printer.line_printer(len(string), "-")
 
   ## Write out X
-  pickle.dump(X, open(os.path.join(path_pickles, 'X_1st_Tier.pickle'),'wb'))
+  pickle.dump(X, open(os.path.join(path_pickles, 'X_1st_Tier_Baseline.pickle'),'wb'))
   ## Write out y
-  pickle.dump(y, open(os.path.join(path_pickles, 'y_1st_Tier.pickle'),'wb'))
+  pickle.dump(y, open(os.path.join(path_pickles, 'y_1st_Tier_Baseline.pickle'),'wb'))
   ## Write out the Model
-  pickle.dump(model, open(os.path.join(path_pickles, 'Model_1st_Tier.pickle'),'wb'))
+  pickle.dump(model, open(os.path.join(path_pickles, 'Model_1st_Tier_Baseline.pickle'),'wb'))
 
   # Leave testing to another file
   sys.exit()
