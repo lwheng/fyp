@@ -9,6 +9,7 @@ I propose a two-tier approach to our problem. In the first tier, it plays the ro
 \end{figure}
 
 \section{{\it GvS} (First Tier)}
+\label{firsttier}
 {\it GvS}, short for General versus Specific, is the first tier in my approach to filter out the General citations. In {\it GvS}, we are performing a 2-class \textit{citation classification} task, which already is a challenging task in the research area of citation analysis. We are not interested in determining whether the citation is one of the 12 class as defined by \cite{teufel2009annotation}, but only whether it is General or Specific. {\it GvS} makes use of information only from the citing contexts in a citing paper. I built a model based on features extracted from the citing contexts. With this model, {\it GvS} classifies citing contexts into one of the two classes. Only those contexts that are classified as Specific will be passed to the second tier.
 
 \subsection*{Building The Model For {\it GvS}}

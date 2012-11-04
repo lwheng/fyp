@@ -3,71 +3,96 @@
 I first performed modular evaluation on {\it GvS} and {\it LocateProv} separately. For each tier I evaluate its performance on a few classifiers: Support Vector Machine (SVM), Naive Bayes (NB) and Decision Tree (DT). For each classifier I also performed evaluation using a few evaluation strategies.
 
 \section{Evaluating {\it GvS}}
-Recall that I used a $1:1$ of Specific versus General data instances for building the model. To verify {\it GvS}, I first evaluated the features added using the {\it feature ablation} strategy. For each feature removed from this set of unskewed data instances, the rest of the features are used to train a model using the SVM classifier and then tested on the same set of data instances. To measure the performance each round, I used to conventional accuracy measure.
+Recall that I used a $1:1$ of Specific versus General data instances for building the model. To verify {\it GvS}, I first evaluated the features added using the {\it feature ablation} strategy. For each feature removed from this set of unskewed data instances, the rest of the features are used to train a model using the SVM classifier and then tested on the same set of data instances. To measure the performance each round, I used to conventional accuracy measure. Note that in Table \ref{tab:ablation_first} the letters $A$ to $E$ represents the five features described in Chapter \ref{firsttier}.
 
-Recall that we have 275 annotated cite links, either General ($g$) or Specific ($s$), and that we have very limited instances of Specific cite links, a situation mentioned in \cite{li2010negative}, that we have a highly unbalanced ratio between General instances and Specific instances. So for our evaluation, we first gathered all Specific instances, and then \textbf{randomly} select General instances. Out of these 56 instances, we have $1:1$ ratio of Specific versus General instances. The reason for choosing a $1:1$ ratio is because we wish to measure our approach's ability to differentiate between General and Specific when given a balanced training set.
+\begin{figure}[ht]
+\begin{minipage}[b]{0.45\linewidth}\centering
+\begin{tabular}{| l | l |}
+Configuration & Accuracy \\
+\hline
+Full		& 0.911 \\
+Full - A	& 0.714 \\
+Full - B	& 0.875 \\
+Full - C	& 0.786 \\
+Full - D	& 0.911 \\
+Full - E	& 0.732 \\
+\end{tabular}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.45\linewidth}\centering
+\begin{tabular}{ l | l }
+Configuration & Accuracy \\
+\hline
+A	& 0.714 \\
+B	& 0.875 \\
+C	& 0.786 \\
+D	& 0.911 \\
+E	& 0.732 \\
+\end{tabular}
+\end{minipage}
+\caption{Feature Ablation On {\it GvS}}
+\label{tab:ablation_first}
+\end{figure}
 
-We trained our model using various classifiers, and then performed \url{Leave-One-Out} (\url{LOO}) and \url{n-Fold} ($n=14$, each fold has 4 instances) evaluation using the 56 instances. The main reason for using \url{Leave-One-Out} is because we are working with limited instances and we wish to maximise them for training. To test our method's performance when given less training data, we use the \url{n-Fold} strategy. When trained on SVM, we observed that in terms of \textit{feature weights}, feature 1(a) and 5 were assigned the highest weights. For instance, feature 1(a), \textit{Density}, was assigned with a weight of magnitude 0.703. This suggests the amount of in-line citations and the amount of cue words within the citing context play an important part in our prediction task.
+Notice there is a biggest drop in accuracy when $A$ alone is removed.
 
-We evaluated using various classifiers and Table \ref{tab:firsttieresults} summarises the performance for each classifier.
-
-\begin{table}[h]
-	\center
-	\begin{tabular}{ c | c  c  c }
-		\textsc{Classifier/Values} & \textsc{Avg. Precision} & \textsc{Avg. Recall} & \textsc{Avg. F$_1$-Score} \\
-		& \url{LOO} / \url{n-Fold} & \url{LOO} / \url{n-Fold} & \url{LOO} / \url{n-Fold} \\
-		\hline
-		\textsc{SVM} 			& 0.84 / 0.71 & 0.84 / 0.70 & 0.84 / 0.69 \\
-		\textsc{NaiveBayes} 	& 0.70 / 0.70 & 0.66 / 0.66 & 0.64 / 0.64 \\
-		\textsc{DecisionTree}	& 0.72 / 0.66 & 0.71 / 0.66 & 0.71 / 0.66
-	\end{tabular}
-	\caption{First Tier Results}
-	\label{tab:firsttieresults}
-\end{table}
-
-We examine the confusion matrix for the best performing SVM classifier that we ran for the \url{Leave-One-Out} strategy. Recall that our First Tier's objective is to filter out the General citations. Our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix. We achieved this in Table \ref{tab:svmconfusionmatrix} and we can conclude that our First Tier performed well in differentiating General and Specific citations.
-
-\begin{table}[h]
-	\center
-	\begin{tabular}{ c | c  c }
-		 & \textsc{actual $g$} & \textsc{actual $s$} \\
-		\hline
-		\textsc{predicted $g$} 	& 24 & 4 \\
-		\textsc{predicted $s$}		& 5 & 23
-	\end{tabular}
-	\caption{Confusion Matrix for SVM with Leave-One-Out}
-	\label{tab:svmconfusionmatrix}
-\end{table}
-
-\section{Results - Second Tier}
-For Second Tier evaluation, we are predicting whether each fragment in the cited paper is a Specific one. We have over 30 thousand training instances for second tier, and so for the same reason, we had to select our training set manually similarly to get a $1:1$ ratio for Specific versus General instances.
-
-\begin{table}[h]
-	\center
-	\begin{tabular}{ c | c  c  c }
-		\textsc{Classifier/Values} & \textsc{Avg. Precision} & \textsc{Avg. Recall} & \textsc{Avg. F$_1$-Score} \\
-		& \url{LOO} / \url{n-Fold} & \url{LOO} / \url{n-Fold} & \url{LOO} / \url{n-Fold} \\
-		\hline
-		\textsc{SVM} 			& 0.85 / 0.84 & 0.84 / 0.82 & 0.84 / 0.82 \\
-		\textsc{NaiveBayes} 	& 0.80 / 0.78 & 0.79 / 0.77 & 0.78 / 0.77 \\
-		\textsc{DecisionTree}	& 0.89 / 0.86 & 0.89 / 0.86 & 0.89 / 0.86
-	\end{tabular}
-	\caption{Second Tier Results}
-	\label{tab:secondtieresults}
-\end{table}
-\newpage
-In this case, the Decision Tree classifier performed slightly better than SVM. Similarly, our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix and in Table \ref{tab:decisiontreeconfusionmatrix} we achieved good results. This means, given a Specific citation, this approach would perform well in determining whether a fragment in the cited paper is the cited fragment or not.
-
-\begin{table}[h]
-	\center
-	\begin{tabular}{ c | c  c }
-		 & \textsc{actual $g$} & \textsc{actual $s$} \\
-		\hline
-		\textsc{predicted $g$} 	& 23 & 5 \\
-		\textsc{predicted $s$}		& 3 & 25
-	\end{tabular}
-	\caption{Confusion Matrix for Naive Bayes}
-	\label{tab:decisiontreeconfusionmatrix}
-\end{table}
-
-(Refer to Appendix \ref{resultsdetails} for more details of our experimental results.)
+%\begin{table}[h]
+%	\center
+%	\begin{tabular}{ c | c  c  c }
+%		\textsc{Classifier/Values} & \textsc{Avg. Precision} & \textsc{Avg. Recall} & \textsc{Avg. F$_1$-Score} \\
+%		& \url{LOO} / \url{n-Fold} & \url{LOO} / \url{n-Fold} & \url{LOO} / \url{n-Fold} \\
+%		\hline
+%		\textsc{SVM} 			& 0.84 / 0.71 & 0.84 / 0.70 & 0.84 / 0.69 \\
+%		\textsc{NaiveBayes} 	& 0.70 / 0.70 & 0.66 / 0.66 & 0.64 / 0.64 \\
+%		\textsc{DecisionTree}	& 0.72 / 0.66 & 0.71 / 0.66 & 0.71 / 0.66
+%	\end{tabular}
+%	\caption{First Tier Results}
+%	\label{tab:firsttieresults}
+%\end{table}
+%
+%We examine the confusion matrix for the best performing SVM classifier that we ran for the \url{Leave-One-Out} strategy. Recall that our First Tier's objective is to filter out the General citations. Our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix. We achieved this in Table \ref{tab:svmconfusionmatrix} and we can conclude that our First Tier performed well in differentiating General and Specific citations.
+%
+%\begin{table}[h]
+%	\center
+%	\begin{tabular}{ c | c  c }
+%		 & \textsc{actual $g$} & \textsc{actual $s$} \\
+%		\hline
+%		\textsc{predicted $g$} 	& 24 & 4 \\
+%		\textsc{predicted $s$}		& 5 & 23
+%	\end{tabular}
+%	\caption{Confusion Matrix for SVM with Leave-One-Out}
+%	\label{tab:svmconfusionmatrix}
+%\end{table}
+%
+%\section{Results - Second Tier}
+%For Second Tier evaluation, we are predicting whether each fragment in the cited paper is a Specific one. We have over 30 thousand training instances for second tier, and so for the same reason, we had to select our training set manually similarly to get a $1:1$ ratio for Specific versus General instances.
+%
+%\begin{table}[h]
+%	\center
+%	\begin{tabular}{ c | c  c  c }
+%		\textsc{Classifier/Values} & \textsc{Avg. Precision} & \textsc{Avg. Recall} & \textsc{Avg. F$_1$-Score} \\
+%		& \url{LOO} / \url{n-Fold} & \url{LOO} / \url{n-Fold} & \url{LOO} / \url{n-Fold} \\
+%		\hline
+%		\textsc{SVM} 			& 0.85 / 0.84 & 0.84 / 0.82 & 0.84 / 0.82 \\
+%		\textsc{NaiveBayes} 	& 0.80 / 0.78 & 0.79 / 0.77 & 0.78 / 0.77 \\
+%		\textsc{DecisionTree}	& 0.89 / 0.86 & 0.89 / 0.86 & 0.89 / 0.86
+%	\end{tabular}
+%	\caption{Second Tier Results}
+%	\label{tab:secondtieresults}
+%\end{table}
+%\newpage
+%In this case, the Decision Tree classifier performed slightly better than SVM. Similarly, our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix and in Table \ref{tab:decisiontreeconfusionmatrix} we achieved good results. This means, given a Specific citation, this approach would perform well in determining whether a fragment in the cited paper is the cited fragment or not.
+%
+%\begin{table}[h]
+%	\center
+%	\begin{tabular}{ c | c  c }
+%		 & \textsc{actual $g$} & \textsc{actual $s$} \\
+%		\hline
+%		\textsc{predicted $g$} 	& 23 & 5 \\
+%		\textsc{predicted $s$}		& 3 & 25
+%	\end{tabular}
+%	\caption{Confusion Matrix for Naive Bayes}
+%	\label{tab:decisiontreeconfusionmatrix}
+%\end{table}
+%
+%(Refer to Appendix \ref{resultsdetails} for more details of our experimental results.)
