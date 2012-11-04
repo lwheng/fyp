@@ -21,8 +21,6 @@ if __name__ == "__main__":
   # Load X
   X = pickle.load(open(os.path.join(path_pickles, 'X_2nd_Tier_Best.pickle'), 'r'))
   X = np.asarray(X)
-  print X.shape
-  sys.exit()
   # Load y
   y = pickle.load(open(os.path.join(path_pickles, 'y_2nd_Tier_Best.pickle'), 'r'))
   y = np.asarray(y)
@@ -44,7 +42,7 @@ if __name__ == "__main__":
   # Remove first feature
   X_train = []
   for x in X:
-    X_train.append(x[5:])
+    X_train.append(x[2:])
   X_train = np.asarray(X_train)
   correct = 0
   clf = svm.SVC(kernel='linear')
@@ -59,7 +57,7 @@ if __name__ == "__main__":
   X_train = []
   for x in X:
     x = list(x)
-    X_train.append(x[0:4] + x[7:])
+    X_train.append(x[0:2] + x[3:])
   X_train = np.asarray(X_train)
   correct = 0
   clf = svm.SVC(kernel='linear')
@@ -74,7 +72,7 @@ if __name__ == "__main__":
   X_train = []
   for x in X:
     x = list(x)
-    X_train.append(x[0:7] + x[8:])
+    X_train.append(x[0:3] + x[4:])
   X_train = np.asarray(X_train)
   correct = 0
   clf = svm.SVC(kernel='linear')
@@ -84,12 +82,12 @@ if __name__ == "__main__":
     if predicted[i] == expected[i]:
       correct += 1
   accuracy = float(correct) / float(total)
-  print "Full - 2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
+  print "Full - 3rd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
   # Remove fourth feature
   X_train = []
   for x in X:
     x = list(x)
-    X_train.append(x[0:8] + x[9:])
+    X_train.append(x[0:4])
   X_train = np.asarray(X_train)
   correct = 0
   clf = svm.SVC(kernel='linear')
@@ -99,26 +97,11 @@ if __name__ == "__main__":
     if predicted[i] == expected[i]:
       correct += 1
   accuracy = float(correct) / float(total)
-  print "Full - 2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
-  # Remove fifth feature
-  X_train = []
-  for x in X:
-    x = list(x)
-    X_train.append(x[0:9])
-  X_train = np.asarray(X_train)
-  correct = 0
-  clf = svm.SVC(kernel='linear')
-  clf.fit(X_train, y)
-  predicted = clf.predict(X_train)
-  for i in range(total):
-    if predicted[i] == expected[i]:
-      correct += 1
-  accuracy = float(correct) / float(total)
-  print "Full - 2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
+  print "Full - 4th : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
   # Only first feature
   X_train = []
   for x in X:
-    X_train.append(x[0:4])
+    X_train.append(x[0:2])
   X_train = np.asarray(X_train)
   correct = 0
   clf = svm.SVC(kernel='linear')
@@ -133,7 +116,7 @@ if __name__ == "__main__":
   X_train = []
   for x in X:
     x = list(x)
-    X_train.append(x[4:7])
+    X_train.append([x[2]])
   X_train = np.asarray(X_train)
   correct = 0
   clf = svm.SVC(kernel='linear')
@@ -148,7 +131,7 @@ if __name__ == "__main__":
   X_train = []
   for x in X:
     x = list(x)
-    X_train.append([x[7]])
+    X_train.append([x[3]])
   X_train = np.asarray(X_train)
   correct = 0
   clf = svm.SVC(kernel='linear')
@@ -158,12 +141,12 @@ if __name__ == "__main__":
     if predicted[i] == expected[i]:
       correct += 1
   accuracy = float(correct) / float(total)
-  print "2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
+  print "3rd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
   # Only fourth feature
   X_train = []
   for x in X:
     x = list(x)
-    X_train.append([x[8]])
+    X_train.append([x[4]])
   X_train = np.asarray(X_train)
   correct = 0
   clf = svm.SVC(kernel='linear')
@@ -173,22 +156,7 @@ if __name__ == "__main__":
     if predicted[i] == expected[i]:
       correct += 1
   accuracy = float(correct) / float(total)
-  print "2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
-  # Only fifth feature
-  X_train = []
-  for x in X:
-    x = list(x)
-    X_train.append(x[9:])
-  X_train = np.asarray(X_train)
-  correct = 0
-  clf = svm.SVC(kernel='linear')
-  clf.fit(X_train, y)
-  predicted = clf.predict(X_train)
-  for i in range(total):
-    if predicted[i] == expected[i]:
-      correct += 1
-  accuracy = float(correct) / float(total)
-  print "2nd : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
+  print "4th : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
 
   print
   # Leave-One-Out
