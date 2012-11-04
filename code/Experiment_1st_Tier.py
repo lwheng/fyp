@@ -38,7 +38,7 @@ if __name__ == "__main__":
     if predicted[i] == expected[i]:
       correct += 1
   accuracy = float(correct) / float(total)
-  print "Full - 1st : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
+  print "Full : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
   # Remove first feature
   X_train = []
   for x in X:
@@ -55,7 +55,7 @@ if __name__ == "__main__":
   print "Full - 1st : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
   # Remove second feature
   X_train = []
-  for x in X:
+  for x in list(X):
     X_train.append(x[0:4] + x[7:])
   X_train = np.asarray(X_train)
   correct = 0
