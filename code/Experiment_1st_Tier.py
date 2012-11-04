@@ -26,14 +26,20 @@ if __name__ == "__main__":
   y = np.asarray(y)
 
   # Feature Ablation
+  correct = 0
+  total = y.shape[0]
+  expected = y
   # Remove first feature (5 parts)
   X_train = []
   for x in X:
     X_train.append(x[5:])
   X_train = np.asarray(X_train)
+  correct = 0
   clf = svm.SVC(kernel='linear')
   clf.fit(X_train, y)
-  expected = y
   predicted = clf.predict(X_train)
-  print metrics.classification_report(expected, predicted)
-  print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
+  for i in range(total):
+    if predicted[i] == expected[i]:
+      correct += 1
+  accuracy = float(correct) / float(total)
+  print "Full - 1st : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
