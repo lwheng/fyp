@@ -37,7 +37,7 @@ Only E	& 0.696 \\
 
 We observe that feature $A$ (Physical Feature) has the most impact in the accuracy of the predictions, with the greatest drop in accuracy when $A$ itself is removed and one of the highest accuracy when $A$ alone is used as a feature (see Figure \ref{fig:ablation_first}). Feature $D$ (Citing Context's Average \url{tf-idf} Weight) appears to be the only redundant feature, but since it does not decrease the overall accuracy we shall include it nevertheless.
 
-We continue evaluating {\it GvS} using the \url{Leave-One-Out} strategy. In this strategy we leave one data instance out for testing while the rest are used for training and we repeat this for the number of instances. The main reason for using this strategy is because the number of data instances in the unskewed data set is already very small, and I wish to maximise them for training. For this strategy I compare the performance of the various classifiers, for each, computing the Precision, Recall and F$_1$ values.
+I continue evaluating {\it GvS} using the \url{Leave-One-Out} strategy. In this strategy we leave one data instance out for testing while the rest are used for training and we repeat this for the number of instances. The main reason for using this strategy is because the number of data instances in the unskewed data set is already very small, and I wish to maximise them for training. For this strategy I compare the performance of the various classifiers, for each, computing the Precision, Recall and F$_1$ values.
 
 \begin{table}[h]
 	\center
@@ -52,7 +52,7 @@ We continue evaluating {\it GvS} using the \url{Leave-One-Out} strategy. In this
 	\label{tab:firsttieresults}
 \end{table}
 
-We examine the confusion matrix for the best performing SVM classifier that we ran for the \url{Leave-One-Out} strategy. Recall that {\it GvS}'s objective is to filter out the General citations. Our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix. We achieved this in Table \ref{tab:svmconfusionmatrix} and we can conclude that {\it GvS} has a promising performance in differentiating General and Specific citations.
+Let us examine the confusion matrix for the best performing SVM classifier that I ran for the \url{Leave-One-Out} strategy. Recall that {\it GvS}'s objective is to filter out the General citations. Our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix. We achieved this in Table \ref{tab:firstsvmconfusionmatrix} and we can conclude that {\it GvS} has a promising performance in differentiating General and Specific citations.
 
 \begin{table}[h]
 	\center
@@ -63,10 +63,11 @@ We examine the confusion matrix for the best performing SVM classifier that we r
 		\textsc{predicted $s$}		& 7 & 21
 	\end{tabular}
 	\caption{Confusion Matrix for SVM with Leave-One-Out on {\it GvS}}
-	\label{tab:svmconfusionmatrix}
+	\label{tab:firstsvmconfusionmatrix}
 \end{table}
 
-For a more conclusive evaluation, I continue evaluating {\it GvS} by training on the unskewed data set, and then testing on the entire data set.
+%TO BE CONTINUED
+For a more conclusive evaluation, TO BE CONTINUED
 
 \section{Evaluating {\it LocateProv}}
 \label{eval:second}
@@ -98,7 +99,35 @@ Only I	& 0.875 \\
 \caption{Feature Ablation on {\it LocateProv}}
 \label{fig:ablation_second}
 \end{figure}
-From Figure \ref{fig:ablation_second} we can conclude that feature $I$ (Cosine Similarity) remains to be the most important among the features for {\it LocateProv}. This is expected because as modelled in Chapter \ref{problemanalysis}, {\it LocateProv} is a searching problem, thus an Information Retrieval solution is most suitable.
+From Figure \ref{fig:ablation_second} we can conclude that feature $I$ (Cosine Similarity) remains to be the most important among the features for {\it LocateProv}. This is expected because as modelled in Chapter \ref{problemanalysis}, {\it LocateProv} is a searching problem, thus an Information Retrieval solution is most suitable. Note that, however, these results is only this particular test set, which is also the training set. We cannot conclude that Cosine Similarity will work well in all cases.
+
+Again, I continue to evaluate {\it LocateProv} using the \url{Leave-One-Out} strategy together with various classifiers. Table \ref{tab:secondtieresults} summarises the results.
+
+\begin{table}[h]
+	\center
+	\begin{tabular}{ c | c  c  c | c c c | c c c}
+		& & SVM & & & NB & & & DT \\
+		\textsc{Class/Values} & \textsc{P} & \textsc{R} & \textsc{F$_1$} & \textsc{P} & \textsc{R} & \textsc{F$_1$} & \textsc{P} & \textsc{R} & \textsc{F$_1$} \\
+		\hline
+		\textsc{Specific-No} 			& 0.92  &    0.82   &   0.87 & 0.84   &   0.96   &   0.90 & 0.89  &    0.89  &    0.89 \\
+		\textsc{Specific-Yes} 			& 0.84  &    0.93   &   0.88 & 0.96   &   0.82   &   0.88 & 0.89  &    0.89  &    0.89 \\
+	\end{tabular}
+	\caption{Leave-One-Out Results for {\it LocateProv}}
+	\label{tab:secondtieresults}
+\end{table}
+The scores are very close to each other between the classifiers. Let us examine the confusion matrix from the Naive Bayes classifier, which has the highest precision for classifying Specific-Yes instances.
+
+\begin{table}[h]
+	\center
+	\begin{tabular}{ c | c  c }
+		 & \textsc{actual $n$} & \textsc{actual $y$} \\
+		\hline
+		\textsc{predicted $n$} 	& 27 & 1 \\
+		\textsc{predicted $y$}		& 5 & 23
+	\end{tabular}
+	\caption{Confusion Matrix for NB with Leave-One-Out on {\it LocateProv}}
+	\label{tab:secondnbconfusionmatrix}
+\end{table}
 
 %For Second Tier evaluation, we are predicting whether each fragment in the cited paper is a Specific one. We have over 30 thousand training instances for second tier, and so for the same reason, we had to select our training set manually similarly to get a $1:1$ ratio for Specific versus General instances.
 %

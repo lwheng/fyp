@@ -1108,6 +1108,110 @@ class extract_features:
     #print docs[max_index].vocab().keys()
     return X
 
+  def extract_feature_2nd_tier_baseline(self, f, c, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
+    # Fix encoding problems
+    cit_str = c.getAttribute('citStr')
+    cit_str = unicode(cit_str.encode('ascii','ignore'), errors='ignore')
+    context = c.firstChild.wholeText
+    context = unicode(context.encode('ascii','ignore'), errors='ignore')
+    
+    # Getting the citing sentence and its neighbour sentences
+    cit_str = cit_str.replace("et al.", "et al")
+    context = context.replace("et al.", "et al")
+    context_lines = self.dist.sentence_tokenizer.tokenize(context)
+    cit_sent = self.tools.search_term_in_lines(cit_str, context_lines)
+    before = context_lines[cit_sent-1] if (cit_sent-1 >= 0) else ""
+    after = context_lines[cit_sent+1] if (cit_sent+1 < len(context_lines)) else ""
+    cit_sent = context_lines[cit_sent]
+    cit_sent_no_cit_str = cit_sent.replace(cit_str, "")
+
+    before_tokens = self.nltk_tools.nltk_word_tokenize(before.lower())
+    before_text = self.nltk_tools.nltk_text(before_tokens)
+    before_bigrams = self.nltk_tools.nltk_bigrams(before_text)
+    
+    cit_sent_tokens = self.nltk_tools.nltk_word_tokenize(cit_sent.lower())
+    cit_sent_text = self.nltk_tools.nltk_text(cit_sent_tokens)
+    cit_sent_bigrams = self.nltk_tools.nltk_bigrams(cit_sent_text)
+    cit_sent_text_tagged = self.nltk_tools.nltk_pos(cit_sent_text)
+    cit_sent_no_cit_str_tokens = self.nltk_tools.nltk_word_tokenize(cit_sent_no_cit_str.lower())
+    cit_sent_no_cit_str_text = self.nltk_tools.nltk_text(cit_sent_no_cit_str_tokens)
+    cit_sent_no_cit_str_bigrams = self.nltk_tools.nltk_bigrams(cit_sent_no_cit_str_text)
+    cit_sent_no_cit_str_text_tagged = self.nltk_tools.nltk_pos(cit_sent_no_cit_str_text)
+    
+    after_tokens = self.nltk_tools.nltk_word_tokenize(after.lower())
+    after_text = self.nltk_tools.nltk_text(after_tokens)
+    after_bigrams = self.nltk_tools.nltk_bigrams(after_text)
+
+    context_tokens = self.nltk_tools.nltk_word_tokenize(context.lower())
+    context_text = self.nltk_tools.nltk_text(context_tokens)
+    context_bigrams = self.nltk_tools.nltk_bigrams(context_text)
+    context_col = self.nltk_tools.nltk_text_collection([context_text])
+
+    # Setting up vocab, bigrams_vocab
+    docs = []
+    bigrams_vocab = []
+    vocab = []
+    body_texts = dom_parscit_section_cited.getElementsByTagName('variant')[0].childNodes
+    for body_text in body_texts:
+      if body_text.nodeType == body_text.TEXT_NODE:
+        continue
+      whole_text = body_text.firstChild.wholeText.lower()
+      whole_text = unicode(whole_text.encode('ascii', 'ignore'), errors='ignore')
+      whole_text = whole_text.replace(cit_str, "")
+      text = self.nltk_tools.nltk_text(self.nltk_tools.nltk_word_tokenize(whole_text.lower()))
+      bigrams_vocab.extend(self.nltk_tools.nltk_bigrams(text))
+      docs.append(text)
+      vocab.extend(whole_text.split())
+    docs_col = self.nltk_tools.nltk_text_collection(docs)
+    bigrams_vocab = set(bigrams_vocab)
+    vocab.extend(context_tokens)
+    vocab = set(vocab)
+
+    # Extract Features
+    # In 2nd tier, features are to match context to specific chunk
+    # For each chunk, we extract a feature vector, hence we return a list of feature vectors
+    X = []
+    x = []
+    max_sim = -1
+    max_index = 0
+    for i in range(len(docs)):
+      doc = docs[i]
+      # Extract features for each body_text
+      x = []
+
+      ## Surface Matching - Using only cit_sent
+      ## returns (num_match, text_match)
+      #feature_surface_matching = self.weight.surface_matching(cit_sent_tokens, cit_sent_text_tagged, doc)
+      #for feat in feature_surface_matching:
+      #  x.append(feat)
+
+      ## Number Near Miss e.g. 81.1 for 81.06, 92 for 0.92
+      #feature_number_near_miss = self.weight.number_near_miss(cit_sent_tokens, cit_sent_text_tagged, doc)
+      #x.append(feature_number_near_miss)
+
+      ## Bigrams Matching
+      #doc_tokens = []
+      #for k in doc:
+      #  doc_tokens.append(k)
+      #doc_tokens = [w for w in doc_tokens if not w in self.stopwords]
+      #doc_tokens = [w for w in doc_tokens if not w in self.punctuation]
+      #doc_bigrams = self.nltk_tools.nltk_bigrams(doc_tokens)
+      #doc_bigrams = list(set(doc_bigrams))
+      #feature_bigrams_matching = self.weight.bigrams_matching(cit_sent_no_cit_str_bigrams, doc_bigrams)
+      #x.append(feature_bigrams_matching)
+
+      # Cos sim
+      feature_cos_sim = self.weight.cos_sim(cit_sent_tokens, context_col, doc, docs_col, vocab)
+      x.append(feature_cos_sim)
+      
+      X.append(x)
+    #print "############"
+    #print cit_sent_tokens
+    #print max_index
+    #print max_sim
+    #print docs[max_index].vocab().keys()
+    return X
+  
   def extract_feature(self, f, context, citing_col, dom_parscit_section_citing, dom_parscit_section_cited):
     cit_str = context.getAttribute('citStr')
     cit_str = unicode(cit_str.encode('ascii','ignore'), errors='ignore')
