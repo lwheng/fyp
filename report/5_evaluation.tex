@@ -3,6 +3,7 @@
 I performed modular evaluation on {\it GvS} and {\it LocateProv}. For each tier I evaluated its performance on a few classifiers: Support Vector Machine (SVM), Naive Bayes (NB) and Decision Tree (DT). For each classifier I also performed evaluation using a few evaluation strategies.
 
 \section{Evaluating {\it GvS}}
+\label{eval:first}
 Recall that I used a $1:1$ of Specific versus General data instances for building the model. To first verify {\it GvS}, I evaluated the features added using the {\it feature ablation} strategy. For each feature removed from this set of unskewed data instances, the rest of the features are used to train a model using the SVM classifier and then tested on the same set of data instances. To measure the performance each round, I used the conventional accuracy measure. Note that in Figure \ref{fig:ablation_first} the letters $A$ to $E$ represents the five features described in Chapter \ref{firsttier}.
 
 \begin{figure}[ht]
@@ -66,8 +67,10 @@ We examine the confusion matrix for the best performing SVM classifier that we r
 \end{table}
 
 For a more conclusive evaluation, I continue evaluating {\it GvS} by training on the unskewed data set, and then testing on the entire data set.
-%
-%\section{Results - Second Tier}
+
+\section{Evaluating {\it LocateProv}}
+\label{eval:second}
+Similar to evaluating {\it GvS} in Chapter \ref{eval:first}, I first evaluate the features added to {\it LocateProv} using the {\it feature ablation} strategy.
 %For Second Tier evaluation, we are predicting whether each fragment in the cited paper is a Specific one. We have over 30 thousand training instances for second tier, and so for the same reason, we had to select our training set manually similarly to get a $1:1$ ratio for Specific versus General instances.
 %
 %\begin{table}[h]
