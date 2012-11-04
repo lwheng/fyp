@@ -54,6 +54,12 @@ if __name__ == "__main__":
     X_train.append(d)
     y_train.append(a)
 
+  # To save this randomized set
+  # Write out X
+  pickle.dump(X_train, open(os.path.join(path_pickles, 'X_1st_Tier_Best.pickle'),'wb'))
+  ## Write out y
+  pickle.dump(y_train, open(os.path.join(path_pickles, 'y_1st_Tier_Best.pickle'),'wb'))
+  
   # Find out the feature weight distribution
   clf = svm.SVC(kernel='linear')
   clf.fit(X_train, y_train)

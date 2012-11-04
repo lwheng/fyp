@@ -1,14 +1,13 @@
 \chapter{Evaluation}
 \label{evaluation}
-\paragraph{}
-We performed 2 evaluations, one for each tier as described early in Chapter \ref{twotierapproach}. We are able to do this because the tiers are independent of each other.
+I first performed modular evaluation on {\it GvS} and {\it LocateProv} separately. For each tier I evaluate its performance on a few classifiers: Support Vector Machine, Naive Bayes and Decision Tree. For each classifier I also performed evaluation using a few evaluation strategies.
 
 %Tao: To make the results more complete, you may discuss the discriminative power of features by show the weights learned by machine learning algorithem. 
-\section{Results - First Tier}
-\paragraph{}
+\section{Evaluating {\it GvS}}
+I first evaluate the features I added for $
+
 Recall that we have 275 annotated cite links, either General ($g$) or Specific ($s$), and that we have very limited instances of Specific cite links, a situation mentioned in \cite{li2010negative}, that we have a highly unbalanced ratio between General instances and Specific instances. So for our evaluation, we first gathered all Specific instances, and then \textbf{randomly} select General instances. Out of these 56 instances, we have $1:1$ ratio of Specific versus General instances. The reason for choosing a $1:1$ ratio is because we wish to measure our approach's ability to differentiate between General and Specific when given a balanced training set.
 
-\paragraph{}
 We trained our model using various classifiers, and then performed \url{Leave-One-Out} (\url{LOO}) and \url{n-Fold} ($n=14$, each fold has 4 instances) evaluation using the 56 instances. The main reason for using \url{Leave-One-Out} is because we are working with limited instances and we wish to maximise them for training. To test our method's performance when given less training data, we use the \url{n-Fold} strategy. When trained on SVM, we observed that in terms of \textit{feature weights}, feature 1(a) and 5 were assigned the highest weights. For instance, feature 1(a), \textit{Density}, was assigned with a weight of magnitude 0.703. This suggests the amount of in-line citations and the amount of cue words within the citing context play an important part in our prediction task.
 
 We evaluated using various classifiers and Table \ref{tab:firsttieresults} summarises the performance for each classifier.
@@ -27,7 +26,6 @@ We evaluated using various classifiers and Table \ref{tab:firsttieresults} summa
 	\label{tab:firsttieresults}
 \end{table}
 
-\paragraph{}
 We examine the confusion matrix for the best performing SVM classifier that we ran for the \url{Leave-One-Out} strategy. Recall that our First Tier's objective is to filter out the General citations. Our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix. We achieved this in Table \ref{tab:svmconfusionmatrix} and we can conclude that our First Tier performed well in differentiating General and Specific citations.
 
 \begin{table}[h]
@@ -43,7 +41,6 @@ We examine the confusion matrix for the best performing SVM classifier that we r
 \end{table}
 
 \section{Results - Second Tier}
-\paragraph{}
 For Second Tier evaluation, we are predicting whether each fragment in the cited paper is a Specific one. We have over 30 thousand training instances for second tier, and so for the same reason, we had to select our training set manually similarly to get a $1:1$ ratio for Specific versus General instances.
 
 \begin{table}[h]
@@ -60,7 +57,6 @@ For Second Tier evaluation, we are predicting whether each fragment in the cited
 	\label{tab:secondtieresults}
 \end{table}
 \newpage
-\paragraph{}
 In this case, the Decision Tree classifier performed slightly better than SVM. Similarly, our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix and in Table \ref{tab:decisiontreeconfusionmatrix} we achieved good results. This means, given a Specific citation, this approach would perform well in determining whether a fragment in the cited paper is the cited fragment or not.
 
 \begin{table}[h]
