@@ -3,11 +3,11 @@
 I first performed modular evaluation on {\it GvS} and {\it LocateProv} separately. For each tier I evaluate its performance on a few classifiers: Support Vector Machine (SVM), Naive Bayes (NB) and Decision Tree (DT). For each classifier I also performed evaluation using a few evaluation strategies.
 
 \section{Evaluating {\it GvS}}
-Recall that I used a $1:1$ of Specific versus General data instances for building the model. To verify {\it GvS}, I first evaluated the features added using the {\it feature ablation} strategy. For each feature removed from this set of unskewed data instances, the rest of the features are used to train a model using the SVM classifier and then tested on the same set of data instances. To measure the performance each round, I used to conventional accuracy measure. Note that in Table \ref{tab:ablation_first} the letters $A$ to $E$ represents the five features described in Chapter \ref{firsttier}.
+Recall that I used a $1:1$ of Specific versus General data instances for building the model. To verify {\it GvS}, I first evaluated the features added using the {\it feature ablation} strategy. For each feature removed from this set of unskewed data instances, the rest of the features are used to train a model using the SVM classifier and then tested on the same set of data instances. To measure the performance each round, I used the conventional accuracy measure. Note that in Figure \ref{fig:ablation_first} the letters $A$ to $E$ represents the five features described in Chapter \ref{firsttier}.
 
 \begin{figure}[ht]
 \begin{minipage}[b]{0.45\linewidth}\centering
-\begin{tabular}{| l | l |}
+\begin{tabular}{ l | l }
 Configuration & Accuracy \\
 \hline
 Full		& 0.911 \\
@@ -20,21 +20,23 @@ Full - E	& 0.732 \\
 \end{minipage}
 \hspace{0.5cm}
 \begin{minipage}[b]{0.45\linewidth}\centering
-\begin{tabular}{ l | l }
+\begin{tabular}{ c | l }
 Configuration & Accuracy \\
 \hline
-A	& 0.714 \\
-B	& 0.875 \\
-C	& 0.786 \\
-D	& 0.911 \\
-E	& 0.732 \\
+Only A	& 0.696 \\
+Only B	& 0.589 \\
+Only C	& 0.625 \\
+Only D	& 0.535 \\
+Only E	& 0.696 \\
 \end{tabular}
 \end{minipage}
-\caption{Feature Ablation On {\it GvS}}
-\label{tab:ablation_first}
+\caption{Feature Ablation on {\it GvS}}
+\label{fig:ablation_first}
 \end{figure}
 
-Notice there is a biggest drop in accuracy when $A$ alone is removed.
+We observe that feature $A$ (Physical Feature) has the most impact in the accuracy of the predictions, with the greatest drop in accuracy when $A$ itself is removed and one of the highest accuracy when it alone is used as a feature (see Figure \ref{fig:ablation_first}). Feature $D$ (Citing Context's Average \url{tf-idf} Weight) appears to be the only redundant feature, but since it does not decrease the overall accuracy we shall include it nevertheless.
+
+We continue evaluating {\it GvS} using the \url{Leave-One-Out} strategy.
 
 %\begin{table}[h]
 %	\center
