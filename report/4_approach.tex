@@ -57,6 +57,7 @@ Recall that according to our annotation statistics, this task is heavily skewed 
 From the set of labelled feature vectors, I first gathered the Specific instances. Then I {\bf randomly} selected from the rest to have a $1:1$ of Specific vs General instances. While this ratio appear unrealistic compared to the actual statistics, I argue that I am building a model using balanced data to measure its ability to differentiate between the 2 types of citation.
 
 \section{{\it LocateProv} (Second Tier)}
+\label{secondtier}
 {\it LocateProv}, short for Locate Provenance, is the second tier of my approach. The design of {\it LocateProv} is all its inputs are Specific citations predicts which of the fragments in the cited paper is the cited fragment. Resembling a search, in {\it LocateProv} the citing context becomes the {\it query} to match the cited fragments in the cited paper. For that I also added some features that are common in Information Retrieval tasks.
 
 \subsection*{Building The Model For {\it LocateProv}}

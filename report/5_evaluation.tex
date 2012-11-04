@@ -70,7 +70,36 @@ For a more conclusive evaluation, I continue evaluating {\it GvS} by training on
 
 \section{Evaluating {\it LocateProv}}
 \label{eval:second}
-Similar to evaluating {\it GvS} in Chapter \ref{eval:first}, I first evaluate the features added to {\it LocateProv} using the {\it feature ablation} strategy.
+Similar to evaluating {\it GvS} in Chapter \ref{eval:first}, I first evaluate the features added to {\it LocateProv} using the {\it feature ablation} strategy. Note that the letters $F$ to $I$ represents the features described in Chapter \ref{secondtier}.
+
+\begin{figure}[ht]
+\begin{minipage}[b]{0.45\linewidth}\centering
+\begin{tabular}{ l | l }
+Configuration & Accuracy \\
+\hline
+Full		& 0.893 \\
+Full - F	& 0.893 \\
+Full - G	& 0.875 \\
+Full - H	& 0.893 \\
+Full - I	& 0.786 \\
+\end{tabular}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.45\linewidth}\centering
+\begin{tabular}{ c | l }
+Configuration & Accuracy \\
+\hline
+Only F	& 0.714 \\
+Only G	& 0.625 \\
+Only H	& 0.607 \\
+Only I	& 0.875 \\
+\end{tabular}
+\end{minipage}
+\caption{Feature Ablation on {\it LocateProv}}
+\label{fig:ablation_second}
+\end{figure}
+From Figure \ref{fig:ablation_second} we can conclude that feature $I$ (Cosine Similarity) remains to be the most important among the features for {\it LocateProv}. This is expected because as modelled in Chapter \ref{problemanalysis}, {\it LocateProv} is a searching problem, thus an Information Retrieval solution is most suitable.
+
 %For Second Tier evaluation, we are predicting whether each fragment in the cited paper is a Specific one. We have over 30 thousand training instances for second tier, and so for the same reason, we had to select our training set manually similarly to get a $1:1$ ratio for Specific versus General instances.
 %
 %\begin{table}[h]

@@ -64,6 +64,7 @@ if __name__ == "__main__":
   X = []
   y = []
   # Extract Features
+  total = len(filtered)
   for f in filtered:
     citing = f['citing']
     cited = f['cited']
@@ -83,6 +84,8 @@ if __name__ == "__main__":
         x = feature_extractor.extract_feature_1st_tier_baseline(f, c, citing_col, doms[hash_key][1], doms[hash_key][3])
         X.append(x)
         y.append(labels_to_index[y_hash_1st_tier[hash_key][i]])
+    total -= 1
+    print "No. left " + str(total)
   X = np.asarray(X)
   y = np.asarray(y)
 
