@@ -26,7 +26,7 @@ if __name__ == "__main__":
   # Feature Ablation
   # Remove first feature
   print X[0]
-  print X[5:]
+  print X[0][5:]
   sys.exit()
   clf = svm.SVC(kernel='linear')
   clf.fit(X, y)
