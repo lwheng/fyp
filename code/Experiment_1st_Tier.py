@@ -28,7 +28,7 @@ if __name__ == "__main__":
   X_train = []
   for x in X:
     X_train.append(x[5:])
-  X_train.npasarray(X_train)
+  X_train = np.asarray(X_train)
   print X.shape
   print X_train.shape
   sys.exit()
