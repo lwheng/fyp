@@ -146,7 +146,7 @@ if __name__ == "__main__":
   X_train = []
   for x in X:
     x = list(x)
-    X_train.append(x[7])
+    X_train.append([x[7]])
   X_train = np.asarray(X_train)
   correct = 0
   clf = svm.SVC(kernel='linear')
@@ -161,7 +161,7 @@ if __name__ == "__main__":
   X_train = []
   for x in X:
     x = list(x)
-    X_train.append(x[8])
+    X_train.append([x[8]])
   X_train = np.asarray(X_train)
   correct = 0
   clf = svm.SVC(kernel='linear')
