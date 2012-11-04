@@ -29,6 +29,16 @@ if __name__ == "__main__":
   correct = 0
   total = y.shape[0]
   expected = y
+  # Full
+  correct = 0
+  clf = svm.SVC(kernel='linear')
+  clf.fit(X, y)
+  predicted = clf.predict(X)
+  for i in range(total):
+    if predicted[i] == expected[i]:
+      correct += 1
+  accuracy = float(correct) / float(total)
+  print "Full - 1st : " + str(correct) + " / " + str(total) + " = " + str(accuracy)
   # Remove first feature (5 parts)
   X_train = []
   for x in X:
