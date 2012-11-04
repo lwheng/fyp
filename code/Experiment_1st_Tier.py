@@ -31,10 +31,9 @@ if __name__ == "__main__":
   for x in X:
     X_train.append(x[5:])
   X_train = np.asarray(X_train)
-  print X.shape
-  print X_train.shape
-  sys.exit()
   clf = svm.SVC(kernel='linear')
-  clf.fit(X, y)
+  clf.fit(X_train, y)
   expected = y
-  predicted = clf.predict(X)
+  predicted = clf.predict(X_train)
+  print metrics.classification_report(expected, predicted)
+  print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
