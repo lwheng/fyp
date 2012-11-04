@@ -24,14 +24,11 @@ if __name__ == "__main__":
   y = pickle.load(open(os.path.join(path_pickles, 'y_1st_Tier_Best.pickle'), 'r'))
 
   # Feature Ablation
+  # Remove first feature
+  print X[0]
+  print X[5:]
+  sys.exit()
   clf = svm.SVC(kernel='linear')
   clf.fit(X, y)
   expected = y
   predicted = clf.predict(X)
-  correct=0
-  total=predicted.shape[0]
-  for i in range(total):
-    if predicted[i] == expected[i]:
-      correct += 1
-  print correct
-  print total
