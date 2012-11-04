@@ -36,7 +36,7 @@ Only E	& 0.696 \\
 
 We observe that feature $A$ (Physical Feature) has the most impact in the accuracy of the predictions, with the greatest drop in accuracy when $A$ itself is removed and one of the highest accuracy when it alone is used as a feature (see Figure \ref{fig:ablation_first}). Feature $D$ (Citing Context's Average \url{tf-idf} Weight) appears to be the only redundant feature, but since it does not decrease the overall accuracy we shall include it nevertheless.
 
-We continue evaluating {\it GvS} using the \url{Leave-One-Out} strategy.
+We continue evaluating {\it GvS} using the \url{Leave-One-Out} strategy. In this strategy we leave one data instance out for testing while the rest are used for training and we repeat this for the number of instances. The main reason for using this strategy is because the number of data instances in the unskewed data set is already very small, and I wish to maximise them for training. For this strategy I compare the performance of the various classifiers, for each, computing the Precision, Recall and F$_1$ score.
 
 %\begin{table}[h]
 %	\center
