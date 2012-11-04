@@ -262,6 +262,7 @@ if __name__ == "__main__":
   y_all = np.asarray(y_all)
   X = np.asarray(X)
   y = np.asarray(y)
+  
   clf = svm.SVC(kernel='linear')
   clf.fit(X, y)
   predicted = clf.predict(X_all)
@@ -282,3 +283,29 @@ if __name__ == "__main__":
   expected = y_all
   print metrics.classification_report(expected, predicted)
   print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
+  print
+  print "########################################################################"
+  print
+  clf = svm.SVC(kernel='linear')
+  clf.fit(X_all, y_all)
+  predicted = clf.predict(X_all)
+  expected = y_all
+  print metrics.classification_report(expected, predicted)
+  print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
+  
+  clf = GaussianNB()
+  clf.fit(X_all, y_all)
+  predicted = clf.predict(X_all)
+  expected = y_all
+  print metrics.classification_report(expected, predicted)
+  print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
+  
+  clf = DecisionTreeClassifier()
+  clf.fit(X_all, y_all)
+  predicted = clf.predict(X_all)
+  expected = y_all
+  print metrics.classification_report(expected, predicted)
+  print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
+  print
+  print "########################################################################"
+  print
