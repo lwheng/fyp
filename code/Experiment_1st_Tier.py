@@ -191,6 +191,7 @@ if __name__ == "__main__":
   print
   # Leave-One-Out
   X = list(X)
+  y = list(y)
   total = len(X)
   correct = 0
   svm_predicted = []
