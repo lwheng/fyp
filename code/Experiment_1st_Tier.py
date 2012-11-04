@@ -249,3 +249,22 @@ if __name__ == "__main__":
 
   print
   print "########################################################################"
+  print
+
+  # Da Bing Xiao Jiang
+  # Get all instances first
+  # Load X_all
+  X_all = pickle.load(open(os.path.join(path_pickles, 'X_1st_Tier.pickle'), 'r'))
+  # Load y_all
+  y_all = pickle.load(open(os.path.join(path_pickles, 'y_1st_Tier.pickle'), 'r'))
+
+  print X_all
+  print type(X_all)
+  sys.exit()
+
+  # Prepare X_skewed and y_skewed
+  X_skewed = []
+  y_skewed = []
+  for x in X_all:
+    if not x in X:
+      X_skewed.append(x)
