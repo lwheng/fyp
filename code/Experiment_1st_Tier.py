@@ -20,8 +20,10 @@ if __name__ == "__main__":
 
   # Load X
   X = pickle.load(open(os.path.join(path_pickles, 'X_1st_Tier_Best.pickle'), 'r'))
+  X = np.asarray(X)
   # Load y
   y = pickle.load(open(os.path.join(path_pickles, 'y_1st_Tier_Best.pickle'), 'r'))
+  y = np.asarray(y)
 
   # Feature Ablation
   # Remove first feature (5 parts)
