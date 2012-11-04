@@ -266,7 +266,7 @@ if __name__ == "__main__":
   y_skewed = []
   for i in range(len(X_all)):
     x = X_all[i]
-    if not x in X:
+    if x in X:
       X_skewed.append(x)
       y_skewed.append(y[i])
 
