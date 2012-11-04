@@ -26,3 +26,7 @@ if __name__ == "__main__":
   # Feature Ablation
   clf = svm.SVC(kernel='linear')
   clf.fit(X, y)
+  expected = y
+  predicted = clf.predict(X)
+  print metrics.classification_report(expected, predicted)
+  print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
