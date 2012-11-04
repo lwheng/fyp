@@ -28,8 +28,8 @@ if __name__ == "__main__":
   clf.fit(X, y)
   expected = y
   predicted = clf.predict(X)
-  int correct=0
-  int total=predicted.shape[0]
+  correct=0
+  total=predicted.shape[0]
   for i in range(total):
     if predicted[i] == expected[i]:
       correct += 1
