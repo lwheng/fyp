@@ -267,10 +267,10 @@ if __name__ == "__main__":
     y_mixed.append(this_y)
   cross_fold = []
   for i in range(len(X_mixed)/k):
-    X_mixed_cross_test = X_mixed[i*k:(i+1)*k]
-    X_mixed_cross_train = X_mixed[0:i*k] + X_mixed[(i+1)*k:]
-    y_mixed_cross_test = y_mixed[i*k:(i+1)*k]
-    y_mixed_cross_train = y_mixed[0:i*k] + y_mixed[(i+1)*k:]
+    X_cross_test = X_mixed[i*k:(i+1)*k]
+    X_cross_train = X_mixed[0:i*k] + X_mixed[(i+1)*k:]
+    y_cross_test = y_mixed[i*k:(i+1)*k]
+    y_cross_train = y_mixed[0:i*k] + y_mixed[(i+1)*k:]
 
     X_cross_test = np.asarray(X_cross_test)
     X_cross_train = np.asarray(X_cross_train)
