@@ -52,7 +52,7 @@ I continue evaluating {\it GvS} using the \url{Leave-One-Out} strategy. In this 
 	\label{tab:firsttieresults}
 \end{table}
 
-Let us examine the confusion matrix for the best performing SVM classifier that I ran for the \url{Leave-One-Out} strategy. Recall that {\it GvS}'s objective is to filter out the General citations. Our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix. We achieved this in Table \ref{tab:firstsvmconfusionmatrix} and we can conclude that {\it GvS} has a promising performance in differentiating General and Specific citations.
+Let us examine the confusion matrix for the best performing SVM classifier that I ran for the \url{Leave-One-Out} strategy. {\it GvS} is aimed at filtering out the General citations. Our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix. We achieved this in Table \ref{tab:firstsvmconfusionmatrix} and we can conclude that {\it GvS} has a promising performance in differentiating General and Specific citations.
 
 \begin{table}[h]
 	\center
@@ -128,7 +128,24 @@ The scores are very close to each other between the classifiers. Let us examine 
 	\caption{Confusion Matrix for NB with Leave-One-Out on {\it LocateProv}}
 	\label{tab:secondnbconfusionmatrix}
 \end{table}
+{\it LocateProv} is aimed at identifying the Specific-Yes fragments in the cited paper. Our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix. We achieved this in Table \ref{tab:secondnbconfusionmatrix} and we can conclude that {\it LocateProv} has a promising performance in differentiating Specific-Yes ($y$) and Specific-No ($n$) fragments.
 
+For a more conclusive evaluation, I compared {\it LocateProv} to my baseline for this task. With {\it LocateProv} resembling a search problem, a feasible baseline is to compare the citing context with the fragments with Cosine Similarity, coupled with \url{tf-idf} \cite{irtextbook} weighting scheme. Essentially the baseline is just {\it LocateProv} running only on feature $I$ (Cosine Similarity). For a fair comparison between {\it LocateProv} and the baseline, I prepared a $1:1$ (Specific-No vs. Specific-Yes) training dataset as I did before to unskew the data instances. Specific-Yes instances were gathered, and the same number of Specific-No instances were {\bf randomly} selected from the collection. For both {\it LocateProv} and baseline, they were trained and tested on their own data set with the SVM classifier. Note that the only difference between the data set is the random set of Specific-No instances.
+I compared their P/R/F values in Table \ref{tab:locateprov_vs_baseline}.
+
+\begin{table}[h]
+	\center
+	\begin{tabular}{ c | c  c  c | c c c }
+		& & {\it LocateProv} & & & Baseline \\
+		\textsc{Class/Values} & \textsc{P} & \textsc{R} & \textsc{F$_1$} & \textsc{P} & \textsc{R} & \textsc{F$_1$}  \\
+		\hline
+		\textsc{Specific-No} 			& 0.96  &    0.82   &   0.88 & 0.89   &   0.57   &   0.70 \\
+		\textsc{Specific-Yes} 			& {\bf 0.84}  &    0.96   &   0.90 & {\bf 0.61}   &   0.89   &   0.72 \\
+	\end{tabular}
+	\caption{{\it LocateProv} versus Baseline}
+	\label{tab:locateprov_vs_baseline}
+\end{table}
+Notice the precision values in bold in Table \ref{tab:locateprov_vs_baseline}, that {\it LocateProv} is able to perform significantly better than the baseline. Thus, justifying the features introduced.
 %For Second Tier evaluation, we are predicting whether each fragment in the cited paper is a Specific one. We have over 30 thousand training instances for second tier, and so for the same reason, we had to select our training set manually similarly to get a $1:1$ ratio for Specific versus General instances.
 %
 %\begin{table}[h]

@@ -29,7 +29,7 @@ $v_m:[f_1, f_2, f_3, \ldots, f_n] \rightarrow L_m$
 
 \subsection*{{\it GvS} Features}
 \begin{enumerate}
-\item Physical Features \\
+\item Physical Features (Feature $A$)\\
 We adopted the physical features as presented in \cite{dongensemble}. They are:
 \begin{enumerate}
 \item \textit{Location}: in which section the citing sentence is from.
@@ -39,16 +39,16 @@ We adopted the physical features as presented in \cite{dongensemble}. They are:
 \end{enumerate}
 The intuition I have for using this feature is: A higher number of citation marks within a citing sentence suggests these citations are likely to be General since there was little room of discussion by the author(s).
 
-\item Number Density \\
+\item Number Density (Feature $B$)\\
 A numerical feature similar to the first feature set that measures the density of numerical figures in the citing context. The intuition is that Specific citations tend refer numerical figures in evaluation results in the cited paper. E.g. ``...Nivre and Scholz (2004) obtained a precision of 79.1\%...". This feature was added based on the observations I made earlier in Chapter \ref{buildingcorpus}.
 
-\item Publishing Year Difference \\
+\item Publishing Year Difference (Feature $C$)\\
 A numerical feature that represents difference in the publishing year between the citing and cited paper. The intuition is that higher difference suggests cited paper is older and presented a fundamental idea, and thus cited for General purposes.
 
-\item Citing Context's Average \url{tf-idf} Weight \\
+\item Citing Context's Average \url{tf-idf} Weight (Feature $D$)\\
 A numerical feature that indicates the average amount of \textit{valuable} words, as determined by \url{tf-idf} \cite{irtextbook},  in the citing context. Higher values suggest important words and thus specific keywords.
 
-\item Cue Words \\
+\item Cue Words (Feature $E$)\\
 Another numerical feature adopted from \cite{dongensemble}, that computes the amount of cue words that appear in the citing sentence and its neighbour sentences. We defined 2 classes of cue words: Cue-General and Cue-Specific (refer to Appendix \ref{cuewords} for list of cue words). These cue words are hand-picked based on the examples I observed during the annotation process.
 \end{enumerate}
 
@@ -65,16 +65,16 @@ In {\it LocateProv} we are predicting which cited fragment is the provenance of 
 
 \subsection*{{\it LocateProv} Features}
 \begin{enumerate}
-\item Surface Matching \\
+\item Surface Matching (Feature $F$)\\
 A numerical feature that measures the amount of word overlap between the citing sentence and a fragment in the cited paper.
 
-\item Number Near-Miss \\
+\item Number Near-Miss (Feature $G$)\\
 A numerical feature that measures the amount of numerical figures overlap between the citing sentence and a fragment in the cited paper. This feature will preprocess each fragment, rounding numerical figures or converting to percentage values when it tries to match the numerical figures in the citing sentence. This feature was added because of the observations I made earlier in Chapter \ref{buildingcorpus}, that citations may refer to evaluation results in the cited paper.
 
-\item Bigrams Matching \\
+\item Bigrams Matching (Feature $H$)\\
 A numerical feature that measures the amount of bigrams overlap between the citing sentence and a fragment in the cited paper. This feature was added to preserve word order when comparing the citing sentence and the fragment. This feature was also targeted at Specific citations that refer to term definitions or quote directly.
 
-\item Cosine Similarity \\
+\item Cosine Similarity (Feature $I$)\\
 A common numerical feature used in Information Retrieval tasks to measure similarity between the query and a candidate document. In our case, citing sentence and the fragment.
 \end{enumerate}
 Most of these features are added based on some of the observations I made during the annotation tasks.
