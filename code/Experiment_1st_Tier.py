@@ -254,6 +254,7 @@ if __name__ == "__main__":
   # Perform K-fold validation
   # First, separate into k subsamples. Test on 1, train on k-1
   k = 7
+  cross_fold = []
   for i in range(len(X)/k):
     X_cross_test = X[i*k:(i+1)*k]
     X_cross_train = X[0:i*k] + X[(i+1)*k:]
@@ -275,6 +276,8 @@ if __name__ == "__main__":
       if predicted[i] == expected[i]:
         correct += 1
     print str(correct) + "/" + str(total) + " = " + str(correct/total)
+    cross_fold.append(correct/total)
+  print sum(cross_fold)/len(cross_fold)
   
   sys.exit()
   print "Compare with Baseline"
