@@ -271,7 +271,7 @@ if __name__ == "__main__":
     predicted = clf.predict(X_cross_test)
     total = float(len(expected))
     correct = float(0)
-    for i in range(total):
+    for i in range(int(total)):
       if predicted[i] == expected[i]:
         correct += 1
     print str(correct) + "/" + str(total) + " = " + str(correct/total)
