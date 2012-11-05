@@ -253,12 +253,26 @@ if __name__ == "__main__":
 
   # Perform K-fold validation
   # First, separate into k subsamples. Test on 1, train on k-1
-  X = np.asarray(X)
-  y = np.asarray(y)
-  print X.shape
-  print y.shape
-  sys.exit()
+  k = 7
+  for i in range(len(X)/k):
+    X_cross_test = X[i*k:(i+1)*k]
+    X_cross_train = X[0:i*k] + X[(i+1)*k:]
+    y_cross_test = y[i*k:(i+1)*k]
+    y_cross_train = y[0:i*k] + y[(i+1)*k:]
+
+    X_cross_test = np.asarray(X_cross_test)
+    X_cross_train = np.asarray(X_cross_train)
+    y_cross_test = np.asarray(y_cross_test)
+    y_cross_train = np.asarray(y_cross_train)
+
+    clf = svm.SVC(kernel='linear')
+    clf.fit(X_cross_train, y_cross_train)
+    expected = y_cross_test
+    predicted = clf.predict(X_cross_test)
+    print metrics.classification_report(expected, predicted)
+    print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
   
+  sys.exit()
   print "Compare with Baseline"
   # Compare with Baseline
   # Run with Baseline
