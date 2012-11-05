@@ -230,6 +230,8 @@ if __name__ == "__main__":
   y_baseline = pickle.load(open(os.path.join(path_pickles, 'y_2nd_Tier_Baseline.pickle'), 'r'))
   y_baseline = np.asarray(y_baseline)
 
+  X = np.asarray(X)
+  y = np.asarray(y)
   print X.shape
   print y.shape
   print X_baseline.shape
