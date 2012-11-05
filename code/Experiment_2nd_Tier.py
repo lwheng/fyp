@@ -263,7 +263,16 @@ if __name__ == "__main__":
    
   X_train = np.asarray(X_train)
   y_train = np.asarray(y_train)
-  print X.shape
-  print y.shape
-  print X_train.shape
-  print y_train.shape
+
+  clf = svm.SVC(kernel='linear')
+  clf.fit(X,y)
+  expected = y
+  predicted = clf.predict(X)
+  print metrics.classification_report(expected, predicted)
+  print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
+  clf = svm.SVC(kernel='linear')
+  clf.fit(X_train,y_train)
+  expected = y_train
+  predicted = clf.predict(X_train)
+  print metrics.classification_report(expected, predicted)
+  print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
