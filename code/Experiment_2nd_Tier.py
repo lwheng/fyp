@@ -260,7 +260,9 @@ if __name__ == "__main__":
   for (d, a) in sample:
     X_train.append(d)
     y_train.append(a)
-    
+   
+  X_train = np.asarray(X_train)
+  y_train = np.asarray(y_train)
   print X.shape
   print y.shape
   print X_train.shape
