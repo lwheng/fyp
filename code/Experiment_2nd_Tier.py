@@ -220,3 +220,17 @@ if __name__ == "__main__":
   print
   print "########################################################################"
   print
+
+  # Compare with Baseline
+  # Run with Baseline
+  # Load X_baseline
+  X_baseline = pickle.load(open(os.path.join(path_pickles, 'X_2nd_Tier_Baseline.pickle'), 'r'))
+  X_baseline = np.asarray(X_baseline)
+  # Load y
+  y_baseline = pickle.load(open(os.path.join(path_pickles, 'y_2nd_Tier_Baseline.pickle'), 'r'))
+  y_baseline = np.asarray(y_baseline)
+
+  print X.shape
+  print y.shape
+  print X_baseline.shape
+  print y_baseline.shape
