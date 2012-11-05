@@ -259,8 +259,9 @@ if __name__ == "__main__":
   for i in range(len(X)):
     Xy.append((list(X[i]), y[i]))
   print Xy
-  print ">>>>>>>"
-  print random.shuffle(Xy)
+  random.shuffle(Xy)
+  print  ">>>>>"
+  print Xy
   sys.exit()
   cross_fold = []
   for i in range(len(X)/k):
