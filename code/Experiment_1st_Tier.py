@@ -256,6 +256,9 @@ if __name__ == "__main__":
   k = 7
   # Put X and y together to shuffle them
   Xy = []
+  print type(X)
+  print type(y)
+  sys.exit()
   for i in range(len(X)):
     Xy.append((X[i], y[i]))
   print Xy
