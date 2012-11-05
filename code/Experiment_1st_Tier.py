@@ -250,7 +250,16 @@ if __name__ == "__main__":
   print
   print "########################################################################"
   print
+
+  # Perform K-fold validation
+  # First, separate into k subsamples. Test on 1, train on k-1
+  X = np.asarray(X)
+  y = np.asarray(y)
+  print X.shape
+  print y.shape
+  sys.exit()
   
+  print "Compare with Baseline"
   # Compare with Baseline
   # Run with Baseline
   # Load X_baseline
