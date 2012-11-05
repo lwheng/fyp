@@ -236,4 +236,4 @@ if __name__ == "__main__":
   print y.shape
   print X_baseline.shape
   print y_baseline.shape
-  print y_baseline[y_baseline==1]
+  print len(y_baseline[y_baseline==1])
