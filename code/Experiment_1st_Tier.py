@@ -253,7 +253,7 @@ if __name__ == "__main__":
 
   # Perform K-fold validation
   # Separate into k subsamples. Test on 1, train on k-1
-  k = 7
+  k = 8
   # Put X and y together to shuffle them
   Xy = []
   for i in range(len(X)):
