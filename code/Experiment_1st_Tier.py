@@ -286,7 +286,7 @@ if __name__ == "__main__":
     for i in range(int(total)):
       if predicted[i] == expected[i]:
         correct += 1
-    print y_cross_train
+    #print y_cross_train
     print "Expected: " +  str(expected)
     print "Predicted: " +  str(predicted)
     print str(correct) + "/" + str(total) + " = " + str(correct/total)
