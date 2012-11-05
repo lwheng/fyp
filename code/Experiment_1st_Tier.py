@@ -260,7 +260,7 @@ if __name__ == "__main__":
   print type(y)
   sys.exit()
   for i in range(len(X)):
-    Xy.append((X[i], y[i]))
+    Xy.append((list(X[i]), y[i]))
   print Xy
   print ">>>>>>>"
   print random.shuffle(Xy)
