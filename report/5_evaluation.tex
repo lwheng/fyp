@@ -66,7 +66,24 @@ Let us examine the confusion matrix for the best performing SVM classifier that 
 	\label{tab:firstsvmconfusionmatrix}
 \end{table}
 
-I continue evaluated {\it GvS} using another cross-validation strategy, $K$-fold. While this appears to be a repeat usage of a cross-validation strategy for evaluation, I wanted to gain a better insight of {\it GvS}'s performance when given less 
+I continue evaluated {\it GvS} using another cross-validation strategy, $K$-fold. While this appears to be a repeat usage of a cross-validation strategy for evaluation, I wanted to gain a better insight of {\it GvS}'s performance when given less training instances. For that I performed 7-fold cross-validation. From Table \ref{tab:crossvalidation} I can conclude {\it GvS} could maintain promising performance in practice.
+\begin{table}[h]
+	\center
+	\begin{tabular}{ c c }
+		\textsc{{\it n}$^{th}$ Fold} & \textsc{Accuracy} \\
+		\hline
+		1 & 0.750 \\
+		2 & 0.750 \\
+		3 & 0.750 \\
+		4 & 0.875 \\
+		5 & 0.875 \\
+		6 & 0.750 \\
+		7 & 0.750 \\
+		Average & 0.786 \\
+	\end{tabular}
+	\caption{Cross-Validation on {\it GvS}}
+	\label{tab:crossvalidation}
+\end{table}
 
 %For a more conclusive evaluation, I compared {\it GvS} to my baseline for this task. With {\it GvS} resembling a search problem, a feasible baseline is to compare the citing context with the fragments with Cosine Similarity, coupled with \url{tf-idf} \cite{irtextbook} weighting scheme. Essentially the baseline is just {\it GvS} running only on feature $I$ (Cosine Similarity). For a fair comparison between {\it LocaGvSteProv} and the baseline, I prepared a $1:1$ (Specific-No vs. Specific-Yes) training dataset as I did before to unskew the data instances. Specific-Yes instances were gathered, and the same number of Specific-No instances were {\bf randomly} selected from the collection. For both {\it GvS} and baseline, they were trained and tested on their own data set with the SVM classifier. Note that the only difference between the data set is the random set of Specific-No instances. I compared their P/R/F values in Table \ref{tab:locateprov_vs_baseline}.
 
