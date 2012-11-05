@@ -82,7 +82,7 @@ if __name__ == "__main__":
           continue
         c = f_contexts[i]
         x = feature_extractor.extract_feature_1st_tier_baseline(f, c, citing_col, doms[hash_key][1], doms[hash_key][3])
-        X.append(x)
+        X.append([x])
         y.append(labels_to_index[y_hash_1st_tier[hash_key][i]])
     total -= 1
     print "No. left " + str(total)
