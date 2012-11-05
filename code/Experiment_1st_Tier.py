@@ -268,6 +268,7 @@ if __name__ == "__main__":
     clf = svm.SVC(kernel='linear')
     clf.fit(X_cross_train, y_cross_train)
     expected = y_cross_test
+    total = len(expected)
     predicted = clf.predict(X_cross_test)
     print expected
     print predicted
