@@ -268,12 +268,13 @@ if __name__ == "__main__":
     clf = svm.SVC(kernel='linear')
     clf.fit(X_cross_train, y_cross_train)
     expected = y_cross_test
-    total = len(expected)
     predicted = clf.predict(X_cross_test)
-    print expected
-    print predicted
-    #print metrics.classification_report(expected, predicted)
-    #print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
+    total = float(len(expected))
+    correct = float(0)
+    for i in range(total):
+      if predicted[i] == expected[i]:
+        correct += 1
+    print str(correct) + "/" + str(total) + " = " + str(correct/total)
   
   sys.exit()
   print "Compare with Baseline"
