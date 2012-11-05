@@ -252,8 +252,15 @@ if __name__ == "__main__":
   print
 
   # Perform K-fold validation
-  # First, separate into k subsamples. Test on 1, train on k-1
+  # Separate into k subsamples. Test on 1, train on k-1
   k = 7
+  # Put X and y together to shuffle them
+  Xy = []
+  for i in range(len(X)):
+    Xy.append(((X[i], y[i]))
+  print Xy
+  print random.shuffle(Xy)
+  sys.exit()
   cross_fold = []
   for i in range(len(X)/k):
     X_cross_test = X[i*k:(i+1)*k]
