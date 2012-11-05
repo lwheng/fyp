@@ -232,8 +232,36 @@ if __name__ == "__main__":
 
   X = np.asarray(X)
   y = np.asarray(y)
+  # Setting up baseline to have same number as unskewed
+  X_n = []
+  y_n = []
+  X_y = []
+  y_y = []
+  for i in range(y_baseline.shape[0]):
+    temp_x = list(X_baseline[i])
+    temp_y = int(y_baseline[i])
+    if temp_y == 1:
+      X_y.append(temp_x)
+      y_y.append(temp_y)
+    else:
+      X_n.append(temp_x)
+      y_n.append(temp_y)
+  X_train = X_y
+  y_train = y_y
+  
+  # Put X_n and y_n together
+  Xy_n = []
+  for i in range(len(X_n)):
+    Xy_n.append((X_n[i], y_n[i]))
+
+  # Pick randomly from Xy_n
+  times = 1
+  sample = random.sample(Xy_n, int(len(y_train)*times))
+  for (d, a) in sample:
+    X_train.append(d)
+    y_train.append(a)
+    
   print X.shape
   print y.shape
-  print X_baseline.shape
-  print y_baseline.shape
-  print len(y_baseline[y_baseline==1])
+  print X_train.shape
+  print y_train.shape
