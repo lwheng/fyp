@@ -66,8 +66,7 @@ Let us examine the confusion matrix for the best performing SVM classifier that 
 	\label{tab:firstsvmconfusionmatrix}
 \end{table}
 
-%TO BE CONTINUED
-For a more conclusive evaluation, TO BE CONTINUED
+%For a more conclusive evaluation, I compared {\it GvS} to my baseline for this task. With {\it GvS} resembling a search problem, a feasible baseline is to compare the citing context with the fragments with Cosine Similarity, coupled with \url{tf-idf} \cite{irtextbook} weighting scheme. Essentially the baseline is just {\it GvS} running only on feature $I$ (Cosine Similarity). For a fair comparison between {\it LocaGvSteProv} and the baseline, I prepared a $1:1$ (Specific-No vs. Specific-Yes) training dataset as I did before to unskew the data instances. Specific-Yes instances were gathered, and the same number of Specific-No instances were {\bf randomly} selected from the collection. For both {\it GvS} and baseline, they were trained and tested on their own data set with the SVM classifier. Note that the only difference between the data set is the random set of Specific-No instances. I compared their P/R/F values in Table \ref{tab:locateprov_vs_baseline}.
 
 \section{Evaluating {\it LocateProv}}
 \label{eval:second}
@@ -130,8 +129,7 @@ The scores are very close to each other between the classifiers. Let us examine 
 \end{table}
 {\it LocateProv} is aimed at identifying the Specific-Yes fragments in the cited paper. Our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix. We achieved this in Table \ref{tab:secondnbconfusionmatrix} and we can conclude that {\it LocateProv} has a promising performance in differentiating Specific-Yes ($y$) and Specific-No ($n$) fragments.
 
-For a more conclusive evaluation, I compared {\it LocateProv} to my baseline for this task. With {\it LocateProv} resembling a search problem, a feasible baseline is to compare the citing context with the fragments with Cosine Similarity, coupled with \url{tf-idf} \cite{irtextbook} weighting scheme. Essentially the baseline is just {\it LocateProv} running only on feature $I$ (Cosine Similarity). For a fair comparison between {\it LocateProv} and the baseline, I prepared a $1:1$ (Specific-No vs. Specific-Yes) training dataset as I did before to unskew the data instances. Specific-Yes instances were gathered, and the same number of Specific-No instances were {\bf randomly} selected from the collection. For both {\it LocateProv} and baseline, they were trained and tested on their own data set with the SVM classifier. Note that the only difference between the data set is the random set of Specific-No instances.
-I compared their P/R/F values in Table \ref{tab:locateprov_vs_baseline}.
+For a more conclusive evaluation, I compared {\it LocateProv} to my baseline for this task. With {\it LocateProv} resembling a search problem, a feasible baseline is to compare the citing context with the fragments with Cosine Similarity, coupled with \url{tf-idf} \cite{irtextbook} weighting scheme. Essentially the baseline is just {\it LocateProv} running only on feature $I$ (Cosine Similarity). For a fair comparison between {\it LocateProv} and the baseline, I prepared a $1:1$ (Specific-No vs. Specific-Yes) training dataset as I did before to unskew the data instances. Specific-Yes instances were gathered, and the same number of Specific-No instances were {\bf randomly} selected from the collection. For both {\it LocateProv} and baseline, they were trained and tested on their own data set with the SVM classifier. Note that the only difference between the data set is the random set of Specific-No instances. I compared their P/R/F values in Table \ref{tab:locateprov_vs_baseline}.
 
 \begin{table}[h]
 	\center
@@ -146,34 +144,3 @@ I compared their P/R/F values in Table \ref{tab:locateprov_vs_baseline}.
 	\label{tab:locateprov_vs_baseline}
 \end{table}
 Notice the precision values in bold in Table \ref{tab:locateprov_vs_baseline}, that {\it LocateProv} is able to perform significantly better than the baseline. Thus, justifying the features introduced.
-%For Second Tier evaluation, we are predicting whether each fragment in the cited paper is a Specific one. We have over 30 thousand training instances for second tier, and so for the same reason, we had to select our training set manually similarly to get a $1:1$ ratio for Specific versus General instances.
-%
-%\begin{table}[h]
-%	\center
-%	\begin{tabular}{ c | c  c  c }
-%		\textsc{Classifier/Values} & \textsc{Avg. Precision} & \textsc{Avg. Recall} & \textsc{Avg. F$_1$-Score} \\
-%		& \url{LOO} / \url{n-Fold} & \url{LOO} / \url{n-Fold} & \url{LOO} / \url{n-Fold} \\
-%		\hline
-%		\textsc{SVM} 			& 0.85 / 0.84 & 0.84 / 0.82 & 0.84 / 0.82 \\
-%		\textsc{NaiveBayes} 	& 0.80 / 0.78 & 0.79 / 0.77 & 0.78 / 0.77 \\
-%		\textsc{DecisionTree}	& 0.89 / 0.86 & 0.89 / 0.86 & 0.89 / 0.86
-%	\end{tabular}
-%	\caption{Second Tier Results}
-%	\label{tab:secondtieresults}
-%\end{table}
-%\newpage
-%In this case, the Decision Tree classifier performed slightly better than SVM. Similarly, our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix and in Table \ref{tab:decisiontreeconfusionmatrix} we achieved good results. This means, given a Specific citation, this approach would perform well in determining whether a fragment in the cited paper is the cited fragment or not.
-%
-%\begin{table}[h]
-%	\center
-%	\begin{tabular}{ c | c  c }
-%		 & \textsc{actual $g$} & \textsc{actual $s$} \\
-%		\hline
-%		\textsc{predicted $g$} 	& 23 & 5 \\
-%		\textsc{predicted $s$}		& 3 & 25
-%	\end{tabular}
-%	\caption{Confusion Matrix for Naive Bayes}
-%	\label{tab:decisiontreeconfusionmatrix}
-%\end{table}
-%
-%(Refer to Appendix \ref{resultsdetails} for more details of our experimental results.)

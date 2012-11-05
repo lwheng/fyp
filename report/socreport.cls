@@ -116,7 +116,7 @@
 \newcommand{\singlespacingplus}{%
   \let\CS=\@currsize\renewcommand{\baselinestretch}{1.25}\tiny\CS}
 \newcommand{\doublespacing}{%
-  \let\CS=\@currsize\renewcommand{\baselinestretch}{1.75}\tiny\CS}
+  \let\CS=\@currsize\renewcommand{\baselinestretch}{1.50}\tiny\CS}
 \newcommand{\realdoublespacing}{%
   \let\CS=\@currsize\renewcommand{\baselinestretch}{2}\tiny\CS}
 \newcommand{\normalspacing}{\doublespacing}
