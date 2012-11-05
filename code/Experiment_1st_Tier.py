@@ -275,6 +275,8 @@ if __name__ == "__main__":
     for i in range(int(total)):
       if predicted[i] == expected[i]:
         correct += 1
+    print "Expected: " +  str(expected)
+    print "Predicted: " +  str(predicted)
     print str(correct) + "/" + str(total) + " = " + str(correct/total)
     cross_fold.append(correct/total)
   print sum(cross_fold)/len(cross_fold)
