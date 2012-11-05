@@ -258,17 +258,19 @@ if __name__ == "__main__":
   Xy = []
   for i in range(len(X)):
     Xy.append((list(X[i]), y[i]))
-  print Xy
   random.shuffle(Xy)
-  print  ">>>>>"
-  print Xy
-  sys.exit()
+  # Separate them now
+  X_mixed = []
+  y_mixed = []
+  for (this_x, this_y) in Xy:
+    X_mixed.append(this_x)
+    y_mixed.append(this_y)
   cross_fold = []
-  for i in range(len(X)/k):
-    X_cross_test = X[i*k:(i+1)*k]
-    X_cross_train = X[0:i*k] + X[(i+1)*k:]
-    y_cross_test = y[i*k:(i+1)*k]
-    y_cross_train = y[0:i*k] + y[(i+1)*k:]
+  for i in range(len(X_mixed)/k):
+    X_mixed_cross_test = X_mixed[i*k:(i+1)*k]
+    X_mixed_cross_train = X_mixed[0:i*k] + X_mixed[(i+1)*k:]
+    y_mixed_cross_test = y_mixed[i*k:(i+1)*k]
+    y_mixed_cross_train = y_mixed[0:i*k] + y_mixed[(i+1)*k:]
 
     X_cross_test = np.asarray(X_cross_test)
     X_cross_train = np.asarray(X_cross_train)
