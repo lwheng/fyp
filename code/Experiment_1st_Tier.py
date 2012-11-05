@@ -257,7 +257,7 @@ if __name__ == "__main__":
   # Put X and y together to shuffle them
   Xy = []
   for i in range(len(X)):
-    Xy.append(((X[i], y[i]))
+    Xy.append((X[i], y[i]))
   print Xy
   print random.shuffle(Xy)
   sys.exit()
