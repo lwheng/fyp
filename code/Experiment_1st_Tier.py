@@ -269,8 +269,10 @@ if __name__ == "__main__":
     clf.fit(X_cross_train, y_cross_train)
     expected = y_cross_test
     predicted = clf.predict(X_cross_test)
-    print metrics.classification_report(expected, predicted)
-    print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
+    print expected
+    print predicted
+    #print metrics.classification_report(expected, predicted)
+    #print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
   
   sys.exit()
   print "Compare with Baseline"
