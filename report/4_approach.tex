@@ -1,6 +1,6 @@
 \chapter{Approach}
 \label{approach}
-I propose a two-tier approach to our problem. In the first tier, it plays the role of a \textit{filter}, and attempts to filter out the General citations, leaving behind the Specific citations to be passed to the second tier. Figure \ref{fig:twotier} illustrates the flow of our approach.
+I proposed a two-tier approach to our problem. In the first tier, it plays the role of a \textit{filter}, and attempts to filter out the General citations, leaving behind the Specific citations to be passed to the second tier. Figure \ref{fig:twotier} illustrates the flow of our approach.
 \begin{figure}[h]
   \centering
   \includegraphics[scale=0.60]{./twotier}
@@ -52,7 +52,7 @@ A numerical feature that indicates the average amount of \textit{valuable} words
 Another numerical feature adopted from \cite{dongensemble}, that computes the amount of cue words that appear in the citing sentence and its neighbour sentences. We defined 2 classes of cue words: Cue-General and Cue-Specific (refer to Appendix \ref{cuewords} for list of cue words). These cue words are hand-picked based on the examples I observed during the annotation process.
 \end{enumerate}
 
-Recall that according to our annotation statistics, this task is heavily skewed towards General citations. Building a model based on this skewed set of data instances will only produce a bias model that often predicts General. In fact, during some preliminary experiments where all data instances are fitted into the model, it outputs General for all its predictions. To fix this problem, I propose training the model on {\it unskewed data}.
+Recall that according to our annotation statistics, this task is heavily skewed towards General citations. Building a model based on this skewed set of data instances will only produce a bias model that often predicts General. In fact, during some preliminary experiments where all data instances are fitted into the model, it outputs General for all its predictions. To fix this problem, I proposed training the model on {\it unskewed data}.
 
 From the set of labelled feature vectors, I first gathered the Specific instances. Then I {\bf randomly} selected from the rest to have a $1:1$ of Specific vs General instances. While this ratio appear unrealistic compared to the actual statistics, I argue that I am building a model using balanced data to measure its ability to differentiate between the 2 types of citation.
 

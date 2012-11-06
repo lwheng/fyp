@@ -38,20 +38,17 @@
 \maketitle
 \begin{abstract}
 \paragraph{}
-We investigate a new task in citation analysis, {\it citation provenance}, which is to determine the provenance of the claim supported in the paper referenced in a citation. We describe the challenges in collecting annotations for our training set, and present a two-tier approach in tackling this problem.
-% Min: be more specific about features.
- From our evaluation results, we show that the features we introduce into our approach were able to differentiate citations that referred to the whole paper in general ({\it general}) versus ones the cited specific claims, evidence or parts of the paper ({\it specific}).  We also show that the system is able to determine which is the cited fragment in the cited paper, given knowledge that a citation is {\it specific}.
-% Min: give specific evaluation results.  e.g., XX% $F_1$.
+We investigate a new task in citation analysis, {\it citation provenance}, to locate the location of the cited information that justifies a citation. We describe the challenges in collecting annotations for our training set, and present a two-tier approach in tackling this problem. We adopted some features used in Citation Classification and Information Retrieval tasks and with them we differentiate citations that referred to the whole paper in general ({\it general}) versus ones the cited specific claims, evidence or parts of the paper ({\it specific}) and then given that a citation is {\it specific}, locate the cited information in the cited paper. The first tier ({\it GvS}) obtained a promising accuracy of $0.786$ in cross-validation evaluation and in terms of $F_1$ score the second tier ({\it LocateProv}), at $0.90$, performed about $25\%$ better than the baseline.
 
 \begin{descriptors}
 	\item H. INFORMATION SYSTEMS
 \end{descriptors}
 \begin{keywords}
-	citation analysis, citation provenance, source of citation
+	citation analysis, citation provenance, source of citation, citation classification
 \end{keywords}
 \begin{implement}
 \begin{flushleft}
-\hspace{5 mm}Software: Python, NLTK, scikit-learn \nocite{scikit-learn}\\
+\hspace{5 mm}Software: Python, NLTK\footnote{http://nltk.org/}, scikit-learn\footnote{http://scikit-learn.org/} \nocite{scikit-learn}\\
 \hspace{5 mm}Hardware: MacBook Pro, Intel Core 2 Duo 2.4GHz, 4GB Memory.
 \end{flushleft}
 \end{implement}
@@ -60,6 +57,9 @@ We investigate a new task in citation analysis, {\it citation provenance}, which
 \begin{acknowledgement}
 \paragraph{}
 I would like to express my gratitude to all the volunteer participants from the NUS WING group for participating in my pilot annotation tests. I thank them for testing my annotation scheme, and appreciate the feedback that improved my project.
+
+\paragraph{}
+Congrats to our \url{CodeForScience} team from WING NUS, consisting of Jin Zhao, Tao Chen, Eric Yulianto Ang and myself for having emerged the winners for the competition with our prototype application CitWeb that integrated our projects -- Citation Classification and Citation Provenance.
 
 \paragraph{}
 Million thanks to Jin Zhao, Tao Chen, and especially my supervisor to this project, A/P Min Yen Kan for providing their guidance during the duration of the project.
