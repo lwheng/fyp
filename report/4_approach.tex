@@ -1,6 +1,7 @@
 \chapter{Approach}
 \label{approach}
-We propose a two-tier approach to our problem. In the first tier, it plays the role of a \textit{filter}, and attempts to filter out the General citations, leaving behind the Specific citations to be passed to the second tier. Figure \ref{fig:twotier} illustrates the flow of our approach.
+% Min: overly repetitive.  I have read similar sentences at least a few times already.  Excise the excess mentions.  DRY.
+We propose a two-tier approach to our problem. In the first tier, we build a \textit{filter}, to drop General citations, leaving behind only the Specific citations to be passed to the second tier. Figure \ref{fig:twotier} illustrates the flow of our approach.
 \begin{figure}[h]
   \centering
   \includegraphics[scale=0.60]{./twotier}
@@ -10,10 +11,17 @@ We propose a two-tier approach to our problem. In the first tier, it plays the r
 
 \section{{\it GvS} (First Tier)}
 \label{firsttier}
-{\it GvS}, short for General versus Specific, is the first tier in our approach to filter out the General citations. In {\it GvS}, we are performing a 2-class \textit{citation classification} task, which already is a challenging task in the research area of citation analysis. We are not interested in determining whether the citation is one of the 12 class as defined by \cite{teufel2009annotation}, but only whether it is General or Specific. {\it GvS} makes use of information only from the citing contexts in a citing paper. We built a model based on features extracted from the citing contexts. With this model, {\it GvS} classifies citing contexts into one of the two classes. Only those contexts that are classified as Specific will be passed to the second tier.
+{\it GvS}, short for General versus Specific, is the first tier in our approach. In {\it GvS}, we perform a binary \textit{citation classification} task, which is already a challenging task. 
+% Min: I don't see the point of this sentence
+We are not interested in determining whether the citation is one of the 12 class as defined by \cite{teufel2009annotation}, but only whether it is General or Specific. 
+{\it GvS} makes use of information only from the citing contexts in a citing paper. We built a model based on features extracted from the citing contexts. With this model, {\it GvS} classifies citing contexts into one of the two classes. 
+% Min: repeated again??
+Only those contexts that are classified as Specific will be passed to the second tier.
 
 \subsection*{Building The Model For {\it GvS}}
-To build a model to classify General versus Specific, we adopt some of the features that \outcite{dongensemble} used for citation classification. From each of the 275 annotated cite links mentioned in Table \ref{tab:annotation} we extracted a set of features into a {\it feature vector} and map it to its {\it label} according to annotation (Figure \ref{fig:featurevector}). The features used are as described below.
+% Min: GLOBAL: replace Table \ref => Table~\ref.  Same with other references to Figures, etc.
+% Min: You need to say why you adopted these features and whether you added any new features.
+To build our model, we adopt past features used in \outcite{dongensemble} previously used for citation classification. From each of the 275 annotated cite links mentioned in Table~\ref{tab:annotation} we extracted a set of features into a {\it feature vector} and map it to its {\it label} according to annotation (Figure \ref{fig:featurevector}). The features used are as described below.
 
 \begin{figure}[h]
 \centering
@@ -30,36 +38,40 @@ $v_m:[f_1, f_2, f_3, \ldots, f_n] \rightarrow L_m$
 \subsection*{{\it GvS} Features}
 \begin{enumerate}
 \item Physical Features (Feature $A$)\\
-We adopted the physical features as presented in \cite{dongensemble}. They are:
+We adopted wholesale the physical feature set as presented in \cite{dongensemble}. They are:
 \begin{enumerate}
 \item \textit{Location}: in which section the citing sentence is from.
-\item \textit{Popularity}: no. of citation marks in the citing sentence.
-\item \textit{Density}: no. of unique citation marks in the citing sentence and its neighbour sentences.
+\item \textit{Popularity}: number of citation marks in the citing sentence.
+\item \textit{Density}: number of unique citation marks in the citing sentence and its neighbour sentences.
 \item \textit{AvgDens}: the average of Density among the citing and neighbour sentences.
 \end{enumerate}
-The intuition for using this feature is: A higher number of citation marks within a citing sentence suggests these citations are likely to be General since there was little room of discussion by the author(s).
+
+% Min: this only gives the reasoning for a particular feature.  What about the other three?
+The intuition for using these features is that: A higher number of citation marks within a citing sentence suggests these citations are likely to be General since there was little room of discussion by the author(s).  
+
+% Min: make sure that you mark these features as new that you invented.  I've tried to add.
+Based on the previously-described analysis in Chapter~ \ref{buildingcorpus}, we also designed and implemented four new features, for the first Tier task: 
 
 \item Number Density (Feature $B$)\\
-A numerical feature similar to the first feature set that measures the density of numerical figures in the citing context. The intuition is that Specific citations tend refer numerical figures in evaluation results in the cited paper. E.g. ``...Nivre and Scholz (2004) obtained a precision of 79.1\%...". This feature was added based on the observations we made earlier in Chapter \ref{buildingcorpus}.
+A numeric feature similar to the first feature set that measures the density of numerical figures in the citing context. The intuition is that Specific citations tend refer numerical figures in evaluation results in the cited paper. E.g. ``...Nivre and Scholz (2004) obtained a precision of 79.1\%...".
 
 \item Publishing Year Difference (Feature $C$)\\
-A numerical feature that represents difference in the publishing year between the citing and cited paper. The intuition is that higher difference suggests cited paper is older and presented a fundamental idea, and thus cited for General purposes.
+A numeric feature that represents difference in the publishing year between the citing and cited paper. A large difference means that a large publishing time gap exists between the citing and cited papers.  Such long term citations are usually citations for General purposes.
 
 \item Citing Context's Average \url{tf-idf} Weight (Feature $D$)\\
-A numerical feature that indicates the average amount of \textit{valuable} words, as determined by \url{tf-idf} \cite{irtextbook},  in the citing context. Higher values suggest important words and thus specific keywords.
+A numeric feature that indicates the average number of \textit{valuable} words, as determined by \url{tf-idf} \cite{irtextbook} in the citing context. Higher values suggest important, signature words pertinent to a specific claim.  Thus high values of this feature we believe indicate a Specific use.
 
 \item Cue Words (Feature $E$)\\
-Another numerical feature adopted from \outcite{dongensemble}, that computes the amount of cue words that appear in the citing sentence and its neighbour sentences. We defined 2 classes of cue words: Cue-General and Cue-Specific (refer to Appendix \ref{cuewords} for list of cue words). These cue words are hand-picked based on the examples we observed during the annotation process.
+Another numeric feature adapted from \outcite{dongensemble} that computes the count of specific cue words that appear in the citing sentence and its neighbouring sentences. We defined two classes of cue words: Cue-General and Cue-Specific (refer to Appendix~\ref{cuewords} for list of cue words). These cue words were hand-picked, based on examples observed during the annotation process.
 \end{enumerate}
 
-Recall that according to our annotation statistics, this task is heavily skewed towards General citations. Building a model based on this skewed set of data instances will only produce a bias model that often predicts General. In fact, during some preliminary experiments where all data instances are fitted into the model, it outputs General for all its predictions. To fix this problem, we proposed training the model on {\it unskewed data}.
-
-From the set of labelled feature vectors, we first gathered the Specific instances. Then we {\bf randomly} selected from the rest to have a $1:1$ of Specific vs General instances. While this ratio appear unrealistic compared to the actual statistics, we argue that we am building a model using balanced data to measure its ability to differentiate between the 2 types of citation.
+Recall that according to our annotation statistics, this task is heavily skewed towards General citations. Building a model based on this skewed set of data instances will produce a biased model that often predicts General. In fact, during some preliminary experiments where all data instances are fitted into the model, it outputs General for all its predictions. To address this problem, we train the model on artificially sampled {\it unskewed data}.  From the set of labelled feature vectors, we first gathered the Specific instances. Then we {\bf randomly} selected from the rest to have a $1:1$ of Specific vs General instances. While this ratio appear unrealistic compared to the actual statistics, we argue that we am building a model using balanced data to measure its ability to differentiate between the two types of citation.
 
 \section{{\it LocateProv} (Second Tier)}
 \label{secondtier}
-{\it LocateProv}, short for Locate Provenance, is the second tier of my approach. The design of {\it LocateProv} is all its inputs are Specific citations predicts which of the fragments in the cited paper is the cited fragment. Resembling a search, in {\it LocateProv} the citing context becomes the {\it query} to match the cited fragments in the cited paper. For that we also added some features that are common in Information Retrieval tasks.
+{\it LocateProv}, short for Locate Provenance, is the second tier of my approach. The design of {\it LocateProv} is all its inputs are Specific citations predicts which of the fragments in the cited paper is the cited fragment. Resembling a search, in {\it LocateProv} the citing context becomes the {\it query} to match the cited fragments in the cited paper. To perform this ranking task, we import features that are prevalent that are basic mechanisms for ranking in Information Retrieval.
 
+% Min: stopped here (Tue Nov  6 23:51:23 SGT 2012)
 \subsection*{Building The Model For {\it LocateProv}}
 In {\it LocateProv} we are predicting which cited fragment is the provenance of a citation. Instead of cite links, we used the annotated fragments in Table \ref{tab:annotation} to build the model. In this tier the features used are based on both the citing contexts and the cited fragments in order to {\it connect} the citation to its provenance. Similarly the feature vectors are mapped onto the annotated labels.
 
