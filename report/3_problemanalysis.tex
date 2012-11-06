@@ -3,12 +3,13 @@
 
 For the scope of our project, we define all citations as belonging to one of two types: \textbf{General} and \textbf{Specific}. 
 % Min: didn't quite get this sentence.  What does it mean?
-We define citations as such to be inline with our goal. That is, given a citation as Specific, that there is a specific portion of the cited document that contains the original information to support the citation. Otherwise, the citation is General. We use the following guideline to ensure that there is no ambiguity in our definition of the dichotomy between General and Specific: \\ \\
+Specific citations refer specifically to particular parts or section in the cited paper, General citations do not.
+We use the following guideline to ensure that there is no ambiguity in our definition of the dichotomy between General and Specific: \\ \\
 \textbf{General Citations}
 \begin{enumerate}
 \item Authors may refer to a paper as a whole. If the author cites the cited paper for a key idea, e.g. Machine Learning, and Machine Learning makes up the entire or majority of the cited paper, it is a general citation.
 % Min: do you want to be more specific about "contributions"?
-\item Authors may refer to a paper as a form of mentioning. In such cases, the authors merely mention the cited paper to acknowledge its contributions.
+\item Authors may refer to a paper as a form of mentioning. In such cases, the authors merely mention the cited paper to acknowledge the referenced authors for having done work on this particular research field.
 \end{enumerate}
 \textbf{Specific Citations}
 \begin{enumerate}
@@ -20,28 +21,28 @@ We define citations as such to be inline with our goal. That is, given a citatio
 \end{enumerate}
 
 \begin{figure}[h]
-\label{fig:terminology}
 \framebox[\textwidth]{
 	\begin{tabular}{ l p{11cm}}
 		\textsc{Term} & \textsc{Description}\\
 		\hline
 % Min: need to define "in-line citation"?
-		Citing Paper & The paper that makes the citation \\
-		Cited Paper & The paper that is being cited by the citing paper \\
+		Citing Paper & The paper that makes reference to the cited paper \\
+		Cited Paper & The paper referred to by the citing paper \\
 % Min: you need to make sure that the format Xdd-dddd is known to the reader as standing for a paper.
 % Min: if possible, show these relationships also in a graphical figure.  You can use powerpoint or something to draw and export as a .eps or .pdf
-		Cite Link & E.g. \url{E06-1034==>J93-2004}. A citation relation between a citing paper (\url{E06-1034}) and a cited paper (\url{J93-2004}) \\
-		Cite String & The citation mark. E.g. Nivre and Scholz (2004), [1], (23) \\
-		Citing Sentence & A sentence in the citing paper that contains the in-line citation. E.g. \textit{That algorithm, in turn, is similar to the dependency parsing algorithm of \textbf{Nivre and Scholz (2004)}, but it builds a constituent tree and a dependency tree simultaneously.} \\
-		Citing Context & The block of text surrounding the citing sentence, about 2 sentences before and after the citing sentence, for providing contextual information \\
-		Cited Fragment & A fragment, from a few lines to paragraphs, in the cited paper
+		Cite Link & E.g. \textbf{E06-1034==$>$J93-2004}. A citation relation between a citing paper (\textbf{E06-1034}) and a cited paper (\textbf{J93-2004}). \textbf{E06-1034} is a sample ID for a scientific paper \\
+		Cite String & The in-line citation mark. E.g. Nivre and Scholz (2004), [1], (23) \\
+		Citing Sentence & A sentence in the citing paper that contains the cite string. E.g. \textit{That algorithm, in turn, is similar to the dependency parsing algorithm of \textbf{Nivre and Scholz (2004)}, but it builds a constituent tree and a dependency tree simultaneously.} \\
+		Citing Context & \textit{Citances} as defined in \cite{nakov2004citances}. The block of text surrounding the citing sentence, about 2 sentences before and after the citing sentence, for providing contextual information \\
+		Cited Fragment & A fragment of text, from a few lines to paragraphs, in the cited paper
 	\end{tabular}
 }
 \caption{Terminological conventions used in this dissertation}
+\label{fig:terminology}
 \end{figure}
 
 % Min: not clear.  Is this the goal, what is already done or what is to be done?
-For \textbf{Specific} citations, we specifically extract a fragment in the cited paper that represents the source of the information mentioned in the citation itself, i.e. citation provenance.
+For \textbf{Specific} citations, we need to extract a fragment in the cited paper that represents the source of the information mentioned in the citation itself, i.e. citation provenance.
 
 \section{Scope Of The Problem}
 We decompose the task into two tiers.  In the first tier, we first determine whether a citation is General or Specific. If a citation is General, the reader can be directed, for example, to the abstract of the cited paper. If a citation is Specific, the reader can be directed to the specific paragraph or line.  From our definition, given that a citation is Specific, then there must exists a region in the cited paper that the citation refers to. To solve this second tier, we implement a ranking system that determines the location of this region.
@@ -52,9 +53,12 @@ While such engineering issues are important, our work focuses only on the resear
 \section{Modelling The Problem As Search}
 In web search engines, an user enters a search query, and a search engine would use this query to search within its search domain -- millions of web pages -- and then display the best matching web pages as compared to the search query. 
 % Min: unclear.  What do you mean "having a search query"?
-That would be equivalent to having a search query for an entire corpus of research papers. Our second subproblem of linking Specific citations to their origin can be modelled as search.
+%That would be equivalent to having a search query for an entire corpus of research papers.
+In comparison for a citation, citing context is the query, the cited document is the search domain and the citation provenance is one (or more) of the `web pages'. With the help of ParsCit \cite{parscit}, the citing context can be extracted.
+Our second subproblem of linking Specific citations to their origin can be modelled as search.
 
-Consider reading a paper, \url{A}. We know the citations made by \url{A}, and these cited papers are listed in its References section. From this our search domain for any query from \url{A} would be the contents of the list of cited papers. We reduce this search domain further when we are investigating a particular citation in \url{A}, say now paper \url{A} cites the paper \url{B}. Now, for this citation, the scope of search would be the sub-domain -- contents of paper \url{B}. So instead of searching for the best matching document in the corpus, we are now searching within \url{B}. The search query is the citation from \url{A}, and the {\it candidate documents} are the various regions (fragments) in \url{B} (Refer to Figure \ref{fig:model} for a simple illustration). With the help of ParsCit \cite{parscit}, the citing context can be extracted. The search query is then citing context which consists of the citing sentence.
+%Getting rid of this additional storytelling
+%Consider reading a paper, \url{A}. We know the citations made by \url{A}, and these cited papers are listed in its References section. From this our search domain for any query from \url{A} would be the contents of the list of cited papers. We reduce this search domain further when we are investigating a particular citation in \url{A}, say now paper \url{A} cites the paper \url{B}. Now, for this citation, the scope of search would be the sub-domain -- contents of paper \url{B}. So instead of searching for the best matching document in the corpus, we are now searching within \url{B}. The search query is the citation from \url{A}, and the {\it candidate documents} are the various regions (fragments) in \url{B} (Refer to Figure \ref{fig:model} for a simple illustration).
 
 \begin{figure}[h]
   \centering
@@ -67,17 +71,37 @@ Cast this way, our first subproblem is simply a \textit{binary classification pr
 
 \section{Target Corpus}
 \label{buildingcorpus}
-We selected the ACL Anthology Reference Corpus\footnote{http://acl-arc.comp.nus.edu.sg/} (ACL-ARC) as the target corpus to perform our research on. The ACL-ARC consists of publications covering topics in computational linguistics.  While we wish to generalize our citation provenance methodology to work on publications from all fields of research, we chose to start with this corpus as it provides the \textit{interlink data} that conveniently informs us of the cite links between the papers in the corpus. For instance, in the interlink data, a link like \url{X98-103==>X96-1049} says that the paper \url{X98-103}\footnote{All ACL-ARC papers are assigned an unique paper ID} cites \url{X96-1049}.  
+We selected the ACL Anthology Reference Corpus\footnote{\url{http://acl-arc.comp.nus.edu.sg}} (ACL-ARC) as the target corpus to perform our research on. The ACL-ARC consists of publications covering topics in computational linguistics.  While we wish to generalize our citation provenance methodology to work on publications from all fields of research, we chose to start with this corpus as it provides the \textit{interlink data} that conveniently informs us of the cite links between the papers in the corpus. For instance, in the interlink data, a link like \textbf{X98-103==$>$X96-1049} says that the paper \textbf{X98-103}\footnote{All ACL-ARC papers are assigned an unique paper ID} cites \textbf{X96-1049}.  
 
 % Min: the $n$ factor is usually very small so it doesn't seem O(nm).  Rather instead of the $n$ citing contexts it is that there are $k$ references.  The complexity is then mostly dominated by O(km)
-Given our formal problem statement, we can now specify the required data for the task. For each cite link, there can be multiple in-line citations i.e. multiple citing contexts, when a target paper is cited multiple times by the authors. Each citing context is compared with every fragment in the cited paper; i.e., if a cite link has $n$ citing contexts and the cited paper can be divided into $m$ fragments.  This immediately gives rise to $(n \times m)$ data instances.
+Given our formal problem statement, we can now specify the required data for the task. For each cite link, there can be multiple in-line citations i.e. multiple citing contexts, when a target paper is cited multiple times by the authors. Each citing context is compared with every fragment in the cited paper; i.e., if a cite link has $n$ citing contexts and the cited paper can be divided into $m$ fragments.  This immediately gives rise to $(n \times m)$ data instances. Consider instance 3050 in Figure~\ref{fig:data_instances} that consists of a context-fragment pair. Note that a fragment is of arbitrary length. For each cite link, for each citing context, there are $m$ context-fragment pairs. One (or a few) of them is the correct pair that connects a citation to its origin.
 % Min: show some examples of data instances.
 
+\begin{figure}[h]
+\centering
+%\framebox[\textwidth]{
+	\begin{tabular}{ l | l | p{4cm} | p{4cm}}
+		Instance & Cite Link & Context & Fragment\\
+		\hline
+		$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$\\
+		3050. & X98-103==$>$X96-1049 & ...Penn Treebank 3 release (\textbf{Marcus et al., 1993}), the string in (1) is a variation... & ...POS tagging phase is automatically parsed an...\\
+		\hline
+		3051. & X98-103==$>$X96-1049 & ...Penn Treebank 3 release (\textbf{Marcus et al., 1993}), the string in (1) is a variation... & ...to annotate large corpora in the past hav...\\
+		$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$
+	\end{tabular}
+%}
+\caption{Data instances}
+\label{fig:data_instances}
+\end{figure}
+
+We need to obtain this information: Which context-fragments pairs connect its citation to its origin? For that we collect annotations for these citations.
 % Min: you need to give some reasoning about why annotations are needed before proceeding into the annotations themselves.
 % Min: GLOBAL you still tend to use passive tense and modals.  Try to use active and simple tenses.
 % Min: GLOBAL use \url.  I've fixed one URL below.  Don't use URL for non-URLs because in PDFs the URLs will be active hyperlinks (that then won't work)
 \subsection*{Collecting Annotations -- First Attempt}
-The first attempt at collecting annotations was to require an annotator to specify the line numbers of the cited information that the citing context was referring to. The annotator would be provided the citing and cited paper in plain text format, and he/she will need to annotate on a separate file, specifying the line number range, e.g. line range \url{L12-55} of the cited paper. For this annotation task, we designed an annotation framework\footnote{\url{http://citprov.heroku.com}} where an annotator is presented with an user-friendly interface to select the lines in the cited paper that he/she deem Specific. We posted this task onto the Amazon Mechanical Turk (MTurk\footnote{https://www.mturk.com}) as an attempt to collect annotations on a larger scale and we collected some annotations from a few MTurk workers. After a trial round of annotation, we reviewed this annotation scheme together with feedback from the small group of participants.
+The first attempt at collecting annotations was to require an annotator to specify the line numbers of the cited information that the citing context was referring to. The annotator would be provided the citing and cited paper in plain text format, and he/she will need to annotate on a separate file, specifying the line number range, e.g. line range L12-55 of the cited paper. For this annotation task, we designed an annotation framework\footnote{\url{http://citprov.heroku.com}} where an annotator is presented with an user-friendly interface to select the lines in the cited paper that he/she deem Specific. 
+
+We planned for 2 means to collect annotations: One via inviting NUS students to computer labs to annotate these citations, the other via an online crowdsourcing solution, Amazon Mechanical Turk (MTurk\footnote{\url{https://www.mturk.com}}). The first allows close supervision, while the second is an attempt to collect annotations on a larger scale. For collecting annotations from NUS students, we applied and were approved for review exemption from the NUS Institutional Review Board (IRB\footnote{\url{http://www.nus.edu.sg/irb/}}) since our annotation task does not collect any confidential information from participants. After a trial round of annotation, we reviewed this annotation scheme together with feedback from the small group of participants.
 
 % Min: I recall you did an IRB application.  You should mention that, especially if it was approved to be exempted.  That is a significant amount of effort.
 First, this annotation task is non-trivial. Participants must be able to understand the contents of the papers, and thus, must largely be either subject matter experts (researchers) or have some experience in reading scientific papers. While it is possible to target a selected category of MTurk workers for this task, the complexity of this task requires participants with research experiences, which could be limited in numbers. Furthermore, most of the annotations collected from MTurk do not agree among the annotators and ourselves. Thus we abandoned collecting annotations via MTurk, and performed annotations manually.
