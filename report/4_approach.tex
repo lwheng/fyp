@@ -56,7 +56,7 @@ The intuition for using these features is that: Based on our observations, citat
 \item *Number Density (Feature $B$)\\
 A numeric feature similar to the first feature set that measures the density of numerical figures in the citing context. This is based on our previously-described analysis in Chapter~\ref{buildingcorpus} that Specific citations tend to refer numerical figures in evaluation results in the cited paper. E.g. ``...Nivre and Scholz (2004) obtained a precision of 79.1\%...".
 
-\item *Publishing Year Difference (Feature $C$)\\
+\item *Published Year Difference (Feature $C$)\\
 A numeric feature that represents difference in the publishing year between the citing and cited paper. A large difference means that a large publishing time gap exists between the citing and cited papers.  Such long term citations are usually citations for General purposes.
 
 \item *Citing Context's Average \url{tf-idf} Weight (Feature $D$)\\
@@ -72,26 +72,27 @@ Recall that according to our annotation statistics, this task is heavily skewed 
 \label{secondtier}
 {\it LocateProv}, short for Locate Provenance, is the second tier of my approach. The design of {\it LocateProv} is all its inputs are Specific citations predicts which of the fragments in the cited paper is the cited fragment. Resembling a search, in {\it LocateProv} the citing context becomes the {\it query} to match the cited fragments in the cited paper. To perform this ranking task, we import features that are prevalent that are basic mechanisms for ranking in Information Retrieval.
 
-% Min: stopped here (Tue Nov  6 23:51:23 SGT 2012)
 \subsection*{Building The Model For {\it LocateProv}}
-In {\it LocateProv} we are predicting which cited fragment is the provenance of a citation. Instead of cite links, we used the annotated fragments in Table \ref{tab:annotation} to build the model. In this tier the features used are based on both the citing contexts and the cited fragments in order to {\it connect} the citation to its provenance. Similarly the feature vectors are mapped onto the annotated labels. In the list of features below, features with names beginning with an asterisk (*) are features we introduced.
+In {\it LocateProv}, we predict which cited fragment is the provenance of a citation. Instead of cite links, we used the annotated fragments in Table~\ref{tab:annotation} to build the model. Unlike the first tier, the features used in the second tier are based on both the citing contexts and the cited fragments. Similarly the feature vectors are mapped onto the annotated labels. Adopting the same notation as used in the first tier, in the list of features below, features with names beginning with an asterisk (*) are features we introduced.
 
 \subsection*{{\it LocateProv} Features}
 \begin{enumerate}
 \item *Surface Matching (Feature $F$)\\
-A numerical feature that measures the amount of word overlap between the citing sentence and a fragment in the cited paper.
+A numeric feature that measures the amount of word overlap between the citing sentence and a fragment in the cited paper.
 
 \item *Number Near-Miss (Feature $G$)\\
-A numerical feature that measures the amount of numerical figures overlap between the citing sentence and a fragment in the cited paper. This feature will preprocess each fragment, rounding numerical figures or converting to percentage values when it tries to match the numerical figures in the citing sentence. This feature was added because of the observations we made earlier in Chapter \ref{buildingcorpus}, that citations may refer to evaluation results in the cited paper.
+A numeric feature that measures the amount of numeric figures overlap between the citing sentence and a fragment in the cited paper. This feature will preprocess each fragment, rounding numbers or converting to percentage values when it tries to match similar numbers in the citing sentence. This feature was added because of the observations we made earlier in Chapter \ref{buildingcorpus}, that citations may refer to evaluation results in the cited paper.
 
-\item *Bigrams Matching (Feature $H$)\\
-A numerical feature that measures the amount of bigrams overlap between the citing sentence and a fragment in the cited paper. This feature was added to preserve word order when comparing the citing sentence and the fragment. This feature was also targeted at Specific citations that refer to term definitions or quote directly.
+\item *Bigram Matching (Feature $H$)\\
+% Min2: is this a percentage or an absolute number?
+A numeric feature that measures the amount of bigrams overlap between the citing sentence and a fragment in the cited paper. This feature was added to preserve word order when comparing the citing sentence and the fragment. This feature was also targeted at Specific citations that refer to term definitions or quote directly.
 
 \item Cosine Similarity (Feature $I$)\\
-A common numerical feature used in Information Retrieval tasks to measure similarity between the query and a candidate document. In our case, citing sentence and the fragment.
+% Min2: give formula
+A feature used commonly in information retrieval to measure similarity between the query and a candidate document. In our case, citing sentence and the fragment.
 \end{enumerate}
 Most of these features are added based on some of the observations we made during the annotation tasks.
 
-Again, recall that the data instances that were annotated are heavily skewed against Specific citations. In fact, the ratio of Specific-Yes instances compared to the rest is at least $1:1000$. It is impossible to train a model that is not biased with this entire set of instances. Hence we used the same method used in {\it GvS}: to use a $1:1$ of Specific-Yes vs Specific-No instances. Note that this also coincide with the design of {\it LocateProv} that inputs are only Specific citations. It was also not feasible to use the actual ratio between Specific-Yes and Specific-No because comparing a citing-cited pair of papers, the ratio of citing context to the number of fragments in the cited paper is easily $1:100$.
+Recall that the data instances that were annotated are heavily skewed against Specific citations. In fact, the ratio of Specific-Yes instances compared to the rest is at least $1:1000$. It is impossible to train a model that is not biased with this entire set of instances. Hence we used the same method used in {\it GvS}: to use a $1:1$ of Specific-Yes vs Specific-No instances. Note that this also coincide with the design of {\it LocateProv} that inputs are only Specific citations. It was also not feasible to use the actual ratio between Specific-Yes and Specific-No because comparing a citing-cited pair of papers, the ratio of citing context to the number of fragments in the cited paper is easily $1:100$.
 
-For both tiers, we trained the models using various classifiers and evaluated their performances on a few evaluation strategies. We discuss the evaluation process in the following chapter.
+For both tiers, we trained the models using various classifiers and evaluated their performance. We discuss the evaluation process in the following chapter.
