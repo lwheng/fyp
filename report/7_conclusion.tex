@@ -1,9 +1,14 @@
 \chapter{Conclusion}
 \label{conclusion}
-We touched on a new task for citation analysis, Citation Provenance. While \outcite{csibs} presented the CSIBS tool that gave readers a preview of a cited paper, it only provided a summarisation solution. In our paper, we described the first attempt to provide a solution to the difficulty of locating the information that justifies a citation.
+In our thesis, we examine a new task in citation analysis, citation provenance. 
+% Min: I still don't know what you mean by ``summarisation solution''
+While \outcite{csibs} presented the CSIBS tool that gave readers a preview of a cited paper, it only provided a summarisation solution.
+In our paper, we described the first attempt to provide a solution to the difficulty of locating the information that justifies a citation.
 
-We presented a two-tier approach towards this problem, {\it Gvs} and {\it LocateProv}. With the first acting as a filter to separate the General citations from the Specific ones and the second one to predict which of the fragments in the cited paper are referenced by the citation. One of the challenges in this task is the highly unbalanced ratio between General versus Specific citations. Also, the annotation task is very challenging and would require experienced researchers who understands the content of the papers to be annotated. As a result all the training instances were manually annotated.
+We presented a two-tier approach towards this problem, {\it Gvs} and {\it LocateProv}. The first tier acts as a filter to separate the General citations from the Specific ones, and the second tier takes Specific citations and predicts which fragments in the cited paper are referenced by the citation. 
+% Min: ok, but you didn't really do anything about this or assess how your system deals with this.  You need to do that in the evaluation before arguing for this.
+One of the challenges in this task is the highly unbalanced ratio between General versus Specific citations. Also, the annotation task is very challenging and would require experienced researchers who understands the content of the papers to be annotated. As a result all the training instances were manually annotated.
 
 To train prediction models for this task, we gathered an unskewed set of instances, a balanced ratio of General versus Specific instances, and measured their ability to differentiate between the 2 types of citations. Feature analysis showed that most of the features are essential, with the Physical Features (Feature $A$) adopted from \outcite{dongensemble} proving to have the most discriminative power in {\it GvS}, and Cosine Similarity (a common strategy for Information Retrieval tasks) remained to be most important in {\it LocateProv}.
 
-Finally, evaluations on {\it GvS} and {\it LocateProv} produced promising results in classifying General versus Specific citations and locating the cited fragment in the cited paper. With that we conclude that we devised an approach to predict Citation Provenance.
+Finally, evaluations on {\it GvS} and {\it LocateProv} produced promising results in classifying General versus Specific citations and locating the cited fragment in the cited paper.
