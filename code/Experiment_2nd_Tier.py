@@ -261,18 +261,46 @@ if __name__ == "__main__":
     X_train.append(d)
     y_train.append(a)
    
-  X_train = np.asarray(X_train)
-  y_train = np.asarray(y_train)
+  
+  # Put X and y together to shuffle them
+  Xy_temp = []
+  for i in range(len(X_train)):
+    Xy_temp.append((list(X_train[i]), y_train[i]))
+  random.shuffle(Xy_temp)
+  # Separate them now
+  X_now = []
+  y_now = []
+  for (this_x, this_y) in Xy_temp:
+    X_now.append(this_x)
+    y_now.append(this_y)
+  
+  X_train = np.asarray(X_now)
+  y_train = np.asarray(y_now)
+
+  # Put X and y together to shuffle them
+  Xy_temp = []
+  for i in range(len(X)):
+    Xy_temp.append((list(X[i]), y[i]))
+  random.shuffle(Xy_temp)
+  # Separate them now
+  X_now = []
+  y_now = []
+  for (this_x, this_y) in Xy_temp:
+    X_now.append(this_x)
+    y_now.append(this_y)
+  
+  X = np.asarray(X_now)
+  y = np.asarray(y_now)
 
   clf = svm.SVC(kernel='linear')
-  clf.fit(X,y)
-  expected = y
-  predicted = clf.predict(X)
+  clf.fit(X[0:42],y[0:42])
+  expected = y[42:]
+  predicted = clf.predict(X[42:])
   print metrics.classification_report(expected, predicted)
   print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)
   clf = svm.SVC(kernel='linear')
-  clf.fit(X_train,y_train)
-  expected = y_train
-  predicted = clf.predict(X_train)
+  clf.fit(X_train[0:42],y_train[0:42])
+  expected = y_train[42:]
+  predicted = clf.predict(X_train[42:])
   print metrics.classification_report(expected, predicted)
   print "Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted)

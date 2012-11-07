@@ -1,10 +1,60 @@
 \chapter{Evaluation}
 \label{evaluation}
-We perform modular evaluation on \textit{GvS} and \textit{LocateProv}. For each tier we evaluate its performance on a few classifiers: Support Vector Machine (SVM), Naive Bayes (NB) and Decision Tree (DT). For each classifier we also performe evaluation using a few evaluation strategies.
+We performed modular evaluations of {\it GvS} and {\it LocateProv}. For each tier we evaluated the performance of models trained with different classifiers using the same feature set as was described in the previous chapter.  We examined the efficacy of Support Vector Machine (SVM), Na\"{\i}ve Bayes (NB) and Decision Tree (DT) learning models. 
 
 \section{Evaluating {\it GvS}}
 \label{eval:first}
-Recall that we use a $1:1$ of Specific versus General data instances, our artificially sampled unskewed training set, for building the model. To first verify {\it GvS}, we evaluate the features added using the \textit{feature ablation} strategy. For each feature removed from this set of unskewed data instances, the rest of the features are used to train a model using the SVM classifier and then tested on the same set of data instances. To measure the performance each round, we use the conventional accuracy measure. Note that in Figure~\ref{fig:ablation_first} the letters $A$ to $E$ represent the five features described in Chapter~\ref{firsttier}.
+% Min: BUG you first need to give overall performance before giving the description of the ablation study.
+% Min: BUG you also need to say which classifier you used for these experiments.
+Recall that we used a $1:1$ of Specific versus General data instances for building the model.
+% Min: put overall performance text here.
+We evaluate \textit{GvS} using the \textbf{Leave-One-Out} cross-validation strategy. In this strategy we leave one data instance out for testing while the rest are used for training and we repeat this for the number of instances. The main reason for using this strategy is because the number of data instances in the unskewed data set is already very small, and we wish to maximise them for training. For this strategy we compare the performance of the various classifiers, for each, computing the Precision, Recall and F$_1$ values.
+
+\begin{table}[h]
+	\center
+	\begin{tabular}{ c | c  c  c | c c c | c c c}
+		& & SVM & & & NB & & & DT \\
+		\textsc{Class/Values} & \textsc{P} & \textsc{R} & \textsc{F$_1$} & \textsc{P} & \textsc{R} & \textsc{F$_1$} & \textsc{P} & \textsc{R} & \textsc{F$_1$} \\
+		\hline
+		\textsc{general} 			& 0.76  &    0.79   &   0.77 & 0.64   &   0.82   &   0.72 & 0.67  &    0.64  &    0.65 \\
+		\textsc{specific} 			& 0.78  &    0.75   &   0.76 & 0.75   &   0.54   &   0.63 & 0.66  &    0.68  &    0.67 \\
+	\end{tabular}
+	\caption{Leave-One-Out Results for {\it GvS}}
+	\label{tab:firsttieresults}
+\end{table}
+
+Examining the confusion matrix for the best performing SVM classifier below in Table~\ref{tab:firstsvmconfusionmatrix}, we see that model yields almost identical amounts of false negatives and false positives, such that neither error class dominates.  We conclude that the classifier thus far has a balanced performance.
+
+\begin{table}[h]
+	\center
+	\begin{tabular}{ c | c  c }
+		 & \textsc{actual $g$} & \textsc{actual $s$} \\
+		\hline
+		\textsc{predicted $g$} 	& 22 & 6 \\
+		\textsc{predicted $s$}		& 7 & 21
+	\end{tabular}
+	\caption{Confusion Matrix for SVM with Leave-One-Out on {\it GvS}}
+	\label{tab:firstsvmconfusionmatrix}
+\end{table}
+
+We assessed the performance of \textit{GvS} given varied amount of training data instances. We experimented on 3 variations of the amount of training data: $9\%$, $25\%$, $50\%$ and $75\%$. The remaining percentage in each variation is used the testing. For this experiment we used the SVM classifier. Table~\ref{tab:variationtesting} shows the results of this experiment.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ c c}
+	Amount for Training & Accuracy \\
+	\hline
+	$9\%$ & 0.294 \\
+	$25\%$ & 0.642 \\
+	$50\%$ & 0.714 \\
+	$75\%$ & 0.857 \\
+\end{tabular}
+\caption{Performance of {\it GvS} given varied amount of training data}
+\label{tab:variationtesting}
+\end{table}
+From Table~\ref{tab:variationtesting} we demonstrated the trend \textit{GvS} showed improvement as the amount of training data increased. This shows the potential for better performance to be used in practice if provided a large enough training set.
+
+We next assessed {\it GvS} by evaluating the important of individual features via a {\it feature ablation} study. In this feature ablation study, we use the SVM classifier. For each feature removed from entire set of features, we trained a classifier on the set of unskewed data instances. The rest of the features are used to train a model and then tested on the same set of data instances. To measure the performance each round, we used the conventional accuracy measure. Note that in Figure \ref{fig:ablation_first} the letters $A$ to $E$ represents the five features described in Chapter \ref{firsttier}.
 
 \begin{figure}[ht]
 \begin{minipage}[b]{0.45\linewidth}\centering
@@ -35,9 +85,39 @@ Only $E$	& 0.696 \\
 \label{fig:ablation_first}
 \end{figure}
 
-We observe that feature $A$ (Physical Feature) has the most impact in the accuracy of the predictions, with the greatest drop in accuracy when $A$ itself is removed and one of the highest accuracy when $A$ alone is used as a feature (see Figure \ref{fig:ablation_first}). Feature $D$ (Citing Context's Average TF$\times$IDF Weight) appears to be the only redundant feature, but since it does not decrease the overall accuracy we shall include it nevertheless.
+% Min: try to describe why this is the case.  Can you point to specific citations i.e., quote them in a figure, that changed to correct/incorrect when a specific features was used or removed? 
+We observed that feature $A$ (Physical Feature) has the most impact in the accuracy of the predictions, with the greatest drop in accuracy when $A$ itself is removed.  Using $A$ alone also results in one of the highest accuracy (see Figure~\ref{fig:ablation_first}). Feature $D$ (Citing Context's Average TF$\times$IDF Weight) appears to be the only redundant feature, but since it does not decrease the overall accuracy we shall include it nevertheless.
 
-We evaluate \textit{GvS} using the \textbf{Leave-One-Out} cross-validation strategy. In this strategy we leave one data instance out for testing while the rest are used for training and we repeat this for the number of instances. The main reason for using this strategy is because the number of data instances in the unskewed data set is already very small, and we wish to maximise them for training. For this strategy we compare the performance of the various classifiers, for each, computing the Precision, Recall and F$_1$ values.
+%% Min: not useful.  You need to do this with different amounts of data (25%, 50%, 75% training data) to see useful trends.  You can plot the results. 
+%We also evaluated {\it GvS} using cross-validation to gain insight on {\it GvS}'s performance when given less training instances. For that we performed 7-fold cross-validation. From Table \ref{tab:crossvalidation} we can conclude {\it GvS} maintains performance.
+%
+%\begin{table}[h]
+%	\singlespacingplus
+%	\center
+%	\begin{tabular}{ c c }
+%		\textsc{{\it n}$^{th}$ Fold} & \textsc{Accuracy} \\
+%		\hline
+%		1 & 0.750 \\
+%		2 & 0.750 \\
+%		3 & 0.750 \\
+%		4 & 0.875 \\
+%		5 & 0.875 \\
+%		6 & 0.750 \\
+%		7 & 0.750 \\
+%		Average & 0.786 \\
+%	\end{tabular}
+%	\caption{Cross-Validation on {\it GvS}}
+%	\label{tab:crossvalidation}
+%\end{table}
+
+
+
+\section{Evaluating {\it LocateProv}}
+\label{eval:second}
+% Min: see above comments for the first tier section and apply them to the below.  
+We evaluate {\it LocateProv} using an identical set of experiments as was done to the first tier {\it GvS} classifier.
+
+We evaluate \textit{LocateProv} using the \textbf{Leave-One-Out} strategy together with various classifiers. Table~\ref{tab:secondtieresults} summarises the results.
 
 \begin{table}[h]
 	\center
@@ -45,50 +125,31 @@ We evaluate \textit{GvS} using the \textbf{Leave-One-Out} cross-validation strat
 		& & SVM & & & NB & & & DT \\
 		\textsc{Class/Values} & \textsc{P} & \textsc{R} & \textsc{F$_1$} & \textsc{P} & \textsc{R} & \textsc{F$_1$} & \textsc{P} & \textsc{R} & \textsc{F$_1$} \\
 		\hline
-		\textsc{general} 			& 0.76  &    0.79   &   0.77 & 0.64   &   0.82   &   0.72 & 0.67  &    0.64  &    0.65 \\
-		\textsc{specific} 			& 0.78  &    0.75   &   0.76 & 0.75   &   0.54   &   0.63 & 0.66  &    0.68  &    0.67 \\
+		\textsc{Specific-No} 			& 0.92  &    0.82   &   0.87 & 0.84   &   0.96   &   0.90 & 0.89  &    0.89  &    0.89 \\
+		\textsc{Specific-Yes} 			& 0.84  &    0.93   &   0.88 & 0.96   &   0.82   &   0.88 & 0.89  &    0.89  &    0.89 \\
 	\end{tabular}
-	\caption{Leave-One-Out Results for {\it GvS}}
-	\label{tab:firsttieresults}
+	\caption{Leave-One-Out Results for {\it LocateProv}}
+	\label{tab:secondtieresults}
 \end{table}
-
-We can see SVM performs best in classifying the citations. Let us examine the confusion matrix for SVM. \textit{GvS} is aimed at filtering out the General citations. Our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix. We achieved this in Table~\ref{tab:firstsvmconfusionmatrix} and we can conclude that \textit{GvS} has a promising performance in differentiating General and Specific citations.
+The scores are very close to each other between the classifiers. 
+Let us examine the confusion matrix from the Na\"{\i}ve Bayes classifier since it has the highest precision for classifying Specific-Yes instances, the class that we are most interested in obtaining high accuracy for.
 
 \begin{table}[h]
 	\center
 	\begin{tabular}{ c | c  c }
-		 & \textsc{actual $g$} & \textsc{actual $s$} \\
+		 & \textsc{actual $n$} & \textsc{actual $y$} \\
 		\hline
-		\textsc{predicted $g$} 	& 22 & 6 \\
-		\textsc{predicted $s$}		& 7 & 21
+		\textsc{predicted $n$} 	& 27 & 1 \\
+		\textsc{predicted $y$}		& 5 & 23
 	\end{tabular}
-	\caption{Confusion Matrix for SVM with Leave-One-Out on {\it GvS}}
-	\label{tab:firstsvmconfusionmatrix}
+	\caption{Confusion Matrix for NB with Leave-One-Out on {\it LocateProv}}
+	\label{tab:secondnbconfusionmatrix}
 \end{table}
+% Min: not good enough. You should discuss why there are 5 false positives and why that is ok (e.g., we want to make sure we get all specific citations)
+{\it LocateProv} is aimed at identifying the Specific-Yes fragments in the cited paper. Our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix. We achieved this in Table \ref{tab:secondnbconfusionmatrix} and we can conclude that {\it LocateProv} has a promising performance in differentiating Specific-Yes ($y$) and Specific-No ($n$) fragments.
 
-We continue evaluating \textit{GvS} using another cross-validation strategy, $K$-fold. While this appears to be a repeat usage of a cross-validation strategy for evaluation, we wanted to gain a better insight of \textit{GvS}'s performance when given less training instances. For that we perform 7-fold cross-validation. From Table~\ref{tab:crossvalidation} we can conclude that \textit{GvS} could maintain promising performance in practice.
-\begin{table}[h]
-	\singlespacingplus
-	\center
-	\begin{tabular}{ c c }
-		\textsc{{\it n}$^{th}$ Fold} & \textsc{Accuracy} \\
-		\hline
-		1 & 0.750 \\
-		2 & 0.750 \\
-		3 & 0.750 \\
-		4 & 0.875 \\
-		5 & 0.875 \\
-		6 & 0.750 \\
-		7 & 0.750 \\
-		Average & 0.786 \\
-	\end{tabular}
-	\caption{Cross-Validation on {\it GvS}}
-	\label{tab:crossvalidation}
-\end{table}
 
-\section{Evaluating {\it LocateProv}}
-\label{eval:second}
-Similar to evaluating \textit{GvS} in Chapter~\ref{eval:first}, we first evaluate the features added to \textit{LocateProv} using the \textit{feature ablation} strategy. Note that the letters $F$ to $I$ represents the features described in Chapter~\ref{secondtier}.
+We next assessed the features added to {\it LocateProv} using the {\it feature ablation} strategy. Note that the letters $F$ to $I$ represents the features described in Chapter \ref{secondtier}.
 
 \begin{figure}[ht]
 \begin{minipage}[b]{0.45\linewidth}\centering
@@ -116,49 +177,55 @@ Only $I$	& 0.875 \\
 \caption{Feature Ablation on {\it LocateProv}}
 \label{fig:ablation_second}
 \end{figure}
-From Figure~\ref{fig:ablation_second} we can conclude that feature $I$ (Cosine Similarity) remains to be the most important among the features for \textit{LocateProv}. This is expected because as modelled in Chapter~\ref{problemanalysis}, \textit{LocateProv} is a search problem, thus a feature commonly applied in Information Retrieval tasks is most suitable. Note that, however, these results is only this particular test set, which is also the training set. We cannot conclude that Cosine Similarity will work well in all cases. From feature ablation on \textit{LocateProv} we do not observe any redundant feature.
+From Figure \ref{fig:ablation_second} we can conclude that feature $I$ (Cosine Similarity) remains to be the most important among the features for {\it LocateProv}. This is expected because as modelled in Chapter \ref{problemanalysis}, {\it LocateProv} is a searching problem, thus an information retrieval technique is most applicable. 
+% Min: not sure what you mean.  You cannot test on the training set.  Be clear about what you mean.
+Note that, however, these results is only this particular small test set, we cannot generalize that Cosine Similarity will work well in larger test sets.
 
-We continue to evaluate \textit{LocateProv} using the \textbf{Leave-One-Out} strategy together with various classifiers. Table~\ref{tab:secondtieresults} summarises the results.
+%We continue to evaluate \textit{LocateProv} using the \textbf{Leave-One-Out} strategy together with various classifiers. Table~\ref{tab:secondtieresults} summarises the results.
+%
+%\begin{table}[h]
+%	\center
+%	\begin{tabular}{ c | c  c  c | c c c | c c c}
+%		& & SVM & & & NB & & & DT \\
+%		\textsc{Class/Values} & \textsc{P} & \textsc{R} & \textsc{F$_1$} & \textsc{P} & \textsc{R} & \textsc{F$_1$} & \textsc{P} & \textsc{R} & \textsc{F$_1$} \\
+%		\hline
+%		\textsc{Specific-No} 			& 0.92  &    0.82   &   0.87 & 0.84   &   0.96   &   0.90 & 0.89  &    0.89  &    0.89 \\
+%		\textsc{Specific-Yes} 			& 0.84  &    0.93   &   0.88 & 0.96   &   0.82   &   0.88 & 0.89  &    0.89  &    0.89 \\
+%	\end{tabular}
+%	\caption{Leave-One-Out Results for {\it LocateProv}}
+%	\label{tab:secondtieresults}
+%\end{table}
+%The scores are very close to each other between the classifiers. 
+%Let us examine the confusion matrix from the Na\"{\i}ve Bayes classifier since it has the highest precision for classifying Specific-Yes instances, the class that we are most interested in obtaining high accuracy for.
+%
+%\begin{table}[h]
+%	\center
+%	\begin{tabular}{ c | c  c }
+%		 & \textsc{actual $n$} & \textsc{actual $y$} \\
+%		\hline
+%		\textsc{predicted $n$} 	& 27 & 1 \\
+%		\textsc{predicted $y$}		& 5 & 23
+%	\end{tabular}
+%	\caption{Confusion Matrix for NB with Leave-One-Out on {\it LocateProv}}
+%	\label{tab:secondnbconfusionmatrix}
+%\end{table}
+%% Min: not good enough. You should discuss why there are 5 false positives and why that is ok (e.g., we want to make sure we get all specific citations)
+%{\it LocateProv} is aimed at identifying the Specific-Yes fragments in the cited paper. Our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix. We achieved this in Table \ref{tab:secondnbconfusionmatrix} and we can conclude that {\it LocateProv} has a promising performance in differentiating Specific-Yes ($y$) and Specific-No ($n$) fragments.
 
-\begin{table}[h]
-	\center
-	\begin{tabular}{ c | c  c  c | c c c | c c c}
-		& & SVM & & & NB & & & DT \\
-		\textsc{Class/Values} & \textsc{P} & \textsc{R} & \textsc{F$_1$} & \textsc{P} & \textsc{R} & \textsc{F$_1$} & \textsc{P} & \textsc{R} & \textsc{F$_1$} \\
-		\hline
-		\textsc{Specific-No} 			& 0.92  &    0.82   &   0.87 & 0.84   &   0.96   &   0.90 & 0.89  &    0.89  &    0.89 \\
-		\textsc{Specific-Yes} 			& 0.84  &    0.93   &   0.88 & 0.96   &   0.82   &   0.88 & 0.89  &    0.89  &    0.89 \\
-	\end{tabular}
-	\caption{Leave-One-Out Results for {\it LocateProv}}
-	\label{tab:secondtieresults}
-\end{table}
-The scores are very close to each other between the classifiers. Let us examine the confusion matrix from the Naive Bayes classifier, which has the highest precision for classifying Specific-Yes instances.
+For a more conclusive evaluation, we compare \textit{LocateProv} to our baseline for this task. With \textit{LocateProv} resembling a search problem, a feasible baseline is to compare the citing context with the fragments with Cosine Similarity, coupled with TF$\times$IDF \cite{irtextbook} weighting scheme. Essentially the baseline is just \textit{LocateProv} running only on feature $I$ (Cosine Similarity). For a fair comparison between \textit{LocateProv} and the baseline, we artificially sampled a $1:1$ (Specific-No vs. Specific-Yes) training dataset as we did before to unskew the data instances. Specific-Yes instances were gathered, and the same number of Specific-No instances were \textbf{randomly} selected from the collection. For both \textit{LocateProv} and baseline, they were trained (on $75\%$) and tested (on $25\%$)  with the SVM classifier. Note that the only difference between the data set is the random set of Specific-No instances. We compared their P/R/F values in Table \ref{tab:locateprov_vs_baseline}.
 
-\begin{table}[h]
-	\center
-	\begin{tabular}{ c | c  c }
-		 & \textsc{actual $n$} & \textsc{actual $y$} \\
-		\hline
-		\textsc{predicted $n$} 	& 27 & 1 \\
-		\textsc{predicted $y$}		& 5 & 23
-	\end{tabular}
-	\caption{Confusion Matrix for NB with Leave-One-Out on {\it LocateProv}}
-	\label{tab:secondnbconfusionmatrix}
-\end{table}
-\textit{LocateProv} is aimed at identifying the Specific-Yes fragments in the cited paper. Our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix. We achieved this in Table~\ref{tab:secondnbconfusionmatrix} and we can conclude that \textit{LocateProv} has a promising performance in differentiating Specific-Yes ($y$) and Specific-No ($n$) fragments.
-
-For a more conclusive evaluation, we compare \textit{LocateProv} to our baseline for this task. With \textit{LocateProv} resembling a search problem, a feasible baseline is to compare the citing context with the fragments with Cosine Similarity, coupled with TF$\times$IDF \cite{irtextbook} weighting scheme. Essentially the baseline is just \textit{LocateProv} running only on feature $I$ (Cosine Similarity). For a fair comparison between \textit{LocateProv} and the baseline, we artificially sampled a $1:1$ (Specific-No vs. Specific-Yes) training dataset as we did before to unskew the data instances. Specific-Yes instances were gathered, and the same number of Specific-No instances were \textbf{randomly} selected from the collection. For both \textit{LocateProv} and baseline, they were trained and tested on their own data set with the SVM classifier. Note that the only difference between the data set is the random set of Specific-No instances. We compared their P/R/F values in Table \ref{tab:locateprov_vs_baseline}.
-
+% Min: before your presentation, test the statistical significance of this difference.
+% Min: you also need to try to run your classifiers over the actual data set where skew is the normal case.
 \begin{table}[h]
 	\center
 	\begin{tabular}{ c | c  c  c | c c c }
 		& & {\it LocateProv} & & & Baseline \\
 		\textsc{Class/Values} & \textsc{P} & \textsc{R} & \textsc{F$_1$} & \textsc{P} & \textsc{R} & \textsc{F$_1$}  \\
 		\hline
-		\textsc{Specific-No} 			& 0.96  &    0.82   &   0.88 & 0.89   &   0.57   &   0.70 \\
-		\textsc{Specific-Yes} 			& {\bf 0.84}  &    0.96   &   0.90 & {\bf 0.61}   &   0.89   &   0.72 \\
+		\textsc{Specific-No} 			& 0.86  &    0.86   &   0.86 & 0.75   &   0.60   &   0.67 \\
+		\textsc{Specific-Yes} 			& {\bf 0.86}  &    0.86   &   0.86 & {\bf 0.80}   &   0.89   &   0.84 \\
 	\end{tabular}
 	\caption{{\it LocateProv} versus Baseline}
 	\label{tab:locateprov_vs_baseline}
 \end{table}
-Notice the precision values in bold in Table \ref{tab:locateprov_vs_baseline}, that {\it LocateProv} attained a higher precision than the baseline. {\it LocateProv} performs better at differentiating Specific-Yes fragments from Specific-No. Thus, justifying our approach to locating Specific-Yes fragments in the cited paper.
+Notice the precision values in bold in Table \ref{tab:locateprov_vs_baseline}, that {\it LocateProv} attained a higher precision than the baseline. {\it LocateProv} performs slightly better at differentiating Specific-Yes fragments from Specific-No. Thus, justifying our approach to locating Specific-Yes fragments in the cited paper.

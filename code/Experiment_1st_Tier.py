@@ -260,11 +260,97 @@ if __name__ == "__main__":
     Xy.append((list(X[i]), y[i]))
   random.shuffle(Xy)
   # Separate them now
-  X_mixed = []
-  y_mixed = []
+  X_now = []
+  y_now = []
   for (this_x, this_y) in Xy:
-    X_mixed.append(this_x)
-    y_mixed.append(this_y)
+    X_now.append(this_x)
+    y_now.append(this_y)
+
+  # Percentage training
+  # Train on 25, test on 75
+  train_amount = int(len(Xy))/10
+  X_now_train = []
+  y_now_train = []
+  X_now_test = []
+  y_now_test = []
+  for i in range(train_amount):
+    X_now_train.append(X_now[i])
+    y_now_train.append(y_now[i])
+  for i in range(train_amount, len(Xy)):
+    X_now_test.append(X_now[i])
+    y_now_test.append(y_now[i])
+  clf = svm.SVC(kernel='linear')
+  clf.fit(X_now_train, y_now_train)
+  predicted = clf.predict(X_now_test)
+  expected = y_now_test
+  accuracy = float(0)
+  for i in range(len(expected)):
+    if predicted[i] == expected[i]:
+      accuracy += 1
+  print accuracy / float(len(expected))
+  train_amount = int(len(Xy))/4
+  X_now_train = []
+  y_now_train = []
+  X_now_test = []
+  y_now_test = []
+  for i in range(train_amount):
+    X_now_train.append(X_now[i])
+    y_now_train.append(y_now[i])
+  for i in range(train_amount, len(Xy)):
+    X_now_test.append(X_now[i])
+    y_now_test.append(y_now[i])
+  clf = svm.SVC(kernel='linear')
+  clf.fit(X_now_train, y_now_train)
+  predicted = clf.predict(X_now_test)
+  expected = y_now_test
+  accuracy = float(0)
+  for i in range(len(expected)):
+    if predicted[i] == expected[i]:
+      accuracy += 1
+  print accuracy / float(len(expected))
+  # Train on 50, test on 50
+  train_amount = int(len(Xy))/2
+  X_now_train = []
+  y_now_train = []
+  X_now_test = []
+  y_now_test = []
+  for i in range(train_amount):
+    X_now_train.append(X_now[i])
+    y_now_train.append(y_now[i])
+  for i in range(train_amount, len(Xy)):
+    X_now_test.append(X_now[i])
+    y_now_test.append(y_now[i])
+  clf = svm.SVC(kernel='linear')
+  clf.fit(X_now_train, y_now_train)
+  predicted = clf.predict(X_now_test)
+  expected = y_now_test
+  accuracy = float(0)
+  for i in range(len(expected)):
+    if predicted[i] == expected[i]:
+      accuracy += 1
+  print accuracy / float(len(expected))
+  # Train on 75, test on 25
+  train_amount = int(len(Xy))/4 * 3
+  X_now_train = []
+  y_now_train = []
+  X_now_test = []
+  y_now_test = []
+  for i in range(train_amount):
+    X_now_train.append(X_now[i])
+    y_now_train.append(y_now[i])
+  for i in range(train_amount, len(Xy)):
+    X_now_test.append(X_now[i])
+    y_now_test.append(y_now[i])
+  clf = svm.SVC(kernel='linear')
+  clf.fit(X_now_train, y_now_train)
+  predicted = clf.predict(X_now_test)
+  expected = y_now_test
+  accuracy = float(0)
+  for i in range(len(expected)):
+    if predicted[i] == expected[i]:
+      accuracy += 1
+  print accuracy / float(len(expected))
+  sys.exit()
   cross_fold = []
   for i in range(len(X_mixed)/k):
     X_cross_test = X_mixed[i*k:(i+1)*k]
