@@ -85,11 +85,14 @@ A numeric feature that measures the amount of numeric figures overlap between th
 
 \item *Bigram Matching (Feature $H$)\\
 % Min2: is this a percentage or an absolute number?
-A numeric feature that measures the amount of bigrams overlap between the citing sentence and a fragment in the cited paper. This feature was added to preserve word order when comparing the citing sentence and the fragment. This feature was also targeted at Specific citations that refer to term definitions or quote directly.
+A numeric feature that measures the percentage of bigrams overlap between the citing sentence and a fragment in the cited paper. This feature was added to preserve word order when comparing the citing sentence and the fragment. This feature was also targeted at Specific citations that refer to term definitions or quote directly.
 
 \item Cosine Similarity (Feature $I$)\\
 % Min2: give formula
-A feature used commonly in information retrieval to measure similarity between the query and a candidate document. In our case, citing sentence and the fragment.
+\begin{equation}
+\textrm{cosine similarity} = \frac{v \cdot u}{|v| |u|}
+\end{equation}
+A feature commonly used in information retrieval to measure similarity between the query and a candidate document. In our case, citing sentence and the fragment. $v$ is a vector representation of the citing sentence and $u$ is the fragment.
 \end{enumerate}
 Most of these features are added based on some of the observations we made during the annotation tasks.
 

@@ -1,5 +1,6 @@
 \chapter{Evaluation}
 \label{evaluation}
+<<<<<<< HEAD
 We performed modular evaluations of {\it GvS} and {\it LocateProv}. For each tier we evaluated the performance of models trained with different classifiers using the same feature set as was described in the previous chapter.  We examined the efficacy of Support Vector Machine (SVM), Na\"{\i}ve Bayes (NB) and Decision Tree (DT) learning models. 
 % Min: this isn't clear.  Be more specific
 For each classifier, we performed evaluation using a few evaluation strategies.
@@ -11,6 +12,8 @@ For each classifier, we performed evaluation using a few evaluation strategies.
 Recall that we used a $1:1$ of Specific versus General data instances for building the model.  
 % Min: put overall performance text here.
 We next assessed {\it GvS} by evaluating the important of individual features via a {\it feature ablation} study. For each feature removed from entire set of features, we trained a classifier on the set of unskewed data instances. the rest of the features are used to train a model using the SVM classifier and then tested on the same set of data instances. To measure the performance each round, we used the conventional accuracy measure. Note that in Figure \ref{fig:ablation_first} the letters $A$ to $E$ represents the five features described in Chapter \ref{firsttier}.
+We perform modular evaluation on \textit{GvS} and \textit{LocateProv}. For each tier we evaluate its performance on a few classifiers: Support Vector Machine (SVM), Naive Bayes (NB) and Decision Tree (DT). For each classifier we also performe evaluation using a few evaluation strategies.
+
 
 \begin{figure}[ht]
 \begin{minipage}[b]{0.45\linewidth}\centering
@@ -41,10 +44,11 @@ Only $E$	& 0.696 \\
 \label{fig:ablation_first}
 \end{figure}
 
+<<<<<<< HEAD
 % Min: try to describe why this is the case.  Can you point to specific citations i.e., quote them in a figure, that changed to correct/incorrect when a specific features was used or removed? 
 We observed that feature $A$ (Physical Feature) has the most impact in the accuracy of the predictions, with the greatest drop in accuracy when $A$ itself is removed.  Using $A$ alone also results in one of the highest accuracy (see Figure \ref{fig:ablation_first}). Feature $D$ (Citing Context's Average \url{tf-idf} Weight) appears to be the only redundant feature, but since it does not decrease the overall accuracy we shall include it nevertheless.
 
-We then evaluated {\it GvS}'s robustness to training data variation.  We did this by using the \url{Leave-One-Out} cross-validation strategy. In this strategy, we leave one data instance out for testing while the rest are used for training and we repeat this for the number of instances. The main reason for using this strategy is because the number of data instances in the unskewed data set is already very small, and we wish to maximise them for training. For this strategy we compared the performance of the various classifiers, for each, computing the Precision, Recall and F$_1$ values.
+We evaluate \textit{GvS} using the \textbf{Leave-One-Out} cross-validation strategy. In this strategy we leave one data instance out for testing while the rest are used for training and we repeat this for the number of instances. The main reason for using this strategy is because the number of data instances in the unskewed data set is already very small, and we wish to maximise them for training. For this strategy we compare the performance of the various classifiers, for each, computing the Precision, Recall and F$_1$ values.
 
 \begin{table}[h]
 	\center
@@ -100,7 +104,7 @@ We also evaluated {\it GvS} using cross-validation to gain insight on {\it GvS}'
 % Min: see above comments for the first tier section and apply them to the below.  
 We evaluate {\it LocateProv} using an identical set of experiments as was done to the first tier {\it GvS} classifier.
 
-we first evaluated the features added to {\it LocateProv} using the {\it feature ablation} strategy. Note that the letters $F$ to $I$ represents the features described in Chapter \ref{secondtier}.
+We first evaluated the features added to {\it LocateProv} using the {\it feature ablation} strategy. Note that the letters $F$ to $I$ represents the features described in Chapter \ref{secondtier}.
 
 \begin{figure}[ht]
 \begin{minipage}[b]{0.45\linewidth}\centering
@@ -132,7 +136,7 @@ From Figure \ref{fig:ablation_second} we can conclude that feature $I$ (Cosine S
 % Min: not sure what you mean.  You cannot test on the training set.  Be clear about what you mean.
 Note that, however, these results is only this particular test set, which is also the training set. We cannot conclude that Cosine Similarity will work well in all cases.
 
-We continue to evaluate {\it LocateProv} using the \url{Leave-One-Out} strategy together with various classifiers. Table \ref{tab:secondtieresults} summarises the results.
+We continue to evaluate \textit{LocateProv} using the \textbf{Leave-One-Out} strategy together with various classifiers. Table~\ref{tab:secondtieresults} summarises the results.
 
 \begin{table}[h]
 	\center
@@ -163,7 +167,7 @@ Let us examine the confusion matrix from the Na\"{\i}ve Bayes classifier since i
 % Min: not good enough. You should discuss why there are 5 false positives and why that is ok (e.g., we want to make sure we get all specific citations)
 {\it LocateProv} is aimed at identifying the Specific-Yes fragments in the cited paper. Our goal is to attain higher numbers in both the $g$-$g$ and $s$-$s$ cells in the confusion matrix. We achieved this in Table \ref{tab:secondnbconfusionmatrix} and we can conclude that {\it LocateProv} has a promising performance in differentiating Specific-Yes ($y$) and Specific-No ($n$) fragments.
 
-For a more conclusive evaluation, we compared {\it LocateProv} to our baseline for this task. With {\it LocateProv} resembling a search problem, a feasible baseline is to compare the citing context with the fragments with Cosine Similarity, coupled with \url{tf-idf} \cite{irtextbook} weighting scheme. Essentially the baseline is just {\it LocateProv} running only on feature $I$ (Cosine Similarity). For a fair comparison between {\it LocateProv} and the baseline, we prepared a $1:1$ (Specific-No vs. Specific-Yes) training dataset as we did before to unskew the data instances. Specific-Yes instances were gathered, and the same number of Specific-No instances were {\bf randomly} selected from the collection. For both {\it LocateProv} and baseline, they were trained and tested on their own data set with the SVM classifier. Note that the only difference between the data set is the random set of Specific-No instances. We compared their P/R/F values in Table \ref{tab:locateprov_vs_baseline}.
+For a more conclusive evaluation, we compare \textit{LocateProv} to our baseline for this task. With \textit{LocateProv} resembling a search problem, a feasible baseline is to compare the citing context with the fragments with Cosine Similarity, coupled with TF$\times$IDF \cite{irtextbook} weighting scheme. Essentially the baseline is just \textit{LocateProv} running only on feature $I$ (Cosine Similarity). For a fair comparison between \textit{LocateProv} and the baseline, we artificially sampled a $1:1$ (Specific-No vs. Specific-Yes) training dataset as we did before to unskew the data instances. Specific-Yes instances were gathered, and the same number of Specific-No instances were \textbf{randomly} selected from the collection. For both \textit{LocateProv} and baseline, they were trained and tested on their own data set with the SVM classifier. Note that the only difference between the data set is the random set of Specific-No instances. We compared their P/R/F values in Table \ref{tab:locateprov_vs_baseline}.
 
 % Min: before your presentation, test the statistical significance of this difference.
 % Min: you also need to try to run your classifiers over the actual data set where skew is the normal case.
