@@ -1,0 +1,15 @@
+S5 - give paper name instead of ACL ID.
+S15 - Again, unless you described the IDs this doesn't make sense.  Might be better to do this slide in a diagram.
+S17 - Give some idea of how much effort you put into to do the analysis as well.
+S25 - Again, highlight the effort you took to do this.
+S 29 - Be careful not to specifically say that the list of 4 are exhaustive.  I think your examiners will know other ones that may be specific to their area.  The observations that you made are specific to the ACL Anthology.
+S35 - Cut into two slides.  Use extra space to give examples of why your features make sense.
+S35 - Try not to refer to your system as 1st tier and 2nd tier but name them by the semantics of what they do (GvsS classifier, Specific Range finder).
+S38 - Zoom only the statistics that are relevant.
+S42 - This is how you formed the dataset.  The LOO is the only part where you describe how to carry out the evaluation.
+
+S43/5 - Needs more work on discussion.  You talked about 40 slides about what you did but only S43 and S45 for results.  
+
+Need to do the holistic experiments running both Tier 1 and 2 together on actual dataset so that a fair evaluation can be done.
+
+S48 Need to introduce CFS and give a screenshot (maybe also your winning portrait).
